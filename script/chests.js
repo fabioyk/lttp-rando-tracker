@@ -785,7 +785,7 @@ chests[34] = {
 };
 
 chests[35] = {
-    name: "Witch: Give her <img src='images/mushroom.png' class='mini'>",
+    name: "Witch: Give her <img src='images/allpowder1.png' class='mini'>",
     x: "40.8%",
     y: "32.5%",
     isOpened: false,
@@ -1041,7 +1041,7 @@ chests[53] = {
 };
 
 chests[54] = {
-    name: "Buried Item <img src='images/shovel.png' class='mini'>",
+    name: "Buried Item <img src='images/allflute1.png' class='mini'>",
     x: "14.4%",
     y: "66.2%",
     isOpened: false,
@@ -1095,7 +1095,7 @@ chests[58] = {
 };
 
 chests[59] = {
-    name: "Bat Cave <img src='images/hammer.png' class='mini'>/<img src='images/mirror.png' class='mini'> + <img src='images/powder.png' class='mini'>",
+    name: "Bat Cave <img src='images/hammer.png' class='mini'>/<img src='images/mirror.png' class='mini'> + <img src='images/allpowder2.png' class='mini'>",
     x: "16.0%",
     y: "58.0%",
     isOpened: false,
