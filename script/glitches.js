@@ -3,9 +3,17 @@ var glitches = {
   ipbj: true,
   bunnyrevival: false,
   owbunnyrevival: false,
-  superbunny: true,
+  superbunny: false,
   surfbunny: false,
   hover: false,
-  darkroom: true,
-  aga_dark: false
+  walkonwater: false,
+  darkrooms: {
+    eastern: true,
+    agatower: false,
+    oldMan: true,
+    pod: true,
+    mire: true,
+    tr: true,
+    sewers: false
+  }  
 }

@@ -71,7 +71,7 @@ td{
     margin-top: -24px;
 }
 
-div{
+#map{
     background-image: url("images/map.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -125,4 +125,43 @@ span{
 
 .aga{
 	background-color: rgb(255,150,0);
+}
+
+select {
+    position: absolute;
+    z-index: 5;
+}
+
+#logic_select {
+    left: 980px;
+}
+#mode_select {
+    left: 1130px;
+}
+
+#options_button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 15;
+}
+
+#options {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 10;
+    color: white;
+    font-size: 18px;
+}
+
+.column {
+    float: left;
+    width: 33%;
+    height: 90%;
+    padding: 20px 20px;
 }

@@ -15,7 +15,7 @@ var medallions = [0, 0];
 
 // Event of clicking on the item tracker
 function toggle(label){
-	if(label.substring(0,5) == "chest"){
+	if(label && label.substring(0,5) == "chest"){
 		if(--items[label] < 0)
 			items[label] = itemsMax[label];
 			document.getElementById(label).style.backgroundImage = ("url(images/chest" + items[label] + ".png)");
@@ -30,13 +30,13 @@ function toggle(label){
 		document.getElementById(label).className = (items[label]=!items[label]);
 	}
 	else{
-		if(++items[label] > itemsMax[label]){
+		if(label && ++items[label] > itemsMax[label]){
 			items[label] = itemsMin[label];
 				document.getElementById(label).style.backgroundImage = ("url(images/" + label + ".png)");
 			if(!items[label])
 				document.getElementById(label).className = ("false");
 		}
-		else {
+		else if (items[label]) {
 			document.getElementById(label).style.backgroundImage = ("url(images/" + label + items[label] + ".png)");
 			document.getElementById(label).className = ("true");
 		}
@@ -57,7 +57,7 @@ function toggle(label){
 		togglePearl();
 	
 	// Clicking a boss on the tracker will check it off on the map!
-	if(label.substring(0,4) == "boss"){
+	if(label && label.substring(0,4) == "boss"){
 		toggleBoss(label.substring(4));
 	}
 
@@ -73,7 +73,7 @@ function isGoMode() {
 	for(var i=0; i<dungeons.length; i++) {
 		if (prizes[i] === 1 || prizes[i] === 2) {
 			crystalCount++;
-			if (!dungeons[i].isBeaten && dungeons[i].isBeatable() !== "available") {
+			if (!dungeons[i].isBeaten && dungeons[i].isBeatable() !== "available" && dungeons[i].isBeatable() !== "glitched") {
 				return false;
 			}
 		}
@@ -99,18 +99,18 @@ function togglePearl(){
 function toggleChest(x){
     chests[x].isOpened = !chests[x].isOpened;
     if(chests[x].isOpened)
-		document.getElementById(x).className = "chest opened";
+			document.getElementById(x).className = "chest opened";
     else
-		document.getElementById(x).className = "chest " + chests[x].isAvailable();
+			document.getElementById(x).className = "chest " + chests[x].isAvailable();
 }
 
 // Event of clicking a dungeon location (not really)
 function toggleBoss(x){
     dungeons[x].isBeaten = !dungeons[x].isBeaten;
     if(dungeons[x].isBeaten)
-		document.getElementById("bossMap"+x).className = "boss opened";
+			document.getElementById("bossMap"+x).className = "boss opened";
     else
-		document.getElementById("bossMap"+x).className = "boss " + dungeons[x].isBeatable();
+			document.getElementById("bossMap"+x).className = "boss " + dungeons[x].isBeatable();		
 }
 
 // Highlights a chest location and shows the name as caption
@@ -139,13 +139,19 @@ function unhighlightDungeon(x){
 function toggleDungeon(n){
 	prizes[n]++;
 	if(prizes[n] == 5)
-		prizes[n] = 0;
+		prizes[n] = 1;
 	document.getElementById("dungeonPrize"+n).style.backgroundImage = "url(images/dungeon"+prizes[n]+".png)";
 	// Update Sahasralah, Fat Fairy, and Master Sword Pedestal
 	var pendantChests = [25, 61, 62];
     for(k=0; k<pendantChests.length; k++){
 		if(!chests[pendantChests[k]].isOpened)
 			document.getElementById(pendantChests[k]).className = "chest " + chests[pendantChests[k]].isAvailable();
+	}
+	
+	if (isGoMode()) {
+		document.getElementById('go').className = "true";
+	} else {
+		document.getElementById('go').className = "false";
 	}
 }
 
@@ -173,6 +179,11 @@ function toggleMedallion(n){
 		dungeonName = "Turtle Rock";
 	dungeons[8+n].name = dungeonName + " <img src='images/medallion"+medallions[n]+".png' class='mini'><img src='images/lantern.png' class='mini'>";
 	
+	if (isGoMode()) {
+		document.getElementById('go').className = "true";
+	} else {
+		document.getElementById('go').className = "false";
+	}
 }
 
 </script>
@@ -225,7 +236,7 @@ while(k < itemList.length){
 			// boss tables (pendant/crystal, medallion)
 			if(x.substring(0,4) == "boss"){
 				var d = prizes.length;
-				prizes[d] = 0;
+				prizes[d] = 1;
 				
 				document.write("<td id='"+x+"' style='background-image:url(images/"+x+".png);'>");
 				document.write("<table cellpadding='0' cellspacing='0' class='lonk'>");
@@ -239,7 +250,7 @@ while(k < itemList.length){
 							document.write("<th id='medallion"+(d-8)+"' onClick='toggleMedallion("+(d-8)+")' class='corner' style='background-image:url(images/medallion0.png)'></th>");
 						else						
 							document.write("<th onClick='toggle("+'"'+x+'"'+")'></th>");
-						document.write("<th id='dungeonPrize"+d+"' onClick='toggleDungeon("+d+")' class='corner' style='background-image:url(images/dungeon0.png)'></th>");
+						document.write("<th id='dungeonPrize"+d+"' onClick='toggleDungeon("+d+")' class='corner' style='background-image:url(images/dungeon1.png)'></th>");
 					document.write("</tr>");
 					document.write("</table>");
 				document.write("</td>");
@@ -268,7 +279,7 @@ document.getElementById("sword").style.backgroundImage = "url(images/sword1.png)
 document.getElementById("shield").style.backgroundImage = "url(images/shield.png)";
 
 // Initialize all chests on the map
-document.write('<div>');
+document.write('<div id="map">');
 for(k=0; k<chests.length; k++){
     document.write("<span style='background-image:url(images/poi.png);' id='"+k+"' onClick='toggleChest("+k+")' onMouseover='highlight("+k+")' onMouseout='unhighlight("+k+")'></span>");
     document.getElementById(k).style.left = chests[k].x;
@@ -296,6 +307,242 @@ for(k=0; k<dungeons.length; k++){
 
 <span id="caption">&nbsp</span>
 </div>
+
+<input type="button" id="options_button" value="Options">
+
+<select name="logic" id="logic_select">
+	<option value="nmg">No Glitches</option>
+	<option value="owg">Overworld Glitches</option>
+	<option value="major">Major Glitches</option>
+</select>
+
+<select name="mode" id="mode_select">
+	<option value="standard">Standard</option>
+	<option value="open">Open</option>
+	<option value="swordless">Swordless</option>
+</select>
+
+<div id="options">
+	<div class="column" id="minor-glitches-list">
+		<div>Minor Glitches I can do:</div>
+		<div>
+			<input type="checkbox" id="fakeflippers">
+			<label for="fakeflippers">Fake Flippers</label>
+		</div>
+		<div>
+			<input type="checkbox" id="ipbj">
+			<label for="ipbj">IP Bomb Jump</label>
+		</div>
+		<div>
+			<input type="checkbox" id="superbunny">
+			<label for="superbunny">Super Bunny</label>
+		</div>
+		<div>
+			<input type="checkbox" id="bunnyrevival">
+			<label for="bunnyrevival">Bunny Revival</label>
+		</div>
+		<div>
+			<input type="checkbox" id="owbunnyrevival">
+			<label for="owbunnyrevival">Overworld Bunny Revival</label>
+		</div>
+		<div>
+			<input type="checkbox" id="surfbunny">
+			<label for="surfbunny">Surfing Bunny</label>
+		</div>
+		<div>
+			<input type="checkbox" id="walkonwater">
+			<label for="walkonwater">Walk on Water</label>
+		</div>
+		<div>
+			<input type="checkbox" id="hover">
+			<label for="hover">Hovering</label>
+		</div>		
+	</div>
+	<div class="column" id="dark-rooms-list">
+		<div>Dark Rooms I can do:</div>
+		<div>
+			<input type="checkbox" class="darkrooms" id="sewers">
+			<label for="sewers">Hyrule Castle Sewers (Open Mode)</label>
+		</div>
+		<div>
+			<input type="checkbox" class="darkrooms" id="eastern">
+			<label for="eastern">Eastern Palace</label>
+		</div>
+		<div>
+			<input type="checkbox" class="darkrooms" id="oldMan">
+			<label for="oldMan">Old Man's Cave</label>
+		</div>
+		<div>
+			<input type="checkbox" class="darkrooms" id="pod">
+			<label for="pod">Palace of Darkness</label>
+		</div>
+		<div>
+			<input type="checkbox" class="darkrooms" id="mire">
+			<label for="mire">Misery Mire</label>
+		</div>
+		<div>
+			<input type="checkbox" class="darkrooms" id="tr">
+			<label for="tr">Turtle Rock</label>
+		</div>
+		<div>
+			<input type="checkbox" class="darkrooms" id="agatower">
+			<label for="agatower">Agahnim's Tower</label>
+		</div>
+	</div>	
+</div>
+
+<script>
+	var optionsOpen = false;
+	var minorGlitchesCheckboxes = document.querySelectorAll('#minor-glitches-list input');
+	var darkRoomsCheckboxes = document.querySelectorAll('#dark-rooms-list input');
+	var modeSelect = document.querySelector('#mode_select');
+	var logicSelect = document.querySelector('#logic_select');
+
+	function setCookie(obj) {
+		console.log(obj);
+		var d = new Date();
+    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    var val = JSON.stringify(obj);
+    document.cookie = "key=" + val + ";" + expires + ";path=/";
+	}
+
+	function getCookie() {
+    var name = "key=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return JSON.parse(c.substring(name.length, c.length));
+        }
+    }
+    return {};
+	}
+
+	var cookieKeys = ['glitches', 'mode', 'logic', 'goal'];
+	var cookieDefault = {
+		glitches: {
+			fakeflippers: true,
+			ipbj: true,
+			bunnyrevival: false,
+			owbunnyrevival: false,
+			superbunny: false,
+			surfbunny: false,
+			hover: false,
+			walkonwater: false,
+			darkrooms: {
+				eastern: true,
+				agatower: false,
+				oldMan: true,
+				pod: true,
+				mire: true,
+				tr: true,
+				sewers: false
+			}  
+		},
+		mode: 'standard',
+		logic: 'nmg',
+		goal: 'ganon'
+	}
+
+	var cookieLock = false;
+	function loadCookie() {
+		if (cookieLock) {
+			return;
+		}
+		cookieLock = true;
+
+		var cookieObj = getCookie();
+
+		cookieKeys.forEach(function (key) {
+			if (cookieObj[key] === undefined) {
+				cookieObj[key] = cookieDefault[key];
+			}
+		});
+
+		Object.keys(glitches).forEach(function(eachGlitch) {
+			if (eachGlitch !== 'darkrooms') {
+				glitches[eachGlitch] = cookieObj.glitches[eachGlitch];
+			}
+		});
+		Object.keys(glitches.darkrooms).forEach(function(darkroom) {
+			glitches.darkrooms[darkroom] = cookieObj.glitches.darkrooms[darkroom];
+		});
+
+		cookieLock = false;
+	}
+	function saveCookie() {
+		if (cookieLock) {
+			return;
+		}
+		cookieLock = true;
+
+		var cookieObj = {};
+
+		cookieObj.glitches = {};
+		Object.keys(glitches).forEach(function(eachGlitch) {
+			if (eachGlitch !== 'darkrooms') {
+				cookieObj.glitches[eachGlitch] = glitches[eachGlitch];
+			}
+		});
+		cookieObj.glitches.darkrooms = {};
+		Object.keys(glitches.darkrooms).forEach(function(darkroom) {
+			cookieObj.glitches.darkrooms[darkroom] = glitches.darkrooms[darkroom];
+		});
+		cookieObj.logic = logic;
+		cookieObj.mode = mode;
+		cookieObj.goal = goal;
+
+		setCookie(cookieObj);
+
+		cookieLock = false;
+	}	
+	loadCookie();
+	saveCookie();
+
+
+	minorGlitchesCheckboxes.forEach(function(checkbox) {
+		checkbox.checked = glitches[checkbox.id];
+		checkbox.addEventListener('click', function() {
+			glitches[checkbox.id] = checkbox.checked;
+			saveCookie();
+			toggle();
+		});
+	});
+
+	darkRoomsCheckboxes.forEach(function(checkbox) {
+		checkbox.checked = glitches.darkrooms[checkbox.id];
+		checkbox.addEventListener('click', function() {
+			glitches.darkrooms[checkbox.id] = checkbox.checked;
+			saveCookie();
+			toggle();
+		});
+	});
+
+	document.querySelector('#options_button').addEventListener('click', function() {
+		optionsOpen = !optionsOpen;
+		if (optionsOpen) {
+			document.querySelector('#options').style.display = "inherit";
+		} else {
+			document.querySelector('#options').style.display = "none";
+		}		
+	});
+
+	modeSelect.addEventListener('change', function() {
+		mode = modeSelect.value;
+		saveCookie();
+		toggle();
+	});
+
+	logicSelect.addEventListener('change', function() {
+		logic = logicSelect.value;
+		saveCookie();
+		toggle();
+	});
+</script>
 
 </body>
 </html>
