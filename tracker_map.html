@@ -306,9 +306,10 @@ for(k=0; k<dungeons.length; k++){
 </script>
 
 <span id="caption">&nbsp</span>
+<input type="button" id="options_button" value="Options">
 </div>
 
-<input type="button" id="options_button" value="Options">
+
 
 <select name="logic" id="logic_select">
 	<option value="nmg">No Glitches</option>
@@ -471,6 +472,22 @@ for(k=0; k<dungeons.length; k++){
 		Object.keys(glitches.darkrooms).forEach(function(darkroom) {
 			glitches.darkrooms[darkroom] = cookieObj.glitches.darkrooms[darkroom];
 		});
+
+		mode = cookieObj.mode;
+		logic = cookieObj.logic;
+		goal = cookieObj.goal;
+
+		var fn = function(select, option) {
+			var opts = select.options;
+			for (var opt, i=0; opt = opts[i]; i++) {
+				if (opt.value === option) {
+					select.selectedIndex = i;
+					break;
+				}
+			}
+		}
+		fn(modeSelect, mode);
+		fn(logicSelect, logic);		
 
 		cookieLock = false;
 	}
