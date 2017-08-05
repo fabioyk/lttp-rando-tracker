@@ -1,6 +1,7 @@
 body{
     background-color: rgb(16,16,16);
     margin: 0px;
+    font-family: "Tahoma", Times, serif;
 }
 
 .tracker{
@@ -88,8 +89,7 @@ span{
     position: absolute;
     width: 100%;
     text-align: center;
-    font-size: 16px;
-    font-family: "Times New Roman", Times, serif;
+    font-size: 16px;    
     bottom: 0px;
 }
 

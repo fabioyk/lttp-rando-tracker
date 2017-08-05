@@ -244,24 +244,68 @@ dungeons[2] = {
     image: "boss22.png",
     isBeaten: false,
     isBeatable: function(){
-        if (!this.isAccessible())
-            return "unavailable";
-        if (items.sword === 0 && !items.hammer)
-            return "unavailable";
-        if (items.allflute < 2 && !items.lantern && hasFiresource())
-            return "glitched";
-		if(hasFiresource())
-			return "available";
-		return "possible";
+        if (logic !== "major") {
+            if (!this.isAccessible()) {
+                if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern") && (items.sword || items.hammer)) {
+                    return "glitched";
+                } else {
+                    return "unavailable";
+                }
+            } else {
+                if (hasFiresource() && (items.sword || items.hammer)) {
+                    return "available";
+                } else {
+                    return "possible";
+                }
+            }
+        } else {
+            if (!this.isAccessible) {
+                if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern") && (items.sword || items.hammer)) {
+                    return "glitched";
+                } else {
+                    return "unavailable";
+                }
+            } else {
+                if (hasFiresource() && ((items.sword || items.hammer) || 
+                        (items.hookshot && items.flippers && (items.firerod || items.icerod || items.bow > 1)))) {
+                    return "available";
+                } else {
+                    return "possible";
+                }
+            }
+        }
     },
     canGetChest: function(){
-		if (!this.isAccessible())
-            return "unavailable";
-        if (items.allflute < 2 && !items.lantern && hasFiresource())
-            return "glitched";
-		if(hasFiresource())
-			return "available";
-		return "possible";
+        if (logic !== "major") {
+            if (!this.isAccessible()) {
+                if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern")) {
+                    return "glitched";
+                } else {
+                    return "unavailable";
+                }
+            } else {
+                if (hasFiresource() && (items.sword || items.hammer)) {
+                    return "available";
+                } else {
+                    return "possible";
+                }
+            }
+        } else {
+            if (!this.isAccessible) {
+                if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern")) {
+                    return "glitched";
+                } else {
+                    return "unavailable";
+                }
+            } else {
+                if (hasFiresource() && ((items.sword || items.hammer) || 
+                        (items.hookshot && items.flippers && (items.firerod || items.icerod || items.bow > 1)))) {
+                    return "available";
+                } else {
+                    return "possible";
+                }
+            }
+        }
     },
     isAccessible: function() {
         switch(logic) {
@@ -706,7 +750,7 @@ dungeons[9] = {
                 return hasMedallion && items.moonpearl && items.somaria && items.glove === 2 && items.hammer && regions.eastDeathMountain();
             case "owg":
                 return (hasMedallion && items.moonpearl && items.somaria && items.hammer && (items.glove === 2 || items.boots) && regions.eastDeathMountain()) ||
-                        (items.mirror || (items.moonpearl && canSpinSpeed()) && regions.darkEastDeathMountain());
+                        ((items.mirror || (items.moonpearl && canSpinSpeed())) && regions.darkEastDeathMountain());
             case "major":
                 return items.mirror || items.moonpearl || items.bottle;
 
@@ -798,6 +842,8 @@ chests[4] = {
                     } else {
                         return "possible";
                     }
+                } else if (glitches.darkrooms.oldMan && doableWith(dungeons[9].isAccessible, "lantern") && items.mirror) {
+                    return "glitched";
                 } else {
                     return "unavailable";
                 }
@@ -918,7 +964,9 @@ chests[10] = {
                 case "major":
                     return "available";
             }
-        } else { // TODO treat aga for owg?
+        } else if (logic === "owg" && considerAga() && doableWith(regions.mire, "agahnim") && (items.moonpearl || items.mirror)) {
+            return "glitched";
+        } else {
             return "unavailable";
         }
     }

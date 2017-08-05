@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Stoops Cross Cheats v4.0</title>
+<title>LTTP Randomizer Tracker</title>
 <link rel="stylesheet" href="styles.css">
 
 <script src="script/glitches.js"></script>
@@ -52,9 +52,9 @@ function toggle(label){
 			document.getElementById("dungeon"+k).className = "dungeon " + dungeons[k].canGetChest();
     }
 
-	// Initiate bunny graphics!
-	if(label=="moonpearl" || label=="tunic")
-		togglePearl();
+	// Tunic graphics
+	if(label=="tunic")
+		toggleTunic();
 	
 	// Clicking a boss on the tracker will check it off on the map!
 	if(label && label.substring(0,4) == "boss"){
@@ -68,6 +68,14 @@ function toggle(label){
 	}
 }
 
+var goModeRequirements = {
+	mastersword: true,
+	temperedsword: false,
+	silverarrows: false,
+	somaria: false,
+	firerod: false,
+	boots: false
+}
 function isGoMode() {
 	var crystalCount = 0;
 	for(var i=0; i<dungeons.length; i++) {
@@ -78,18 +86,26 @@ function isGoMode() {
 			}
 		}
 	}
-	if (crystalCount === 7 && items.sword >= 2 && (items.hookshot || glitches.hover)) {
-		return true;
+	if (crystalCount === 7) {
+		if ((mode !== "swordless" ? ((goModeRequirements.mastersword ? items.sword > 1 : true) &&
+				(goModeRequirements.temperedsword ? items.sword > 2 : true) &&
+				(goModeRequirements.silverarrows ? items.bow === 3 : true)) : (items.hammer && items.silverarrows)) &&
+				(goModeRequirements.somaria ? items.somaria : true) &&
+				(goModeRequirements.firerod ? items.firerod : true) &&
+				(goModeRequirements.boots ? items.boots : true) &&
+				items.bow > 1 && (items.firerod || items.lantern) &&
+				(items.hookshot || glitches.hover)
+				)
+			return true;
+		else
+			return false;
 	}
 }
 
-// BUNNY TIME!!!
-function togglePearl(){
+function toggleTunic(){
 	var link="url(images/tunic";
 	if(items.tunic>1)
 		link += items.tunic;
-	//if(!items.moonpearl)
-	//	link += "b";
 	link += ".png)";
 	
 	document.getElementById("tunic").style.backgroundImage = link;
@@ -324,39 +340,69 @@ for(k=0; k<dungeons.length; k++){
 </select>
 
 <div id="options">
-	<div class="column" id="minor-glitches-list">
+	<div class="column">
 		<div>Minor Glitches I can do:</div>
-		<div>
-			<input type="checkbox" id="fakeflippers">
-			<label for="fakeflippers">Fake Flippers</label>
-		</div>
-		<div>
-			<input type="checkbox" id="ipbj">
-			<label for="ipbj">IP Bomb Jump</label>
-		</div>
-		<div>
-			<input type="checkbox" id="superbunny">
-			<label for="superbunny">Super Bunny</label>
-		</div>
-		<div>
-			<input type="checkbox" id="bunnyrevival">
-			<label for="bunnyrevival">Bunny Revival</label>
-		</div>
-		<div>
-			<input type="checkbox" id="owbunnyrevival">
-			<label for="owbunnyrevival">Overworld Bunny Revival</label>
-		</div>
-		<div>
-			<input type="checkbox" id="surfbunny">
-			<label for="surfbunny">Surfing Bunny</label>
-		</div>
-		<div>
-			<input type="checkbox" id="walkonwater">
-			<label for="walkonwater">Walk on Water</label>
-		</div>
-		<div>
-			<input type="checkbox" id="hover">
-			<label for="hover">Hovering</label>
+		<div id="minor-glitches-list">
+			<div>
+				<input type="checkbox" id="fakeflippers">
+				<label for="fakeflippers" title="Access to Hobo, Zora and Ice Palace without Flippers">Fake Flippers</label>
+			</div>
+			<div>
+				<input type="checkbox" id="ipbj">
+				<label for="ipbj" title="Ability to do Ice Palace without Hookshot or Cane of Somaria">IP Bomb Jump</label>
+			</div>
+			<div>
+				<input type="checkbox" id="superbunny">
+				<label for="superbunny" title="Access to two chests in DW Death Mountain and two in Mire area without Moon Pearl">Super Bunny</label>
+			</div>
+			<div>
+				<input type="checkbox" id="bunnyrevival">
+				<label for="bunnyrevival" title="Access to Ice Palace without Moon Pearl">Bunny Revival</label>
+			</div>
+			<div>
+				<input type="checkbox" id="owbunnyrevival">
+				<label for="owbunnyrevival">Overworld Bunny Revival</label>
+			</div>
+			<div>
+				<input type="checkbox" id="surfbunny">
+				<label for="surfbunny" title="Access to the Lake Hylia item without Moon Pearl">Surfing Bunny</label>
+			</div>
+			<div>
+				<input type="checkbox" id="walkonwater">
+				<label for="walkonwater" title="Access to Lake Hylia item without Flippers">Walk on Water</label>
+			</div>
+			<div>
+				<input type="checkbox" id="hover">
+				<label for="hover">Hovering</label>
+			</div>
+		</div>		
+		<hr>
+		<div>How strict are Go Mode requirements?</div>
+		<div id="go-mode-restrictions">
+			<div>
+				<input type="checkbox" id="mastersword">
+				<label for="mastersword">I want Master Sword (can't risk no Swords in GT)</label>
+			</div>
+			<div>
+				<input type="checkbox" id="temperedsword">
+				<label for="temperedsword">I want Tempered Sword</label>
+			</div>
+			<div>
+				<input type="checkbox" id="silverarrows">
+				<label for="silverarrows">I want Silver Arrows</label>
+			</div>
+			<div>
+				<input type="checkbox" id="somaria">
+				<label for="somaria">I want Cane of Somaria (can't risk right side GT)</label>
+			</div>
+			<div>
+				<input type="checkbox" id="firerod">
+				<label for="firerod">I want Fire Rod (can't risk right side GT)</label>
+			</div>
+			<div>
+				<input type="checkbox" id="boots">
+				<label for="boots">I want Boots (can't risk Big Key on torch in GT)</label>
+			</div>
 		</div>		
 	</div>
 	<div class="column" id="dark-rooms-list">
@@ -396,11 +442,11 @@ for(k=0; k<dungeons.length; k++){
 	var optionsOpen = false;
 	var minorGlitchesCheckboxes = document.querySelectorAll('#minor-glitches-list input');
 	var darkRoomsCheckboxes = document.querySelectorAll('#dark-rooms-list input');
+	var gomodeCheckboxes = document.querySelectorAll('#go-mode-restrictions input');
 	var modeSelect = document.querySelector('#mode_select');
 	var logicSelect = document.querySelector('#logic_select');
 
-	function setCookie(obj) {
-		console.log(obj);
+	function setCookie(obj) {		
 		var d = new Date();
     d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
     var expires = "expires="+d.toUTCString();
@@ -423,7 +469,7 @@ for(k=0; k<dungeons.length; k++){
     return {};
 	}
 
-	var cookieKeys = ['glitches', 'mode', 'logic', 'goal'];
+	var cookieKeys = ['glitches', 'mode', 'logic', 'goal', 'goModeRequirements'];
 	var cookieDefault = {
 		glitches: {
 			fakeflippers: true,
@@ -446,7 +492,15 @@ for(k=0; k<dungeons.length; k++){
 		},
 		mode: 'standard',
 		logic: 'nmg',
-		goal: 'ganon'
+		goal: 'ganon',
+		goModeRequirements: {
+			mastersword: true,
+			temperedsword: false,
+			silverarrows: false,
+			somaria: false,
+			firerod: false,
+			boots: false
+		}
 	}
 
 	var cookieLock = false;
@@ -465,12 +519,11 @@ for(k=0; k<dungeons.length; k++){
 		});
 
 		Object.keys(glitches).forEach(function(eachGlitch) {
-			if (eachGlitch !== 'darkrooms') {
-				glitches[eachGlitch] = cookieObj.glitches[eachGlitch];
-			}
+			glitches[eachGlitch] = cookieObj.glitches[eachGlitch];
 		});
-		Object.keys(glitches.darkrooms).forEach(function(darkroom) {
-			glitches.darkrooms[darkroom] = cookieObj.glitches.darkrooms[darkroom];
+
+		Object.keys(cookieObj.goModeRequirements).forEach(function(eachGoMode) {
+			goModeRequirements[eachGoMode] = cookieObj.goModeRequirements[eachGoMode];
 		});
 
 		mode = cookieObj.mode;
@@ -501,13 +554,7 @@ for(k=0; k<dungeons.length; k++){
 
 		cookieObj.glitches = {};
 		Object.keys(glitches).forEach(function(eachGlitch) {
-			if (eachGlitch !== 'darkrooms') {
-				cookieObj.glitches[eachGlitch] = glitches[eachGlitch];
-			}
-		});
-		cookieObj.glitches.darkrooms = {};
-		Object.keys(glitches.darkrooms).forEach(function(darkroom) {
-			cookieObj.glitches.darkrooms[darkroom] = glitches.darkrooms[darkroom];
+			cookieObj.glitches[eachGlitch] = glitches[eachGlitch];
 		});
 		cookieObj.logic = logic;
 		cookieObj.mode = mode;
@@ -534,6 +581,15 @@ for(k=0; k<dungeons.length; k++){
 		checkbox.checked = glitches.darkrooms[checkbox.id];
 		checkbox.addEventListener('click', function() {
 			glitches.darkrooms[checkbox.id] = checkbox.checked;
+			saveCookie();
+			toggle();
+		});
+	});
+
+	gomodeCheckboxes.forEach(function(checkbox) {
+		checkbox.checked = goModeRequirements[checkbox.id];
+		checkbox.addEventListener('click', function() {
+			goModeRequirements[checkbox.id] = checkbox.checked;
 			saveCookie();
 			toggle();
 		});
