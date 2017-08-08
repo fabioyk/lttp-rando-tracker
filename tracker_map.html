@@ -7,7 +7,6 @@
 <script src="script/items.js"></script>
 <script src="script/chests.js"></script>
 
-
 <script>
 var rowLength = 7;
 var prizes = [];
@@ -15,33 +14,40 @@ var medallions = [0, 0];
 
 // Event of clicking on the item tracker
 function toggle(label){
+	console.log(label);
 	if(label && label.substring(0,5) == "chest"){
 		if(--items[label] < 0)
 			items[label] = itemsMax[label];
-			document.getElementById(label).style.backgroundImage = ("url(images/chest" + items[label] + ".png)");
+		document.getElementById(label).style.backgroundImage = ("url(images/chest" + items[label] + ".png)");
 		x = label.substring(5);
+		logAction(label, items[label]);
 		if(items[label] == 0)
 			document.getElementById("dungeon"+x).className = "dungeon opened";
 		else
 			document.getElementById("dungeon"+x).className = "dungeon " + dungeons[x].canGetChest();
 		return;
-    }
-    if((typeof items[label]) == "boolean"){
+  }
+  if((typeof items[label]) == "boolean"){
 		document.getElementById(label).className = (items[label]=!items[label]);
+		logAction(label, items[label]);
 	}
 	else{
 		if(label && ++items[label] > itemsMax[label]){
 			items[label] = itemsMin[label];
-				document.getElementById(label).style.backgroundImage = ("url(images/" + label + ".png)");
-			if(!items[label])
+			document.getElementById(label).style.backgroundImage = ("url(images/" + label + ".png)");
+			if(!items[label]) {			
 				document.getElementById(label).className = ("false");
+			}
 		}
 		else if (items[label]) {
 			document.getElementById(label).style.backgroundImage = ("url(images/" + label + items[label] + ".png)");
 			document.getElementById(label).className = ("true");
 		}
-    }
-    for(k=0; k<chests.length; k++){
+		if (items[label] !== undefined) {
+			logAction(label, items[label]);
+		}
+  }
+  for(k=0; k<chests.length; k++){
 		if(!chests[k].isOpened)
 			document.getElementById(k).className = "chest " + chests[k].isAvailable();
 	}
@@ -53,8 +59,9 @@ function toggle(label){
     }
 
 	// Tunic graphics
-	if(label=="tunic")
-		toggleTunic();
+	if(label=="tunic") {	
+		toggleTunic();		
+	}
 	
 	// Clicking a boss on the tracker will check it off on the map!
 	if(label && label.substring(0,4) == "boss"){
@@ -76,6 +83,8 @@ var goModeRequirements = {
 	firerod: false,
 	boots: false
 }
+
+var wasInGo = false;
 function isGoMode() {
 	var crystalCount = 0;
 	for(var i=0; i<dungeons.length; i++) {
@@ -95,10 +104,19 @@ function isGoMode() {
 				(goModeRequirements.boots ? items.boots : true) &&
 				items.bow > 1 && (items.firerod || items.lantern) &&
 				(items.hookshot || glitches.hover)
-				)
+				) {
+			if (!wasInGo) {
+				wasInGo = true;
+				logAction('gomode', true);
+			}
 			return true;
-		else
+		} else {
+			if (wasInGo) {
+				wasInGo = false;
+				logAction('gomode', false);
+			}
 			return false;
+		}			
 	}
 }
 
@@ -113,7 +131,8 @@ function toggleTunic(){
 
 // Event of clicking a chest on the map
 function toggleChest(x){
-    chests[x].isOpened = !chests[x].isOpened;
+		chests[x].isOpened = !chests[x].isOpened;
+		logAction('location'+x, chests[x].isOpened);
     if(chests[x].isOpened)
 			document.getElementById(x).className = "chest opened";
     else
@@ -122,7 +141,7 @@ function toggleChest(x){
 
 // Event of clicking a dungeon location (not really)
 function toggleBoss(x){
-    dungeons[x].isBeaten = !dungeons[x].isBeaten;
+		dungeons[x].isBeaten = !dungeons[x].isBeaten;
     if(dungeons[x].isBeaten)
 			document.getElementById("bossMap"+x).className = "boss opened";
     else
@@ -132,7 +151,7 @@ function toggleBoss(x){
 // Highlights a chest location and shows the name as caption
 function highlight(x){
     document.getElementById(x).style.backgroundImage = "url(images/highlighted.png)";
-    document.getElementById("caption").innerHTML = chests[x].name;
+    document.getElementById("caption").innerHTML = chests[x].name + " " + (chests[x].hint ? chests[x].hint : "");
 }
 
 function unhighlight(x){
@@ -143,7 +162,7 @@ function unhighlight(x){
 // Highlights a chest location and shows the name as caption (but for dungeons)
 function highlightDungeon(x){
     document.getElementById("dungeon"+x).style.backgroundImage = "url(images/highlighted.png)";
-    document.getElementById("caption").innerHTML = dungeons[x].name;
+    document.getElementById("caption").innerHTML = dungeons[x].name + " " + (dungeons[x].hint ? dungeons[x].hint : "");
 }
 
 function unhighlightDungeon(x){
@@ -157,6 +176,7 @@ function toggleDungeon(n){
 	if(prizes[n] == 5)
 		prizes[n] = 1;
 	document.getElementById("dungeonPrize"+n).style.backgroundImage = "url(images/dungeon"+prizes[n]+".png)";
+	logAction('dungeonClicked'+n, prizes[n]);
 	// Update Sahasralah, Fat Fairy, and Master Sword Pedestal
 	var pendantChests = [25, 61, 62];
     for(k=0; k<pendantChests.length; k++){
@@ -176,6 +196,7 @@ function toggleMedallion(n){
 	medallions[n]++;
 	if(medallions[n] == 4)
 		medallions[n] = 0;
+	logAction('medallion'+n, medallions[n]);
 	document.getElementById("medallion"+n).style.backgroundImage = "url(images/medallion"+medallions[n]+".png)";
 	// Update availability of dungeon boss AND chests
     dungeons[8+n].isBeaten = !dungeons[8+n].isBeaten;
@@ -193,7 +214,7 @@ function toggleMedallion(n){
 		dungeonName = "Misery Mire";
 	else
 		dungeonName = "Turtle Rock";
-	dungeons[8+n].name = dungeonName + " <img src='images/medallion"+medallions[n]+".png' class='mini'><img src='images/lantern.png' class='mini'>";
+	dungeons[8+n].hint = "<img src='images/medallion"+medallions[n]+".png' class='mini'><img src='images/lantern.png' class='mini'>";
 	
 	if (isGoMode()) {
 		document.getElementById('go').className = "true";
@@ -435,188 +456,15 @@ for(k=0; k<dungeons.length; k++){
 			<input type="checkbox" class="darkrooms" id="agatower">
 			<label for="agatower">Agahnim's Tower</label>
 		</div>
-	</div>	
+	</div>
+	<div class="column" id="log-field">
+		<textarea id="log-text-area" readonly="true">Item log will be shown here</textarea>
+	</div>
 </div>
 
-<script>
-	var optionsOpen = false;
-	var minorGlitchesCheckboxes = document.querySelectorAll('#minor-glitches-list input');
-	var darkRoomsCheckboxes = document.querySelectorAll('#dark-rooms-list input');
-	var gomodeCheckboxes = document.querySelectorAll('#go-mode-restrictions input');
-	var modeSelect = document.querySelector('#mode_select');
-	var logicSelect = document.querySelector('#logic_select');
-
-	function setCookie(obj) {		
-		var d = new Date();
-    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
-    var expires = "expires="+d.toUTCString();
-    var val = JSON.stringify(obj);
-    document.cookie = "key=" + val + ";" + expires + ";path=/";
-	}
-
-	function getCookie() {
-    var name = "key=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return JSON.parse(c.substring(name.length, c.length));
-        }
-    }
-    return {};
-	}
-
-	var cookieKeys = ['glitches', 'mode', 'logic', 'goal', 'goModeRequirements'];
-	var cookieDefault = {
-		glitches: {
-			fakeflippers: true,
-			ipbj: true,
-			bunnyrevival: false,
-			owbunnyrevival: false,
-			superbunny: false,
-			surfbunny: false,
-			hover: false,
-			walkonwater: false,
-			darkrooms: {
-				eastern: true,
-				agatower: false,
-				oldMan: true,
-				pod: true,
-				mire: true,
-				tr: true,
-				sewers: false
-			}  
-		},
-		mode: 'standard',
-		logic: 'nmg',
-		goal: 'ganon',
-		goModeRequirements: {
-			mastersword: true,
-			temperedsword: false,
-			silverarrows: false,
-			somaria: false,
-			firerod: false,
-			boots: false
-		}
-	}
-
-	var cookieLock = false;
-	function loadCookie() {
-		if (cookieLock) {
-			return;
-		}
-		cookieLock = true;
-
-		var cookieObj = getCookie();
-
-		cookieKeys.forEach(function (key) {
-			if (cookieObj[key] === undefined) {
-				cookieObj[key] = cookieDefault[key];
-			}
-		});
-
-		Object.keys(glitches).forEach(function(eachGlitch) {
-			glitches[eachGlitch] = cookieObj.glitches[eachGlitch];
-		});
-
-		Object.keys(cookieObj.goModeRequirements).forEach(function(eachGoMode) {
-			goModeRequirements[eachGoMode] = cookieObj.goModeRequirements[eachGoMode];
-		});
-
-		mode = cookieObj.mode;
-		logic = cookieObj.logic;
-		goal = cookieObj.goal;
-
-		var fn = function(select, option) {
-			var opts = select.options;
-			for (var opt, i=0; opt = opts[i]; i++) {
-				if (opt.value === option) {
-					select.selectedIndex = i;
-					break;
-				}
-			}
-		}
-		fn(modeSelect, mode);
-		fn(logicSelect, logic);		
-
-		cookieLock = false;
-	}
-	function saveCookie() {
-		if (cookieLock) {
-			return;
-		}
-		cookieLock = true;
-
-		var cookieObj = {};
-
-		cookieObj.glitches = {};
-		Object.keys(glitches).forEach(function(eachGlitch) {
-			cookieObj.glitches[eachGlitch] = glitches[eachGlitch];
-		});
-		cookieObj.logic = logic;
-		cookieObj.mode = mode;
-		cookieObj.goal = goal;
-		cookieObj.goModeRequirements = goModeRequirements;
-
-		setCookie(cookieObj);
-
-		cookieLock = false;
-	}	
-	loadCookie();
-	saveCookie();
-
-
-	minorGlitchesCheckboxes.forEach(function(checkbox) {
-		checkbox.checked = glitches[checkbox.id];
-		checkbox.addEventListener('click', function() {
-			glitches[checkbox.id] = checkbox.checked;
-			saveCookie();
-			toggle();
-		});
-	});
-
-	darkRoomsCheckboxes.forEach(function(checkbox) {
-		checkbox.checked = glitches.darkrooms[checkbox.id];
-		checkbox.addEventListener('click', function() {
-			glitches.darkrooms[checkbox.id] = checkbox.checked;
-			saveCookie();
-			toggle();
-		});
-	});
-
-	gomodeCheckboxes.forEach(function(checkbox) {
-		checkbox.checked = goModeRequirements[checkbox.id];
-		checkbox.addEventListener('click', function() {
-			goModeRequirements[checkbox.id] = checkbox.checked;
-			saveCookie();
-			toggle();
-		});
-	});
-
-	document.querySelector('#options_button').addEventListener('click', function() {
-		optionsOpen = !optionsOpen;
-		if (optionsOpen) {
-			document.querySelector('#options').style.display = "inherit";
-		} else {
-			document.querySelector('#options').style.display = "none";
-		}		
-	});
-
-	modeSelect.addEventListener('change', function() {
-		mode = modeSelect.value;
-		saveCookie();
-		toggle();
-	});
-
-	logicSelect.addEventListener('change', function() {
-		logic = logicSelect.value;
-		saveCookie();
-		toggle();
-	});
-</script>
+<script src="script/options.js"></script>
+<script src="script/cookies.js"></script>
+<script src="script/logging.js"></script>
 
 </body>
 </html>

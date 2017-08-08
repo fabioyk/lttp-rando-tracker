@@ -122,3 +122,81 @@ var itemsMax = {
     chest9: 5 
 
 };
+
+var itemsNames = {
+    tunic: {
+        1: 'Green Mail',
+        2: 'Blue Mail',
+        3: 'Red Mail'
+    },
+    sword: {
+        0: 'No Sword',
+        1: 'Fighter Sword',
+        2: 'Master Sword',
+        3: 'Tempered Sword',
+        4: 'Gold Sword'
+    },
+    shield: {
+        0: 'No Shield',
+        1: 'Fighter Shield',
+        2: 'Red Shield',
+        3: 'Mirror Shield'
+    },
+    moonpearl: 'Moon Pearl',
+    bow: {
+        0: 'No Bow',
+        1: 'Silver Arrows',
+        2: 'Bow',
+        3: 'Bow and Silvers'
+    },
+    boomerang: {
+        0: 'No Boomerang',
+        1: 'Blue Boomerang',
+        2: 'Magic Boomerang'
+    },
+    hookshot: 'Hookshot',
+    bombs: 'Bombs',
+    allpowder: {
+        0: 'No Powder',
+        1: 'Mushroom',
+        2: 'Magic Powder',
+        3: 'Mushroom and Powder'
+    },
+    firerod: 'Fire Rod',
+    icerod: 'Ice Rod',
+    bombos: 'Bombos',
+    ether: 'Ether',
+    quake: 'Quake',
+    lantern: 'Lantern',
+    hammer: 'Hammer',
+    allflute: {
+        0: 'No Flute',
+        1: 'Shovel',
+        2: 'Flute',
+        3: 'Shovel and Flute'
+    },
+    net: 'Bug Net',
+    book: 'Book of Mudora',
+    bottle: {
+        0: 'No Bottles',
+        1: '1 Bottle',
+        2: '2 Bottles',
+        3: '3 Bottles',
+        4: '4 Bottles'
+    },
+    somaria: 'Cane of Somaria',
+    byrna: 'Cane of Byrna',
+    cape: 'Magic Cape',
+    mirror: 'Magic Mirror',
+    boots: 'Pegasus Boots',
+    glove: {
+        0: 'No Glove',
+        1: 'Power Glove',
+        2: 'Titan Mitts'
+    },
+    flippers: 'Flippers',
+    agahnim: {
+        0: 'Aga 1 Alive',
+        1: 'Aga 1 Killed'
+    }
+}
