@@ -60,13 +60,13 @@ function convertTime(timestamp) {
 
 function getSeparatorSymbol(timestamp1, timestamp2) {
   var delta = timestamp2 - timestamp1;
-  if (delta < 5000) {
+  if (delta < 30000) {
     return '';
-  } else if (delta < 30000) {
-    return '.\r\n';
   } else if (delta < 60000) {
+    return '.\r\n';
+  } else if (delta < 3 * 60000) {
     return ':\r\n';
-  } else if (delta < 5 * 60000) {
+  } else if (delta < 6 * 60000) {
     return '|\r\n';
   } else {
     return '|\r\n|\r\n';
