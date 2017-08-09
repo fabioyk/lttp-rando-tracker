@@ -152,7 +152,8 @@ var itemsNames = {
     boomerang: {
         0: 'No Boomerang',
         1: 'Blue Boomerang',
-        2: 'Magic Boomerang'
+        2: 'Magic Boomerang',
+        3: 'Blue and Magic Boomerangs'
     },
     hookshot: 'Hookshot',
     bombs: 'Bombs',
