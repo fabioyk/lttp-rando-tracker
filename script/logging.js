@@ -1,8 +1,16 @@
 var currentLog = [];
 var logData = {};
 
+document.addEventListener('keypress', function(evt) {
+  if (evt.code == "Numpad1") {
+    if (!logData.startTime) {
+      logData.startTime = Date.now();
+    }
+  }
+})
+
 function logAction(label, status) {
-  if (label && label !== 'go') {
+  if (label && logData.startTime && label !== 'go') {
     if (!logData.startTime) {
       logData.startTime = Date.now();
     }
