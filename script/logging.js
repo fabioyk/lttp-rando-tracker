@@ -1,8 +1,10 @@
 var currentLog = [];
 var logData = {};
 
+var keybindCode = 'Numpad1';
+
 document.addEventListener('keypress', function(evt) {
-  if (evt.code == "Numpad1") {
+  if (evt.code === keybindCode && !keybindMode && shouldUseKeybind) {
     if (!logData.startTime) {
       logData.startTime = Date.now();
     }
@@ -10,11 +12,10 @@ document.addEventListener('keypress', function(evt) {
 })
 
 function logAction(label, status) {
+  if (!logData.startTime && !shouldUseKeybind) {
+    logData.startTime = Date.now();
+  }
   if (label && logData.startTime && label !== 'go') {
-    if (!logData.startTime) {
-      logData.startTime = Date.now();
-    }
-
     var index;
     for (var i = currentLog.length-1; i >= 0; i--) {
       if (currentLog[i].label === label) {
@@ -85,9 +86,9 @@ function translateLabel(label, value) {
   if (label.indexOf('location') === 0) {
     var chestNum = +label.substr(8);
     if (value) {
-      return chests[chestNum].name;
+      return 'DID ' + chests[chestNum].name;
     } else {
-      return 'Closed ' + chests[chestNum].name;
+      return 'CLOSED ' + chests[chestNum].name;
     }
   } else if (label.indexOf('dungeonClicked') === 0) {
     var dungeonNum = +label.substr(14);
@@ -131,12 +132,12 @@ function translateLabel(label, value) {
   } else {
     if (typeof value === 'boolean') {
       if (value) {
-        return itemsNames[label];
+        return 'GOT ' + itemsNames[label];
       } else {
         return 'Removed ' + itemsNames[label];
       }
     } else {
-      return itemsNames[label][value];
+      return 'GOT ' + itemsNames[label][value];
     }
   }
 }

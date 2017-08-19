@@ -201,3 +201,69 @@ var itemsNames = {
         1: 'Aga 1 Killed'
     }
 }
+
+function resetItems() {
+    items = {
+        tunic: 1,
+        shield: 0,
+        moonpearl: false,
+        
+        bow: 0,
+        boomerang: 0,
+        hookshot: false,
+        bombs: true,
+        allpowder: 0,    
+
+        firerod: false,
+        icerod: false,
+        bombos: false,
+        ether: false,
+        quake: false,
+
+        boss0: 1,
+        chest0: 3,
+        lantern: false,
+        hammer: false,
+        allflute: 0,
+        net: false,
+        book: false,
+
+        boss1: 1,
+        chest1: 2,
+        bottle:0,
+        somaria: false,
+        byrna: false,
+        cape: false,
+        mirror: false,
+
+        boss2: 1,
+        chest2: 2,
+        boots: false,
+        glove: 0,
+        flippers: false,
+        go: false,
+        agahnim: 0,
+
+        boss3: 1,
+        boss4: 1,
+        boss5: 1,
+        boss6: 1,
+        boss7: 1,
+        boss8: 1,
+        boss9: 1,
+        
+        chest3: 5,
+        chest4: 6,
+        chest5: 2,
+        chest6: 4,
+        chest7: 3,
+        chest8: 2,
+        chest9: 5 
+    };
+    if (mode === "standard") {
+        items.sword = 0;
+    } else {
+        items.sword = 4;
+    }
+    toggle("sword");
+}

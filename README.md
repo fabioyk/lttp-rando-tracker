@@ -34,7 +34,7 @@ Some of these features were simply based on my needs, so it may not be fit for e
     * Blue: All chests can be opened, but using glitches not accounted by the logic
   * Overworld Locations
     * Green: Accessible
-    * Orange: If you killed Aga, you would have access to it
+    * Orange: If you kill Aga, you would have access to it
     * Yellow: You can view what the item is, but you can't get it
     * Red: Not Acessible
     * Blue: Accessible, but using glitches not accounted by the logic
@@ -43,11 +43,11 @@ Some of these features were simply based on my needs, so it may not be fit for e
 * Updated Logic to require weapons for bosses, in case of Open Mode/Swordless
 * Updated Logic to require sword for Mothula, in case of Open Mode
 * Added Swordless Logic
-* Added Overworld Glitches and Major Glitches logic, still needs to be tested
 * Added being able to select mode and logic being played
 * Added basic UI to select which glitches you can do
 * Added cookies to save your settings
+* Event Logging to display at the end of the run when was each location marked, so you could track which location had an item
+* Keybinding for run start
 
 ## Planned Features
-* Be able to change goal. Ganon, Pedestal, All Dungeons.
-* Event Logging to display at the end of the run when was each location marked, so you could track which location had an item
+* Triforce Hunt functionality

@@ -21,7 +21,7 @@ function getCookie() {
   return {};
 }
 
-var cookieKeys = ['glitches', 'mode', 'logic', 'goal', 'goModeRequirements'];
+var cookieKeys = ['glitches', 'mode', 'logic', 'goal', 'goModeRequirements', 'shouldUseKeybind', 'keybindCode'];
 var cookieDefault = {
   glitches: {
     fakeflippers: true,
@@ -52,7 +52,9 @@ var cookieDefault = {
     somaria: false,
     firerod: false,
     boots: false
-  }
+  },
+  shouldUseKeybind: false,
+  keybindCode: 'Numpad1'
 }
 
 var cookieLock = false;
@@ -78,6 +80,11 @@ function loadCookie() {
     goModeRequirements[eachGoMode] = cookieObj.goModeRequirements[eachGoMode];
   });
 
+  shouldUseKeybind = cookieObj.keybindMode;
+  keybindCode = cookieObj.keybindCode;
+  splitCheckbox.checked = shouldUseKeybind;
+  keybindButton.disabled = !shouldUseKeybind;
+
   mode = cookieObj.mode;
   logic = cookieObj.logic;
   goal = cookieObj.goal;
@@ -92,7 +99,11 @@ function loadCookie() {
     }
   }
   fn(modeSelect, mode);
-  fn(logicSelect, logic);		
+  fn(goalSelect, goal);
+  //fn(logicSelect, logic);
+
+  resetItems();
+  resetChests();
 
   cookieLock = false;
 }
@@ -112,6 +123,8 @@ function saveCookie() {
   cookieObj.mode = mode;
   cookieObj.goal = goal;
   cookieObj.goModeRequirements = goModeRequirements;
+  cookieObj.shouldUseKeybind = shouldUseKeybind;
+  cookieObj.keybindCode = keybindCode;
 
   setCookie(cookieObj);
 

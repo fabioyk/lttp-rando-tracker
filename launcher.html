@@ -17,8 +17,7 @@ function launch(){
 }
 
 function launch1(){
-    myWindow = window.open("tracker.html", "", "width=448, height=448, menubar=0 scrollbars=0, titlebar=0, resizable=0, toolbar=0");
-    setTimeout("window.close()", 5000);
+    window.location.href = "tracker_map.html";
 }
 
 function launch3(){
@@ -34,9 +33,9 @@ function launch3(){
 
 <body>
 
-<input type="radio" name="option" id="opt1" value="1">Item Tracker Only (7 x 7)
+<input type="radio" name="option" id="opt1" value="1">Open Tracker in this tab
 <br>
-<input type="radio" name="option" id="opt3" value="3" checked>Item Tracker + Location Tracker
+<input type="radio" name="option" id="opt3" value="3" checked>Open Tracker in a new window
 <br>
 <input type="button" value="LAUNCH!" onClick="launch()">
 

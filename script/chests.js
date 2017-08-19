@@ -56,6 +56,23 @@ function doableWith(func, itemName) {
     }    
 }
 
+function resetChests() {
+    dungeons.forEach(function(dun) {
+        dun.isBeaten = false;
+    });
+    chests.forEach(function(chest) {
+        chest.isOpened = false;
+    });
+    if (mode === "standard") {
+        // Change initial chests to checked in standard
+        var initialChests = [2, 56, 57, 58, 64];
+        initialChests.forEach(function(chestNum) {
+            toggleChest(chestNum);
+        });
+
+    }
+}
+
 var regions = {  
     westDeathMountain: function(isGlitch) {
         switch (logic) {
@@ -950,7 +967,7 @@ chests[9] = {
 };
 
 chests[10] = {
-    name: "West of Mire",
+    name: "Mire Shed",
     hint: "(2)",
     x: "51.7%",
     y: "79.5%",
@@ -1034,8 +1051,17 @@ chests[13] = {
     isOpened: false,
     isAvailable: function(){
         var isAccessible = items.hammer && items.glove;
+        var isClearable = (items.cape || items.byrna);
         if (regions.darkWestDeathMountain()) {
-            return isAccessible ? "available" : "unavailable";            
+            if (isAccessible) {
+                if (isClearable) {
+                    return "available";
+                } else {
+                    return "possible";
+                }
+            } else {
+                return "unavailable";
+            }      
         } else if (glitches.darkrooms.oldMan && doableWith(regions.darkWestDeathMountain, "lantern")) {
             return isAccessible ? "glitched" : "unavailable";
         } else {
@@ -1452,7 +1478,7 @@ chests[32] = {
 chests[33] = {
     name: "King Zora",
     hint: "(Pay 500 rupees)",
-    x: "47.5%",
+    x: "47.7%",
     y: "12.1%",
     isOpened: false,
     isAvailable: function(){
@@ -1671,7 +1697,7 @@ chests[43] = {
 };
 
 chests[44] = {
-    name: "Mushroom",
+    name: "Mushroom Location",
     x: "6.2%",
     y: "8.6%",
     isOpened: false,
@@ -1779,6 +1805,8 @@ chests[49] = {
                     return "available";
                 } else if (considerAga() && items.flippers && items.moonpearl && items.mirror && (doableWith(regions.SouthDarkWorld, "agahnim") || doableWith(regions.northEastDarkWorld, "agahnim"))) {
                     return "aga";
+                } else if (items.agahnim && items.flippers && items.mirror && glitches.surfbunny) {
+                    return "glitched";
                 } else if (items.flippers || glitches.fakeflippers) {
                     return "possible";
                 } else {
@@ -1815,10 +1843,10 @@ chests[50] = {
         }
         if (regions.northWestDarkWorld() && isAccessible) {
             return "available";
+        } else if (regions.northWestDarkWorld()) {
+            return "possible";        
         } else if (considerAga() && doableWith(regions.northWestDarkWorld, "agahnim")) {
             return "aga";
-        } else if (regions.northWestDarkWorld()) {
-            return "possible";
         } else {
             return "unavailable";
         }
@@ -1863,7 +1891,7 @@ chests[52] = {
 chests[53] = {
     name: "Zora River Ledge",
     hint: "<img src='images/flippers.png' class='mini'>",
-    x: "47.5%",
+    x: "47.7%",
     y: "17.3%",
     isOpened: false,
     isAvailable: function(){
@@ -1910,8 +1938,10 @@ chests[55] = {
         if (mode === "standard") {
             return "available";
         } else {
-            if (items.lantern || items.glove) {
+            if (items.glove) {
                 return "available";
+            } else if (items.lantern || glitches.darkrooms.sewers) {
+                return "possible";
             } else {
                 return "unavailable";
             }
@@ -1930,21 +1960,13 @@ chests[56] = {
 };
 
 chests[57] = {
-    name: "Hyrule Castle",
-    hint: "(4 including Key)",
+    name: "Escape",
+    hint: "(3)",
     x: "24.9%",
-    y: "44.1%",
+    y: "46%",
     isOpened: true,
     isAvailable: function(){
-        if (mode === "standard") {
-            return "available";
-        } else {
-            if (items.lantern) {
-                return "available";
-            } else {
-                return "possible";
-            }
-        }
+        return "available";
     }
 };
 
@@ -2068,4 +2090,49 @@ chests[62] = {
 		return "unavailable";
     }
 };
+
+chests[63] = {
+    name: "Waterfall Fairy",
+    hint: "<img src='images/flippers.png' class='mini'>",
+    x: "45%",
+    y: "19.3%",
+    isOpened: false,
+    isAvailable: function(){
+        if (logic === "nmg") {
+            if (items.flippers) {
+                return "available";
+            } else if (glitches.fakeflippers && items.moonpearl) {
+                return "glitched";
+            } else {
+                return "unavailable";
+            }
+        } else {
+            if (items.flippers || items.moonpearl) {
+                return "available";
+            } else {
+                return "unavailable";
+            }
+        }
+    }
+};
+
+chests[64] = {
+   name: "Escape Dark Room Chest",    
+    x: "24.9%",
+    y: "40.8%",
+    isOpened: true,
+    isAvailable: function(){
+        if (mode === "standard") {
+            return "available";
+        } else {
+            if (items.lantern) {
+                return "available";
+            } else if (glitches.darkrooms.sewers) {
+                return "glitched";
+            } else {
+                return "unavailable";
+            }
+        }
+    }
+}
 
