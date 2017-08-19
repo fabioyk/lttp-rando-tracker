@@ -80,7 +80,7 @@ function loadCookie() {
     goModeRequirements[eachGoMode] = cookieObj.goModeRequirements[eachGoMode];
   });
 
-  shouldUseKeybind = cookieObj.keybindMode;
+  shouldUseKeybind = cookieObj.shouldUseKeybind;
   keybindCode = cookieObj.keybindCode;
   splitCheckbox.checked = shouldUseKeybind;
   keybindButton.disabled = !shouldUseKeybind;
