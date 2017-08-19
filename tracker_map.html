@@ -14,7 +14,6 @@ var medallions = [0, 0];
 
 // Event of clicking on the item tracker
 function toggle(label){
-	console.log(label);
 	if(label && label.substring(0,5) == "chest"){
 		if(--items[label] < 0)
 			items[label] = itemsMax[label];
@@ -553,8 +552,8 @@ for(k=0; k<dungeons.length; k++){
 </div>
 
 <script src="script/options.js"></script>
-<script src="script/cookies.js"></script>
 <script src="script/logging.js"></script>
+<script src="script/cookies.js"></script>
 
 </body>
 </html>
