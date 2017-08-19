@@ -45,7 +45,6 @@ document.querySelector('#options_button').addEventListener('click', function() {
 });
 
 modeSelect.addEventListener('change', function() {
-  console.log('we changing mode ',modeSelect.value);
   mode = modeSelect.value;
   resetChests();
   resetItems();
@@ -65,7 +64,6 @@ goalSelect.addEventListener('change', function() {
   goal = goalSelect.value;
   saveCookie();
   toggle();
-  console.log('changed to',goal);
 });
 
 var shouldUseKeybind = false;
@@ -101,7 +99,6 @@ function deactivateKeybindMode() {
 function onBindButton(evt) {
   if (evt.code) {
     keybindCode = evt.code;
-    console.log(evt.code);
     deactivateKeybindMode();
   }  
 }

@@ -40,7 +40,7 @@ function logAction(label, status) {
         label: label
       });
     }
-    console.log(currentLog);
+    
     document.querySelector('#log-text-area').value = processLog();
   }
 }
