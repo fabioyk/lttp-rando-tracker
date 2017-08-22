@@ -80,6 +80,16 @@ function loadCookie() {
     goModeRequirements[eachGoMode] = cookieObj.goModeRequirements[eachGoMode];
   });
 
+  minorGlitchesCheckboxes.forEach(function(checkbox) {
+    checkbox.checked = glitches[checkbox.id];
+  });
+  darkRoomsCheckboxes.forEach(function(checkbox) {
+    checkbox.checked = glitches.darkrooms[checkbox.id];
+  });
+  gomodeCheckboxes.forEach(function(checkbox) {
+    checkbox.checked = goModeRequirements[checkbox.id];
+  });
+
   shouldUseKeybind = cookieObj.shouldUseKeybind;
   keybindCode = cookieObj.keybindCode;
   splitCheckbox.checked = shouldUseKeybind;
