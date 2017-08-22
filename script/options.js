@@ -50,6 +50,8 @@ modeSelect.addEventListener('change', function() {
   resetItems();
   saveCookie();
   toggle();
+  resetLog();
+  refreshAll();
 });
 
 /*
@@ -64,6 +66,7 @@ goalSelect.addEventListener('change', function() {
   goal = goalSelect.value;
   saveCookie();
   toggle();
+  refreshAll();
 });
 
 var shouldUseKeybind = false;

@@ -67,7 +67,8 @@ function resetChests() {
         // Change initial chests to checked in standard
         var initialChests = [2, 56, 57, 58, 64];
         initialChests.forEach(function(chestNum) {
-            toggleChest(chestNum);
+            chests[chestNum].isOpened = true;
+            document.getElementById(chestNum).className = "chest opened";
         });
 
     }
@@ -658,11 +659,18 @@ dungeons[8] = {
         } else {
             canClear = items.somaria || items.sword || items.hammer || (items.hookshot && items.flippers && (items.firerod || items.icerod || items.bow > 1))
         }
-		if (!this.isAccessible()) {
+		if (!this.isAccessible() || !this.canKillBoss()) {
             return "unavailable";
-        } else if (canClear) {
-            return "available";
-        } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire) {
+        } else if (items.moonpearl) {
+            if (canClear) {
+                return "available";
+            } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire) {
+                return "glitched";
+            } else {
+                return "unavailable";
+            }
+        } else if (glitches.owbunnyrevival && items.bottle && items.net && 
+                        (canClear || (items.somaria && items.firerod && glitches.darkrooms.mire))) {            
             return "glitched";
         } else {
             return "unavailable";
@@ -677,24 +685,33 @@ dungeons[8] = {
         }
 		if (!this.isAccessible()) {
             return "unavailable";
-        } else if (canClear) {
-            return "available";
-        } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire) {
+        } else if (items.moonpearl) {
+            if (canClear && canKillBoss()) {
+                return "available";
+            } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire) {
+                return "glitched";
+            } else {
+                return "possible";
+            }
+        } else if (glitches.owbunnyrevival && items.bottle && items.net) {
             return "glitched";
         } else {
-            return "possible";
+            return "unavailable";
         }
     },
     isAccessible: function() {
         var hasMedallion = medallionCheck(0) && (items.sword || mode === "swordless");
         switch (logic) {
             case "nmg":
-                return hasMedallion && items.glove === 2 && items.moonpearl && items.allflute > 1 && (items.boots || items.hookshot);
+                return hasMedallion && items.glove === 2 && items.allflute > 1 && (items.boots || items.hookshot);
             case "owg":
                 return hasMedallion && items.moonpearl && regions.mire() && (items.boots || items.hookshot);
             case "major":
                 return hasMedallion && (items.moonpearl || items.bottle) && (items.boots || items.hookshot);
         }
+    },
+    canKillBoss: function() {
+        return items.sword || items.hammer || items.bow > 1;
     }
 };
 

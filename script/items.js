@@ -261,9 +261,14 @@ function resetItems() {
         chest9: 5 
     };
     if (mode === "standard") {
-        items.sword = 0;
+        items.sword = 1;
     } else {
-        items.sword = 4;
+        items.sword = 0;
     }
-    toggle("sword");
+    medallions[0] = 0;
+    medallions[1] = 0;
+
+    for (var i=0; i<dungeons.length; i++) {
+        prizes[i] = 1;
+    }
 }

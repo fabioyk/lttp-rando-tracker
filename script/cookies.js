@@ -104,6 +104,7 @@ function loadCookie() {
 
   resetItems();
   resetChests();
+  resetLog();
 
   cookieLock = false;
 }

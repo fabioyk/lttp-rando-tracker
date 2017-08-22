@@ -2,6 +2,7 @@
 <head>
 <title>LTTP Randomizer Tracker</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="icon" type="image/png" href="images/triforce.png">
 
 <script src="script/glitches.js"></script>
 <script src="script/items.js"></script>
@@ -66,11 +67,20 @@ function toggle(label){
 		toggleBoss(label.substring(4));
 	}
 
-	if (isGoMode()) {
+	if (goal === "triforce") {
+		if (label === "go") {
+			logAction('triforce', true);
+		}
+		document.getElementById('go').style.backgroundImage = "url(images/triforce.png)";
 		document.getElementById('go').className = "true";
 	} else {
-		document.getElementById('go').className = "false";
-	}
+		document.getElementById('go').style.backgroundImage = "url(images/go.png)";
+		if (isGoMode()) {
+			document.getElementById('go').className = "true";
+		} else {
+			document.getElementById('go').className = "false";
+		}
+	}	
 }
 
 var goModeRequirements = {
@@ -259,31 +269,38 @@ function toggleMedallion(n){
 	}
 }
 
-function refreshAll() {
-	chests.forEach(function(chestNum) {
-		if(chests[chestNum].isOpened)
+function refreshAll() {	
+	chests.forEach(function(chest, chestNum) {
+		if(chest.isOpened)
 			document.getElementById(chestNum).className = "chest opened";
     else
-			document.getElementById(chestNum).className = "chest " + chests[x].isAvailable();
+			document.getElementById(chestNum).className = "chest " + chest.isAvailable();
 	});
 
-	dungeons.forEach(function(dungeonNum) {
+	dungeons.forEach(function(dungeon, dungeonNum) {
 		document.getElementById("dungeonPrize"+dungeonNum).style.backgroundImage = 
 			"url(images/dungeon"+prizes[dungeonNum]+".png)";
-		if(dungeons[dungeonNum].isBeaten)
+		if (dungeon.isBeaten) {
 			document.getElementById("bossMap"+dungeonNum).className = "boss opened";
-    else
-			document.getElementById("bossMap"+dungeonNum).className = "boss " + dungeons[dungeonNum].isBeatable();	
+		} else {
+			document.getElementById("bossMap"+dungeonNum).className = "boss " + dungeon.isBeatable();	
+		}
 		document.getElementById("chest" + dungeonNum).style.backgroundImage = ("url(images/chest" + items["chest" + dungeonNum] + ".png)");
-		if(items["chest" + dungeonNum] === 0)
+		if (items["chest" + dungeonNum] === 0) {
 			document.getElementById("dungeon"+dungeonNum).className = "dungeon opened";
-		else
-			document.getElementById("dungeon"+x).className = "dungeon " + dungeons[dungeonNum].canGetChest();
+		} else {
+			document.getElementById("dungeon"+dungeonNum).className = "dungeon " + dungeon.canGetChest();
+		}
+		document.getElementById("boss"+dungeonNum).style.backgroundImage = "url(images/boss"+dungeonNum+(items["boss"+dungeonNum] === "2" ? "2" : "")+".png)";
+		document.getElementById("dungeonPrize"+dungeonNum).style.backgroundImage = "url(images/dungeon"+prizes[dungeonNum]+".png)";
 	});
+
+	document.getElementById("medallion0").style.backgroundImage = "url(images/medallion"+medallions[0]+".png)";
+	document.getElementById("medallion1").style.backgroundImage = "url(images/medallion"+medallions[1]+".png)";
 
 	Object.keys(items).forEach(function(itemName) {
 		if (itemName.indexOf('chest') === -1 && itemName.indexOf('boss') === -1 && itemName !== "go") {
-			if (typeof items[itemNames] === "boolean") {
+			if (typeof items[itemName] === "boolean") {
 				document.getElementById(itemName).style.backgroundImage = ("url(images/" + itemName + ".png)");
 				if (!items[itemName]) {			
 					document.getElementById(itemName).className = ("false");
@@ -291,11 +308,19 @@ function refreshAll() {
 					document.getElementById(itemName).className = ("true");
 				}
 			} else {
-				document.getElementById(itemName).style.backgroundImage = ("url(images/" + itemName + items[itemName] + ".png)");
+				if (items[itemName]) {
+					document.getElementById(itemName).style.backgroundImage = ("url(images/" + itemName + items[itemName] + ".png)");
+					document.getElementById(itemName).className = ("true");
+				} else {
+					document.getElementById(itemName).style.backgroundImage = ("url(images/" + itemName + ".png)");
+					document.getElementById(itemName).className = ("false");
+				}				
 			}
 			
 		}
 	});
+
+	toggleTunic();
 }
 
 </script>
@@ -453,6 +478,7 @@ for(k=0; k<dungeons.length; k++){
 				<input type="checkbox" id="ipbj">
 				<label for="ipbj" title="Ability to do Ice Palace without Hookshot or Cane of Somaria">IP Bomb Jump</label>
 			</div>
+			<!--
 			<div>
 				<input type="checkbox" id="superbunny">
 				<label for="superbunny" title="Access to two chests in DW Death Mountain and two in Mire area without Moon Pearl">Super Bunny</label>
@@ -472,12 +498,13 @@ for(k=0; k<dungeons.length; k++){
 			<div>
 				<input type="checkbox" id="walkonwater">
 				<label for="walkonwater" title="Access to Lake Hylia item without Flippers">Walk on Water</label>
-			</div>
+			</div> -->			
 			<div>
 				<input type="checkbox" id="hover">
 				<label for="hover">Hovering</label>
 			</div>
-		</div>		
+		</div>
+		<br><br><br><br>
 		<hr>
 		<div>How strict are Go Mode requirements?</div>
 		<div id="go-mode-restrictions">
@@ -537,7 +564,6 @@ for(k=0; k<dungeons.length; k++){
 			<input type="checkbox" class="darkrooms" id="agatower">
 			<label for="agatower">Agahnim's Tower</label>
 		</div>
-		<br>
 		<hr>
 		<div>
 			<input type="checkbox" class="usesplit" id="splitcheckbox">

@@ -24,7 +24,18 @@ function logAction(label, status) {
       }
     }
 
-    if (index !== undefined && status === false && label.indexOf('chest') === 0) {
+    if (label === 'triforce') {
+      if (!logData.triforces) {
+        logData.triforces = 1;
+      } else {
+        logData.triforces++;
+      }
+      currentLog.push({
+        timestamp: Date.now(),
+        status: logData.triforces,
+        label: label
+      })
+    } else if (index !== undefined && status === false && label.indexOf('chest') === 0) {
       currentLog.splice(index, 1);
     } else if (index !== undefined && (Date.now() - currentLog[index].timestamp) < 10000) {  
       if (status === false) {
@@ -136,8 +147,16 @@ function translateLabel(label, value) {
       } else {
         return 'Removed ' + itemsNames[label];
       }
+    } else if (label === 'triforce') {        
+      return 'GOT Triforce Piece ' + value;
     } else {
       return 'GOT ' + itemsNames[label][value];
     }
   }
+}
+
+function resetLog() {
+  currentLog = [];
+  logData = {};
+  document.querySelector('#log-text-area').value = "Item log will be shown here";
 }
