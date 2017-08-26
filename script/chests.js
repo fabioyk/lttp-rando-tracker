@@ -686,7 +686,7 @@ dungeons[8] = {
 		if (!this.isAccessible()) {
             return "unavailable";
         } else if (items.moonpearl) {
-            if (canClear && canKillBoss()) {
+            if (canClear && this.canKillBoss()) {
                 return "available";
             } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire) {
                 return "glitched";
