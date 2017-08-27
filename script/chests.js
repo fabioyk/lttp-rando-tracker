@@ -1387,9 +1387,9 @@ chests[30] = {
     isOpened: false,
     isAvailable: function(){
         if (logic !== "major") {
-            if (items.book && (items.mirror || (items.hammer && items.hookshot))) {
+            if (items.book && (items.mirror || (mode === "swordless" && items['Hammer'])) {
                 if (regions.westDeathMountain()) {
-                    if (items.sword >= 2) {
+                    if (items.sword >= 2 || mode === "swordless") {
                         return "available";
                     } else {
                         return "possible";
@@ -1400,7 +1400,7 @@ chests[30] = {
             }           
         } else {
             if (regions.westDeathMountain() && items.book) {
-                if (items.sword >= 2) {
+                if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
                     return "available";
                 } else {
                     return "possible";
@@ -1421,7 +1421,7 @@ chests[31] = {
         switch (logic) {
             case "nmg":
                 if (items.book && items.mirror && regions.SouthDarkWorld()) {
-                    if (items.sword >= 2) {
+                    if (items.sword >= 2 || mode === "swordless") {
                         return "available";
                     } else {
                         return "possible";
@@ -1433,7 +1433,7 @@ chests[31] = {
                 }
             case "owg":
                 if (items.book && (items.boots || (items.mirror && regions.SouthDarkWorld()))) {
-                    if (items.sword >= 2) {
+                    if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
                         return "available";
                     } else {
                         return "possible";
@@ -1445,7 +1445,7 @@ chests[31] = {
                 }
             case "major":
                 if (items.book) {
-                    if (items.sword >= 2) {
+                    if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
                         return "available";
                     } else {
                         return "possible";
