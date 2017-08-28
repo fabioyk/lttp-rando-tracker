@@ -1387,7 +1387,7 @@ chests[30] = {
     isOpened: false,
     isAvailable: function(){
         if (logic !== "major") {
-            if (items.book && (items.mirror || (mode === "swordless" && items['Hammer']))) {
+            if (items.book) {
                 if (regions.westDeathMountain()) {
                     if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
                         return "available";
@@ -1421,7 +1421,7 @@ chests[31] = {
         switch (logic) {
             case "nmg":
                 if (items.book && items.mirror && regions.SouthDarkWorld()) {
-                    if (items.sword >= 2 || mode === "swordless") {
+                    if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
                         return "available";
                     } else {
                         return "possible";
