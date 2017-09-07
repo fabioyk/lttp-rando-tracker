@@ -1388,13 +1388,14 @@ chests[30] = {
     isAvailable: function(){
         if (logic !== "major") {
             if (items.book) {
-                if (regions.westDeathMountain()) {
+                if (regions.westDeathMountain() && (items.mirror || (items.hammer && items.hookshot))) {
                     if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
                         return "available";
                     } else {
                         return "possible";
                     }
-                } else if (glitches.darkrooms.oldMan && doableWith(regions.westDeathMountain, "lantern")) {
+                } else if (glitches.darkrooms.oldMan && doableWith(regions.westDeathMountain, "lantern") 
+                        && (items.mirror || (items.hammer && items.hookshot))) {
                     return "glitched";
                 }
             }           
