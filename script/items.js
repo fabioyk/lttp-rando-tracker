@@ -57,6 +57,40 @@ var items = {
     chest9: 5 
 };
 
+var currentMaxSphere = 0;
+var sphereCounter = {
+	moonpearl: 0,
+	
+	bow: 0,
+    boomerang: 0,
+    hookshot: 0,
+    bombs: 0,
+    allpowder: 0,    
+
+    firerod: 0,
+    icerod: 0,
+    bombos: 0,
+    ether: 0,
+    quake: 0,
+
+    lantern: 0,
+    hammer: 0,
+    allflute: 0,
+    net: 0,
+    book: 0,
+
+    bottle:0,
+    somaria: 0,
+    byrna: 0,
+    cape: 0,
+    mirror: 0,
+
+    boots: 0,
+    glove: 0,
+    flippers: 0,
+    agahnim: 0,
+}
+
 var itemsMin = {
     sword:0,
     shield:0,

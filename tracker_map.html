@@ -13,6 +13,42 @@ var rowLength = 7;
 var prizes = [];
 var medallions = [0, 0];
 
+window.oncontextmenu = function () {
+	return false;
+}
+
+function preToggle(event) {
+	// if (sphereCounter[event.target.id] === undefined) {
+	// 	toggle(event.target.id);
+	// 	return;
+	// }
+	if (event.button == 2) {
+		if (sphereCounter[event.target.id] === 0) {
+			// if (currentMaxSphere > 0) {
+			// 	sphereCounter[event.target.id] = currentMaxSphere;
+			// } else {
+				sphereCounter[event.target.id] = 1;
+				currentMaxSphere = 1;
+			//}
+		} else {
+			sphereCounter[event.target.id]++;
+			if (sphereCounter[event.target.id] > currentMaxSphere) {
+				currentMaxSphere = sphereCounter[event.target.id];
+			}
+		}
+		
+	} else if (event.button == 1) {
+		sphereCounter[event.target.id]--;
+	} else {
+		toggle(event.target.id);
+	}
+	if (sphereCounter[event.target.id] < 0) sphereCounter[event.target.id] = 0;
+	if (sphereCounter[event.target.id] > 30) sphereCounter[event.target.id] = 30;
+	event.target.innerHTML = sphereCounter[event.target.id];
+	if (sphereCounter[event.target.id] === 0) {
+		event.target.innerHTML = '';
+	}
+}
 // Event of clicking on the item tracker
 function toggle(label){
 	if(label && label.substring(0,5) == "chest"){
@@ -26,7 +62,8 @@ function toggle(label){
 		else
 			document.getElementById("dungeon"+x).className = "dungeon " + dungeons[x].canGetChest();
 		return;
-  }
+	}	
+	console.log(items);
   if(label && (typeof items[label]) == "boolean"){
 		document.getElementById(label).className = (items[label]=!items[label]);
 		logAction(label, items[label]);
@@ -75,11 +112,7 @@ function toggle(label){
 		document.getElementById('go').className = "true";
 	} else {
 		document.getElementById('go').style.backgroundImage = "url(images/go.png)";
-		if (isGoMode()) {
-			document.getElementById('go').className = "true";
-		} else {
-			document.getElementById('go').className = "false";
-		}
+		document.getElementById('go').className = isGoMode();
 	}	
 }
 
@@ -139,16 +172,16 @@ function isGoMode() {
 						wasInGo = true;
 						logAction('gomode', true);
 					}
-					return true;
+					return 'true';
 				} else {
 					if (wasInGo) {
 						wasInGo = false;
 						logAction('gomode', false);
 					}
-					return false;
+					return 'half';
 				}
 			} else {
-				return false;
+				return 'false';
 			}
 			break;
 		case "pedestal":
@@ -157,13 +190,13 @@ function isGoMode() {
 					wasInGo = true;
 					logAction('gomode', true);
 				}
-				return true;
+				return 'true';
 			} else {
 				if (wasInGo) {
 					wasInGo = false;
 					logAction('gomode', false);
 				}
-				return false;
+				return 'false';
 			}
 			break;		
 	}
@@ -233,11 +266,7 @@ function toggleDungeon(n){
 			document.getElementById(pendantChests[k]).className = "chest " + chests[pendantChests[k]].isAvailable();
 	}
 	
-	if (isGoMode()) {
-		document.getElementById('go').className = "true";
-	} else {
-		document.getElementById('go').className = "false";
-	}
+	document.getElementById('go').className = isGoMode();
 }
 
 // event of clicking on Mire/TRock's medallion subsquare
@@ -265,11 +294,7 @@ function toggleMedallion(n){
 		dungeonName = "Turtle Rock";
 	dungeons[8+n].hint = "<img src='images/medallion"+medallions[n]+".png' class='mini'><img src='images/lantern.png' class='mini'>";
 	
-	if (isGoMode()) {
-		document.getElementById('go').className = "true";
-	} else {
-		document.getElementById('go').className = "false";
-	}
+	document.getElementById('go').className = isGoMode();
 }
 
 function refreshAll() {	
@@ -402,9 +427,14 @@ while(k < itemList.length){
 				else 
 					document.write("<td style='background-image:url(images/"+x+".png);' ");
 				document.write("id='"+x+"' ");
-				document.write("class='"+!!items[x]+"' ");
-				document.write("onClick='toggle("+'"'+x+'"'+")'>");
+				document.write("class='unselectable "+!!items[x]+"' ");
+				if (sphereCounter[x] === undefined) {
+					document.write("onClick='toggle("+'"'+x+'"'+")'>");
+				}
 				document.write("</td>");
+				if (sphereCounter[x] !== undefined) {
+					document.querySelector('#' + x).addEventListener('mousedown', preToggle);
+				}
 			}
 		
 		

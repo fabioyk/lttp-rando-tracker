@@ -273,7 +273,7 @@ dungeons[2] = {
                 if (hasFiresource() && (items.sword || items.hammer)) {
                     return "available";
                 } else {
-                    return "possible";
+                    return "unavailable";
                 }
             }
         } else {
