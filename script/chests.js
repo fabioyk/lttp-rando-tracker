@@ -1024,16 +1024,16 @@ chests[11] = {
     isAvailable: function(){
         switch(logic) {
             case "nmg":
-                var glitches = [];
+                var glitchList = [];
                 if (glitches.superbunny) {
-                    glitches.push("moonpearl");
+                    glitchList.push("moonpearl");
                 }
                 if (glitches.darkrooms.oldMan) {
-                    glitches.push("lantern");
+                    glitchList.push("lantern");
                 }
                 if (regions.darkEastDeathMountain()) {
                     return "available";
-                } else if (doableWith(regions.darkEastDeathMountain, glitches)) {
+                } else if (doableWith(regions.darkEastDeathMountain, glitchList)) {
                     return "glitched";
                 } else {
                     return "unavailable";
