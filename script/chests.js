@@ -4,7 +4,7 @@ var goal = "ganon";
 
 function considerAga() {
     if (mode !== "swordless") {
-        return !items.agahnim && (items.lantern || glitches.darkrooms.agatower) && (items.cape || items.sword >= 2);       
+        return !items.agahnim && (items.lantern || glitches.darkrooms.agatower) && (items.cape || items.sword >= 2) && items.sword;       
     } else {
         return !items.agahnim && (items.lantern || glitches.darkrooms.agatower) && (items.cape || items.hammer);               
     }    
@@ -580,10 +580,10 @@ dungeons[7] = {
                     return "unavailable";
                 }
             } else {
-                if ((items.hookshot || items.somaria) && items.hammer) {
+                if (items.hookshot && items.somaria && items.hammer) {
                     return "available";
-                } else if (glitches.ipbj && items.hammer) {
-                    return "glitched";
+                } else if (items.hammer) {
+                    return "possible";
                 } else {
                     return "unavailable";
                 }
@@ -612,10 +612,8 @@ dungeons[7] = {
                     return "unavailable";
                 }
             } else {
-                if ((items.hookshot || items.somaria) && items.hammer) {
+                if (items.hookshot && items.somaria && items.hammer) {
                     return "available";
-                } else if (glitches.ipbj && items.hammer) {
-                    return "glitched";
                 } else {
                     return "possible";
                 }
@@ -846,7 +844,7 @@ chests[2] = {
     name: "Link's House",
     x: "27.4%",
     y: "67.9%",
-    isOpened: true,
+    isOpened: false,
     isAvailable: function(){
 	    return "available";
     }
@@ -1026,9 +1024,16 @@ chests[11] = {
     isAvailable: function(){
         switch(logic) {
             case "nmg":
+                var glitches = [];
+                if (glitches.superbunny) {
+                    glitches.push("moonpearl");
+                }
+                if (glitches.darkrooms.oldMan) {
+                    glitches.push("lantern");
+                }
                 if (regions.darkEastDeathMountain()) {
                     return "available";
-                } else if (glitches.superbunny && doableWith(regions.darkEastDeathMountain, "moonpearl")) {
+                } else if (doableWith(regions.darkEastDeathMountain, glitches)) {
                     return "glitched";
                 } else {
                     return "unavailable";
@@ -1191,7 +1196,7 @@ chests[21] = {
                 if (regions.darkEastDeathMountain() && (items.hookshot || items.boots)) {                    
                     return "available";                    
                 } else if (glitches.darkrooms.oldMan && doableWith(regions.darkEastDeathMountain, "lantern") && (items.hookshot || items.boots)) {
-                    return "glitched";                    
+                    return "glitched";
                 } else {
                     return "unavailable";
                 }
@@ -1971,7 +1976,7 @@ chests[56] = {
     name: "Castle Secret Entrance",
     x: "29.8%",
     y: "41.8%",
-    isOpened: true,
+    isOpened: false,
     isAvailable: function(){
 		return "available";
     }
@@ -1982,7 +1987,7 @@ chests[57] = {
     hint: "(3)",
     x: "24.9%",
     y: "46%",
-    isOpened: true,
+    isOpened: false,
     isAvailable: function(){
         return "available";
     }
@@ -1992,7 +1997,7 @@ chests[58] = {
     name: "Sanctuary",
     x: "23.0%",
     y: "28.0%",
-    isOpened: true,
+    isOpened: false,
     isAvailable: function(){
 		return "available";
     }
@@ -2138,7 +2143,7 @@ chests[64] = {
    name: "Escape Dark Room Chest",    
     x: "24.9%",
     y: "40.8%",
-    isOpened: true,
+    isOpened: false,
     isAvailable: function(){
         if (mode === "standard") {
             return "available";
