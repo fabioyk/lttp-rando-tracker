@@ -89,6 +89,42 @@ var sphereCounter = {
     glove: 0,
     flippers: 0,
     agahnim: 0,
+
+    chest0: 0,
+    chest1: 0,
+    chest2: 0,
+    chest3: 0,
+    chest4: 0,
+    chest5: 0,
+    chest6: 0,
+    chest7: 0,
+    chest8: 0,
+    chest9: 0,
+
+    boss0: false,
+    boss1: false,
+    boss2: false,
+    boss3: false,
+    boss4: false,
+    boss5: false,
+    boss6: false,
+    boss7: false,
+    boss8: false,
+    boss9: false,
+
+}
+
+var maxKeyCount = {
+    chest0: 0,
+    chest1: 1,
+    chest2: 1,
+    chest3: 6,
+    chest4: 1,
+    chest5: 3,
+    chest6: 1,
+    chest7: 2,
+    chest8: 3,
+    chest9: 4
 }
 
 var itemsMin = {
@@ -294,6 +330,18 @@ function resetItems() {
         chest8: 2,
         chest9: 5 
     };
+    if (goal === "keysanity") {
+        items.chest0 = 6;
+        items.chest1 = 6;
+        items.chest2 = 6;
+        items.chest3 = 14;
+        items.chest4 = 10;
+        items.chest5 = 8;
+        items.chest6 = 8;
+        items.chest7 = 8;
+        items.chest8 = 8;
+        items.chest9 = 12;
+    }
     if (mode === "standard") {
         items.sword = 1;
     } else {
