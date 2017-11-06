@@ -197,9 +197,9 @@ dungeons[0] = {
     image: "boss02.png",
     isBeaten: false,
     isBeatable: function(){
-		if(items.bow>1 && items.lantern && (goal == "keysanity" && sphereCounter.boss0))
+		if(items.bow>1 && items.lantern && (goal !== "keysanity" || sphereCounter.boss0))
 			return "available";
-        if (items.bow>1 && glitches.darkrooms.eastern && (goal == "keysanity" && sphereCounter.boss0))
+        if (items.bow>1 && glitches.darkrooms.eastern && (goal !== "keysanity" || sphereCounter.boss0))
             return "glitched";
 		return "unavailable";
     },
@@ -233,7 +233,7 @@ dungeons[1] = {
         if (!this.isAccessible())
             return "unavailable";
         if ((items.glove || logic === "major") && hasFiresource() && items.boots 
-                && this.isKillable() && (goal == "keysanity" && sphereCounter.chest1)) {
+                && this.isKillable() && (goal !== "keysanity" || sphereCounter.chest1)) {
             return "available";
         }
         return "possible";
@@ -251,7 +251,7 @@ dungeons[1] = {
     },
     isKillable: function() {
         return (items.sword || items.hammer || items.bow > 1 || items.firerod || 
-              items.icerod || items.byrna || items.somaria) && (goal == "keysanity" && sphereCounter.boss1);
+              items.icerod || items.byrna || items.somaria) && (goal !== "keysanity" || sphereCounter.boss1);
     }
 };
 
@@ -306,7 +306,7 @@ dungeons[2] = {
         
     },
     isKillable: function() {
-        return (items.sword || items.hammer) && (goal == "keysanity" && sphereCounter.boss2);
+        return (items.sword || items.hammer) && (goal !== "keysanity" || sphereCounter.boss2);
     }          
 };
 
@@ -355,7 +355,7 @@ dungeons[3] = {
     },
     isKillable: function() {
         return (items.bow > 1 && items.hammer) 
-            && (goal == "keysanity" && sphereCounter.boss3 && sphereCounter.chest3);
+            && (goal !== "keysanity" || (sphereCounter.boss3 && sphereCounter.chest3));
     }
 };
 
@@ -401,7 +401,7 @@ dungeons[4] = {
             }
         }
         if (logic !== "major") {
-            if (this.isKillable() && (goal == "keysanity" && sphereCounter.boss4)) {
+            if (this.isKillable() && (goal !== "keysanity" || sphereCounter.boss4)) {
                 return "available";      
             } else {  
                 return "possible";
@@ -427,7 +427,7 @@ dungeons[4] = {
         }
     },
     isKillable: function() {
-        return items.hookshot && items.hammer && (goal == "keysanity" && sphereCounter.chest4);
+        return items.hookshot && items.hammer && (goal !== "keysanity" || sphereCounter.chest4);
     }
 };
 
@@ -462,7 +462,7 @@ dungeons[5] = {
             }
         } else {
             if (items.firerod && (items.sword || mode === "swordless") 
-                    && (goal == "keysanity" && sphereCounter.boss5)) {
+                    && (goal !== "keysanity" || sphereCounter.boss5)) {
                 return "available";
             } else {
                 return "possible";
@@ -511,7 +511,7 @@ dungeons[6] = {
                 return "unavailable";
             }
         } else {
-            if (items.hammer && this.canKillBoss() && (goal == "keysanity" && sphereCounter.chest6)) {
+            if (items.hammer && this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest6)) {
                 return "available";
             } else {
                 return "possible";
@@ -527,7 +527,7 @@ dungeons[6] = {
     },
     canKillBoss: function() {
         return (items.sword || items.hammer || items.somaria || items.byrna)
-                && (goal == "keysanity" && sphereCounter.boss6);
+                && (goal !== "keysanity" || sphereCounter.boss6);
     }    
 };
 
@@ -586,7 +586,7 @@ dungeons[7] = {
                     return "unavailable";
                 }
             } else {
-                if (items.hookshot && items.somaria && items.hammer && (goal == "keysanity" && sphereCounter.boss7)) {
+                if (items.hookshot && items.somaria && items.hammer && (goal !== "keysanity" || sphereCounter.boss7)) {
                     return "available";
                 } else {
                     return "possible";
@@ -627,7 +627,7 @@ dungeons[8] = {
     isBeatable: function(){
 		var canClear;
         if (logic !== "major") {
-            canClear = items.somaria && items.lantern && (goal == "keysanity" && sphereCounter.boss8);
+            canClear = items.somaria && items.lantern && (goal !== "keysanity" || sphereCounter.boss8);
         } else {
             canClear = items.somaria || items.sword || items.hammer || (items.hookshot && items.flippers && (items.firerod || items.icerod || items.bow > 1))
         }
@@ -651,7 +651,7 @@ dungeons[8] = {
     canGetChest: function(){
         var canClear;
         if (logic !== "major") {
-            canClear = items.somaria && items.lantern && (goal == "keysanity" && sphereCounter.boss8);
+            canClear = items.somaria && items.lantern && (goal !== "keysanity" || sphereCounter.boss8);
         } else {
             canClear = items.somaria || items.sword || items.hammer || (items.hookshot && items.flippers && (items.firerod || items.icerod || items.bow > 1))
         }
@@ -768,7 +768,7 @@ dungeons[9] = {
     },
     canKillBoss: function() {
         return items.firerod && items.icerod && items.somaria 
-            && (goal == "keysanity" && sphereCounter.boss9 && sphereCounter.chest9 >= 3);
+            && (goal !== "keysanity" || (sphereCounter.boss9 && sphereCounter.chest9 >= 3));
     }
 };
 
