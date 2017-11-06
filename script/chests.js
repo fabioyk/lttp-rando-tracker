@@ -375,7 +375,7 @@ dungeons[4] = {
                 } else {
                     return "unavailable";
                 }
-            } else if (isKillable()) {
+            } else if (this.isKillable()) {
                 return "available";
             } else {
                 return "unavailable";
