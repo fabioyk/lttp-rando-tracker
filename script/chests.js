@@ -854,7 +854,7 @@ chests[4] = {
         switch (logic) {
             case "nmg":
                 if (dungeons[9].isAccessible() && items.mirror) {
-                    if (items.firerod) {
+                    if (items.firerod || (goal === "keysanity" && sphereCounter.chest9 >= 2)) {
                         return "available";
                     } else {
                         return "possible";
