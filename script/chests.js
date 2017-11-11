@@ -285,7 +285,7 @@ dungeons[2] = {
                 return "unavailable";
             }
         } else {
-            if (hasFiresource() && this.isKillable() && sphereCounter.chest2) {
+            if (hasFiresource() && this.isKillable() && (goal !== "keysanity" || sphereCounter.chest2)) {
                 return "available";
             } else {
                 return "possible";
@@ -342,7 +342,7 @@ dungeons[3] = {
                 return "unavailable";
             }
         }
-		if (this.isKillable() && sphereCounter.chest3 >= 5 && items.lantern) {
+		if (this.isKillable() && (goal !== "keysanity" || sphereCounter.chest3 >= 5) && items.lantern) {
             return "available";
         } else if (this.isKillable() && !items.lantern && glitches.darkrooms.pod) {
             return "glitched";
@@ -733,7 +733,7 @@ dungeons[9] = {
             }
         } else {
             if (logic !== "major") {
-                if (this.canKillBoss() && sphereCounter.chest9 >= 4) {
+                if (this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest9 >= 4)) {
                     if (items.lantern) {
                         return "available";
                     } else if (glitches.darkrooms.tr) {
@@ -745,7 +745,7 @@ dungeons[9] = {
                     return "possible";
                 }
             } else {
-                if (this.canKillBoss() && sphereCounter.chest9 >= 4) {
+                if (this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest9 >= 4)) {
                     return "available";
                 } else {
                     return "possible";
