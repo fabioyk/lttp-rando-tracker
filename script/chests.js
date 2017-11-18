@@ -272,6 +272,8 @@ dungeons[2] = {
         } else {
             if (hasFiresource() && this.isKillable()) {
                 return "available";
+            } else if (this.isKillable()) {
+                return "possible";
             } else {
                 return "unavailable";
             }
