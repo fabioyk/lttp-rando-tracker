@@ -43,7 +43,11 @@ function preToggleBoss(event) {
 	if (event.button == 1 || event.button == 2) {
 		sphereCounter[bossId] = !sphereCounter[bossId];
 		if (sphereCounter[bossId]) {
-			event.target.innerHTML = 'BK';
+			if (goal === "keysanity") {
+				event.target.innerHTML = 'BK';
+			} else {
+				event.target.innerHTML = '*';
+			}			
 		} else {
 			event.target.innerHTML = '';		
 		}
