@@ -204,9 +204,9 @@ dungeons[0] = {
 		return "unavailable";
     },
     canGetChest: function(){
-		if(items.bow>1 && items.lantern)
+		if(items.bow>1 && items.lantern && (goal !== "keysanity" || sphereCounter.boss0))
 			return "available";
-        if (items.bow>1 && glitches.darkrooms.eastern)
+        if (items.bow>1 && glitches.darkrooms.eastern && (goal !== "keysanity" || sphereCounter.boss0))
             return "glitched";
 		return "possible";
     }
@@ -638,7 +638,7 @@ dungeons[8] = {
         } else if (items.moonpearl) {
             if (canClear) {
                 return "available";
-            } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire) {
+            } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire && (goal !== "keysanity" || sphereCounter.boss8)) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -662,7 +662,7 @@ dungeons[8] = {
         } else if (items.moonpearl) {
             if (canClear && this.canKillBoss()) {
                 return "available";
-            } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire) {
+            } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire && (goal !== "keysanity" || sphereCounter.boss8)) {
                 return "glitched";
             } else {
                 return "possible";

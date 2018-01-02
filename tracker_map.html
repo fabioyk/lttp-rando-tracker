@@ -141,7 +141,7 @@ function isGoMode() {
 	var isAllPendantsBeatable = true;
 	
 	for(var i=0; i<dungeons.length; i++) {
-		if (prizes[i] === 1 || prizes[i] === 2) {
+		if (prizes[i] <= 2) {
 			crystalCount++;
 			if (!(dungeons[i].isBeaten || dungeons[i].isBeatable() === "available" || dungeons[i].isBeatable() === "glitched")) {
 				isAllCrystalsBeatable = false;
@@ -262,7 +262,7 @@ function unhighlightDungeon(x){
 function toggleDungeon(n){
 	prizes[n]++;
 	if(prizes[n] == 5)
-		prizes[n] = 1;
+		prizes[n] = (goal === "keysanity" ? 0 : 1);
 	document.getElementById("dungeonPrize"+n).style.backgroundImage = "url(images/dungeon"+prizes[n]+".png)";
 	logAction('dungeonClicked'+n, prizes[n]);
 	// Update Sahasralah, Fat Fairy, and Master Sword Pedestal

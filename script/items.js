@@ -351,6 +351,6 @@ function resetItems() {
     medallions[1] = 0;
 
     for (var i=0; i<dungeons.length; i++) {
-        prizes[i] = 1;
+        prizes[i] = (goal === "keysanity" ? 0 : 1);
     }
 }

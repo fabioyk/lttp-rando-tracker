@@ -99,6 +99,10 @@ goalSelect.addEventListener('change', function() {
   items.chest8 = itemsMax.chest8;
   items.chest9 = itemsMax.chest9;
 
+  for (var i=0; i<10; i++) {
+    prizes[i] = (goal === "keysanity" ? 0 : 1);
+  }
+  
   saveCookie();
   toggle();
   refreshAll();
