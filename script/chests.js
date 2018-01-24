@@ -4,7 +4,9 @@ var goal = "ganon";
 
 function considerAga() {
     if (mode !== "swordless") {
-        return !items.agahnim && (items.lantern || glitches.darkrooms.agatower) && (items.cape || items.sword >= 2) && items.sword;       
+        return !items.agahnim && (items.lantern || glitches.darkrooms.agatower) 
+        && (items.cape || items.sword >= 2) && items.sword 
+        && (goal !== "keysanity" || sphereCounter.agahnim === 2);
     } else {
         return !items.agahnim 
             && (items.lantern || glitches.darkrooms.agatower) 
