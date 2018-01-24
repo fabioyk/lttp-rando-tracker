@@ -6,7 +6,10 @@ function considerAga() {
     if (mode !== "swordless") {
         return !items.agahnim && (items.lantern || glitches.darkrooms.agatower) && (items.cape || items.sword >= 2) && items.sword;       
     } else {
-        return !items.agahnim && (items.lantern || glitches.darkrooms.agatower) && (items.cape || items.hammer);               
+        return !items.agahnim 
+            && (items.lantern || glitches.darkrooms.agatower) 
+            && (items.cape || items.hammer)
+            && (goal !== "keysanity" || sphereCounter.agahnim === 2);
     }    
 }
 
@@ -63,6 +66,29 @@ function resetChests() {
     chests.forEach(function(chest) {
         chest.isOpened = false;
     });
+    if (goal === 'keysanity') {
+        itemsMax.chest0 = 6;
+        itemsMax.chest1 = 6;
+        itemsMax.chest2 = 6;
+        itemsMax.chest3 = 14;
+        itemsMax.chest4 = 10;
+        itemsMax.chest5 = 8;
+        itemsMax.chest6 = 8;
+        itemsMax.chest7 = 8;
+        itemsMax.chest8 = 8;
+        itemsMax.chest9 = 12;    
+      } else {
+        itemsMax.chest0 = 3;
+        itemsMax.chest1 = 2;
+        itemsMax.chest2 = 2;
+        itemsMax.chest3 = 5;
+        itemsMax.chest4 = 6;
+        itemsMax.chest5 = 2;
+        itemsMax.chest6 = 4;
+        itemsMax.chest7 = 3;
+        itemsMax.chest8 = 2;
+        itemsMax.chest9 = 5;
+      }
     if (mode === "standard") {
         // Change initial chests to checked in standard
         var initialChests = [2, 56, 57, 58, 64];
@@ -204,11 +230,38 @@ dungeons[0] = {
 		return "unavailable";
     },
     canGetChest: function(){
-		if(items.bow>1 && items.lantern && (goal !== "keysanity" || sphereCounter.boss0))
-			return "available";
-        if (items.bow>1 && glitches.darkrooms.eastern && (goal !== "keysanity" || sphereCounter.boss0))
-            return "glitched";
-		return "possible";
+        if (goal === "keysanity") {
+            var normalChests = 3;
+            var withGlitches = 2;
+            if (items.lantern) {
+                normalChests--;
+            }
+            if (sphereCounter.boss0) {
+                normalChests--;
+                withGlitches--;
+                if (items.bow>1) {
+                    if (items.lantern) {
+                        normalChests--;
+                    }                    
+                    withGlitches--;
+                }
+            }
+            if (normalChests === 0) {
+                return "available";
+            } else if (items.chest0 > normalChests) {
+                return "possible";
+            } else if (items.chest0 > withGlitches && glitches.darkrooms.eastern) {
+                return "glitched";
+            } else {
+                return "unavailable";
+            }
+        } else {
+            if(items.bow>1 && items.lantern)
+                return "available";
+            if (items.bow>1 && glitches.darkrooms.eastern)
+                return "glitched";
+            return "possible";
+        }		
     }
 };
 
@@ -224,19 +277,42 @@ dungeons[1] = {
             return "unavailable";
         if(!(this.isAccessible() && (items.glove || logic === "major") && hasFiresource()))
             return "unavailable";
-        if(!items.boots)
+        if(!items.boots && goal !== "keysanity")
             return "possible";
-        return "available";
-		
+        return "available";		
     },
-    canGetChest: function(){
+    canGetChest: function(){        
         if (!this.isAccessible())
             return "unavailable";
-        if ((items.glove || logic === "major") && hasFiresource() && items.boots 
+        if (goal === "keysanity") {
+            var chestsLeft = 5;
+            if (items.boots) {
+                chestsLeft--;
+            }
+            if (sphereCounter.chest1) {
+                chestsLeft -= 2;
+            }
+            if (sphereCounter.boss1) {
+                chestsLeft--;
+                if (items.glove && hasFiresource() && this.isKillable()) {
+                    chestsLeft--;
+                }
+            }
+            if (chestsLeft === 0 && items.boots) {
+                return "available";
+            } else if (items.chest1 > chestsLeft) {
+                return "possible";
+            } else {
+                return "unavailable";
+            }
+        } else {
+            if ((items.glove || logic === "major") && hasFiresource() && items.boots 
                 && this.isKillable() && (goal !== "keysanity" || sphereCounter.chest1)) {
-            return "available";
+                return "available";
+            }
+            return "possible";
         }
-        return "possible";
+        
     },
     isAccessible: function() {
         switch(logic) {
@@ -281,17 +357,55 @@ dungeons[2] = {
     },
     canGetChest: function(){
         if (!this.isAccessible()) {
-            if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern")) {
-                return "glitched";
+            if (goal === "keysanity") {
+                var chestsLeft = 4;
+                if (hasFiresource() && sphereCounter.chest2) {
+                    chestsLeft--;
+                }
+                if (sphereCounter.boss2) {
+                    chestsLeft -= 2;
+                    if (this.isKillable()) {
+                        chestsLeft--;
+                    }
+                }
+                if (items.chest2 > chestsLeft) {
+                    return "glitched";
+                } else {
+                    return "unavailable";
+                }
             } else {
-                return "unavailable";
-            }
+                if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern")) {
+                    return "glitched";
+                } else {
+                    return "unavailable";
+                }
+            }            
         } else {
-            if (hasFiresource() && this.isKillable() && (goal !== "keysanity" || sphereCounter.chest2)) {
-                return "available";
+            if (goal === "keysanity") {
+                var chestsLeft = 4;
+                if (hasFiresource() && sphereCounter.chest2) {
+                    chestsLeft--;
+                }
+                if (sphereCounter.boss2) {
+                    chestsLeft -= 2;
+                    if (this.isKillable()) {
+                        chestsLeft--;
+                    }
+                }
+                if (chestsLeft === 0) {
+                    return "available";
+                } else if (items.chest2 > chestsLeft) {
+                    return "possible";
+                } else {
+                    return "unavailable";
+                }
             } else {
-                return "possible";
-            }
+                if (hasFiresource() && this.isKillable()) {
+                    return "available";
+                } else {
+                    return "possible";
+                }
+            }            
         }
     },
     isAccessible: function() {
@@ -344,13 +458,142 @@ dungeons[3] = {
                 return "unavailable";
             }
         }
-		if (this.isKillable() && (goal !== "keysanity" || sphereCounter.chest3 >= 5) && items.lantern) {
-            return "available";
-        } else if (this.isKillable() && !items.lantern && glitches.darkrooms.pod) {
-            return "glitched";
+        if (goal === "keysanity") {
+            var minChests, maxChests, maxChestsGlitched, totalChests;
+            if (!items.hammer || items.bow<1) {
+                switch (sphereCounter.chest3) {
+                    case 0:
+                        minChests = maxChests = 1;
+                        break;
+                    case 1:
+                        minChests = maxChests = 3;
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        minChests = 3;
+                        maxChests = 4;
+                        maxChestsGlitched = 8 + (sphereCounter.chest3 - 2);
+                        if (items.lantern) {
+                            maxChests += 2 + (sphereCounter.chest3 - 2);
+                            if (sphereCounter.chest3 > 2) {
+                                maxChests ++;
+                                if (sphereCounter.boss3) {
+                                    maxChests++;
+                                }
+                            }
+                        } else {
+                            maxChests += (sphereCounter.chest3 - 2);
+                        }
+                        if (sphereCounter.boss3) {
+                            maxChestsGlitched++;
+                        }
+                        break;
+                    case 5:
+                    case 6:
+                        minChests = 6;
+                        if (items.lantern) {
+                            minChests += 3;
+                            if (sphereCounter.boss3) {
+                                minChests++;
+                            }
+                        }
+                        maxChests = minChests;
+                        maxChestsGlitched = 10;
+                        if (sphereCounter.boss3) {
+                            maxChestsGlitched++;
+                        }
+                        break;                    
+                }
+                totalChests = 14;
+                if (items.bow) {
+                    totalChests - 2;
+                }                
+            }
+            if (items.hammer && items.bow>1) {
+                switch(sphereCounter.chest3) {
+                    case 0:
+                        minChests = maxChests = maxChestsGlitched = 5;
+                        break;
+                    case 1:
+                    case 2:
+                        minChests = 5;
+                        maxChests = 5 + sphereCounter.chest3;
+                        if (items.lantern) {
+                            maxChests += 2;
+                            if (sphereCounter.chest3 === 2) {
+                                maxChests++;
+                                if (sphereCounter.boss3) {
+                                    maxChests++;
+                                }
+                            }
+                        }
+                        maxChestsGlitched = 10 + (sphereCounter.chest3-1);
+                        if (sphereCounter.boss3) {
+                            maxChestsGlitched++;
+                        }
+                        break;
+                    case 3:
+                    case 4:
+                    case 5:
+                        minChests = maxChests = 6;                        
+                        if (items.lantern) {
+                            minChests += 2;
+                            maxChests += 4 + (sphereCounter.chest3-2);
+                            if (sphereCounter.boss3) {
+                                maxChests++;
+                            }
+                        } else {
+                            maxChests += sphereCounter.chest3-2;
+                        }
+                        maxChestsGlitched = 11 + (sphereCounter.chest3-3);
+                        if (maxChestsGlitched === 13 && !sphereCounter.boss3) {
+                            maxChestsGlitched--;
+                        }
+                        if (sphereCounter.boss3) {
+                            maxChestsGlitched++;
+                            if (sphereCounter.chest3 === 5) {
+                                maxChestsGlitched++;
+                            }
+                        }
+                        break;
+                    case 6: 
+                        minChests = 8;
+                        if (items.lantern) {
+                            minChests += 4;
+                            if (sphereCounter.boss3) {
+                                minChests += 2;
+                            }
+                        }
+                        maxChests = minChests;
+                        maxChestsGlitched = 12;
+                        if (sphereCounter.boss3) {
+                            maxChestsGlitched += 2;
+                        }
+                }
+                totalChests = 14;
+            }
+            if (minChests === 14) {
+                return "available";
+            } else if (items.chest3 > totalChests-minChests) {
+                return "possible";
+            } else if (items.chest3 > totalChests-maxChestsGlitched && glitches.darkrooms.pod) {
+                return "glitched";
+            } else if (items.chest3 > totalChests-maxChests) {
+                return "possible";
+            } else {
+                return "unavailable";
+            }
         } else {
-            return "possible";
-        }        
+            if (this.isKillable() && items.lantern) {
+                return "available";
+            } else if (this.isKillable() && !items.lantern && glitches.darkrooms.pod) {
+                return "glitched";
+            } else {
+                return "possible";
+            }     
+        }
+		   
     },
     isAccessible: function() {
         return items.moonpearl && regions.northEastDarkWorld();
@@ -402,23 +645,46 @@ dungeons[4] = {
                 return "unavailable";
             }
         }
-        if (logic !== "major") {
-            if (this.isKillable() && (goal !== "keysanity" || sphereCounter.boss4)) {
-                return "available";      
-            } else {  
+        if (goal === "keysanity") {
+            var chestCount = 1;
+            if (sphereCounter.chest4) {
+                chestCount++;
+                if (items.hammer) {
+                    chestCount += 3;
+                    if (sphereCounter.boss4) {
+                        chestCount++;
+                    }
+                    if (items.hookshot) {
+                        chestCount += 4;
+                    }
+                }
+            }
+            if (chestCount === 10) {
+                return "available";
+            } else if (items.chest4 > 10-chestCount) {
                 return "possible";
+            } else {
+                return "unavailable";
             }
         } else {
-            if (items.moonpearl && items.mirror && items.hookshot && items.flippers) {
-                if (dungeons[8].isAccessible()) {
-                    return "available";
-                } else {
+            if (logic !== "major") {
+                if (this.isKillable() && (goal !== "keysanity" || sphereCounter.boss4)) {
+                    return "available";      
+                } else {  
                     return "possible";
                 }
             } else {
-                return "possible";
+                if (items.moonpearl && items.mirror && items.hookshot && items.flippers) {
+                    if (dungeons[8].isAccessible()) {
+                        return "available";
+                    } else {
+                        return "possible";
+                    }
+                } else {
+                    return "possible";
+                }
             }
-        }
+        }        
         
     },
     isAccessible: function() {
@@ -512,6 +778,22 @@ dungeons[6] = {
             } else {
                 return "unavailable";
             }
+        } 
+        if (goal === "keysanity") {
+            var chestCount = 4;
+            if (sphereCounter.boss6) {
+                chestCount += 3;
+                if (sphereCounter.chest6 && items.hammer) {
+                    chestCount++;
+                }
+            }
+            if (chestCount === 8) {
+                return "available";
+            } else if (items.chest6 > 8-chestCount) {
+                return "possible";
+            } else {
+                return "unavailable";
+            }
         } else {
             if (items.hammer && this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest6)) {
                 return "available";
@@ -583,6 +865,36 @@ dungeons[7] = {
                     glitchList.push("moonpearl");
                 }
                 if (doableWith(this.isAccessible, glitchList)) {
+                    return "glitched";
+                } else {
+                    return "unavailable";
+                }
+            } else if (goal === "keysanity") {
+                var minChests, maxChests;
+                minChests = 3;
+                maxChests = 4;
+                if (sphereCounter.boss7) {
+                    minChests++;
+                    maxChests++;
+                }
+                if (items.hookshot || sphereCounter.boss7 ? items.hookshot : sphereCounter.chest7) {
+                    minChests ++;
+                    if (items.hammer) {
+                        minChests += 2;
+                    }
+                }
+                if (sphereCounter.boss7 && items.hammer && ((items.somaria && sphereCounter.chest7) || sphereCounter.chest7 > 1)) {
+                    minChests++;
+                }
+                if (items.hammer) {
+                    maxChests += 3;
+                }
+                
+                if (minChests === 8) {
+                    return "available";
+                } else if (items.chest7 > 8-minChests) {
+                    return "possible";
+                } else if (items.chest7 > 8-maxChests) {
                     return "glitched";
                 } else {
                     return "unavailable";
@@ -660,13 +972,44 @@ dungeons[8] = {
 		if (!this.isAccessible()) {
             return "unavailable";
         } else if (items.moonpearl) {
-            if (canClear && this.canKillBoss()) {
-                return "available";
-            } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire && (goal !== "keysanity" || sphereCounter.boss8)) {
-                return "glitched";
+            if (goal === "keysanity") {
+                var minChests = 2, maxChests = 6;
+                if (sphereCounter.boss8) {
+                    minChests++;
+                    maxChests++;
+                    if (items.somaria) {
+                        maxChests++;
+                    }
+                }
+                if (sphereCounter.boss8 || sphereCounter.chest8) {
+                    minChests += 2;
+                }
+                if (hasFiresource() && sphereCounter.chest8 === 3) {
+                    minChests += 2;
+                }
+                if (sphereCounter.boss8 && items.somaria && items.lantern && this.canKillBoss()) {
+                    minChests++;
+                }
+                if (minChests === 8) {
+                    return "available";
+                } else if (items.chest8 > 8-minChests) {
+                    return "possible";                
+                } else if (items.chest8 > 8-maxChests) {
+                    return "glitched";
+                } else {
+                    return "unavailable";
+                }
+
             } else {
-                return "possible";
+                if (canClear && this.canKillBoss()) {                
+                    return "available";
+                } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire && (goal !== "keysanity" || sphereCounter.boss8)) {
+                    return "glitched";
+                } else {
+                    return "possible";
+                }
             }
+            
         } else if (glitches.owbunnyrevival && items.bottle && items.net) {
             return "glitched";
         } else {
@@ -735,17 +1078,58 @@ dungeons[9] = {
             }
         } else {
             if (logic !== "major") {
-                if (this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest9 >= 4)) {
-                    if (items.lantern) {
+                if (goal === "keysanity") {
+                    var chests = 1, maxChests = 1;
+                    if (items.firerod) {
+                        chests += 2;
+                        maxChests += 2;
+                    }
+                    if (sphereCounter.chest9 >= 1) {
+                        chests++;
+                        maxChests++;
+                        if (sphereCounter.chest9 >= 2) {
+                            chests++;
+                            maxChests++;
+                            if (sphereCounter.boss9) {
+                                chests += 2;
+                                maxChests += 2;
+                                if (sphereCounter.chest9 >= 3) {
+                                    maxChests += 4;
+                                    if (items.lantern && (items.byrna || items.cape || items.shield === 3)) {
+                                        chests += 4;
+                                    }
+                                    if (sphereCounter.chest9 == 4 && items.icerod && items.firerod && items.lantern) {
+                                        chests ++;
+                                    }
+                                    if (items.icerod && items.firerod) {
+                                        maxChests++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (chests === 12) {
                         return "available";
-                    } else if (glitches.darkrooms.tr) {
+                    } else if (items.chest9 > 12-chests) {
+                        return "possible";
+                    } else if (items.chest9 > 12-maxChests) {
                         return "glitched";
+                    } else {
+                        return "unavailable";
+                    }
+                } else {
+                    if (this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest9 >= 4)) {
+                        if (items.lantern) {
+                            return "available";
+                        } else if (glitches.darkrooms.tr) {
+                            return "glitched";
+                        } else {
+                            return "possible";
+                        }
                     } else {
                         return "possible";
                     }
-                } else {
-                    return "possible";
-                }
+                }                
             } else {
                 if (this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest9 >= 4)) {
                     return "available";
