@@ -359,7 +359,7 @@ dungeons[2] = {
     },
     canGetChest: function(){
         if (!this.isAccessible()) {
-            if (goal === "keysanity" && glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern") {
+            if (goal === "keysanity" && glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern")) {
                 var chestsLeft = 4;
                 if (hasFiresource() && sphereCounter.chest2) {
                     chestsLeft--;
