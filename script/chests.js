@@ -348,7 +348,7 @@ dungeons[2] = {
                 return "unavailable";
             }
         } else {
-            if (hasFiresource() && this.isKillable()) {
+            if ((hasFiresource() || goal === "keysanity") && this.isKillable()) {
                 return "available";
             } else if (this.isKillable()) {
                 return "possible";
