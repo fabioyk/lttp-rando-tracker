@@ -79,6 +79,7 @@ function toggle(label){
 			document.getElementById("dungeon"+x).className = "dungeon opened";
 		else
 			document.getElementById("dungeon"+x).className = "dungeon " + dungeons[x].canGetChest();
+		document.getElementById("bossMap"+x).innerText = getChestsLeftText(x);		
 		return;
 	}	
   if(label && (typeof items[label]) == "boolean"){
@@ -120,6 +121,7 @@ function toggle(label){
 			if(items["chest"+k])
 				document.getElementById("dungeon"+k).className = "dungeon " + dungeons[k].canGetChest();
 		}
+		document.getElementById("bossMap"+k).innerText = getChestsLeftText(k);
 	}
 		
 
@@ -364,6 +366,7 @@ function refreshAll() {
 			document.getElementById("boss"+dungeonNum).style.backgroundImage = "url(images/boss"+dungeonNum+(items["boss"+dungeonNum] === "2" ? "2" : "")+".png)";
 			document.getElementById("dungeonPrize"+dungeonNum).style.backgroundImage = "url(images/dungeon"+prizes[dungeonNum]+".png)";
 		}		
+		document.getElementById("bossMap"+dungeonNum).innerText = getChestsLeftText(dungeonNum);
 	});
 
 	document.getElementById("medallion0").style.backgroundImage = "url(images/medallion"+medallions[0]+".png)";
@@ -509,8 +512,8 @@ for(k=0; k<dungeons.length; k++){
     document.write("<span style='background-image:url(images/"+dungeons[k].image+");' id='bossMap"+k+"' onMouseover='highlightDungeon("+k+")' onMouseout='unhighlightDungeon("+k+")'></span>");
     document.getElementById("bossMap"+k).style.left = dungeons[k].x;
     document.getElementById("bossMap"+k).style.top = dungeons[k].y;
-    document.getElementById("bossMap"+k).className = "boss " + dungeons[k].isBeatable();
-
+		document.getElementById("bossMap"+k).className = "boss " + dungeons[k].isBeatable();
+		document.getElementById("bossMap"+k).innerText = getChestsLeftText(k);
     document.write("<span style='background-image:url(images/poi.png)' id='dungeon"+k+"' onMouseover='highlightDungeon("+k+")' onMouseout='unhighlightDungeon("+k+")'></span>");
     document.getElementById("dungeon"+k).style.left = dungeons[k].x;
     document.getElementById("dungeon"+k).style.top = dungeons[k].y;

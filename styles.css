@@ -198,3 +198,13 @@ td {
     -ms-user-select: none;
     user-select: none;
 }
+
+#bossMap0, #bossMap1, #bossMap2, #bossMap3, #bossMap4,
+#bossMap5, #bossMap6, #bossMap7, #bossMap8, #bossMap9  {
+    text-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+    font-size: 20px;
+}
