@@ -462,7 +462,7 @@ dungeons[3] = {
         }
         if (goal === "keysanity") {
             var minChests, maxChests, maxChestsGlitched, totalChests;
-            if (!items.hammer || items.bow<1) {
+            if (!items.hammer || items.bow<=1) {
                 switch (sphereCounter.chest3) {
                     case 0:
                         minChests = maxChests = 1;
@@ -508,8 +508,8 @@ dungeons[3] = {
                         break;                    
                 }
                 totalChests = 14;
-                if (items.bow) {
-                    totalChests - 2;
+                if (items.bow > 1) {
+                    totalChests -= 2;
                 }                
             }
             if (items.hammer && items.bow>1) {
@@ -723,7 +723,7 @@ dungeons[5] = {
             }
         }
     },
-    canGetChest: function(){
+    canGetChest: function(){        
         if (!this.isAccessible()) {
             if (considerAga() && doableWith(this.isAccessible, "agahnim")) {
                 return "aga";
@@ -731,13 +731,34 @@ dungeons[5] = {
                 return "unavailable";
             }
         } else {
-            if (items.firerod && (items.sword || mode === "swordless") 
-                    && (goal !== "keysanity" || sphereCounter.boss5)) {
-                return "available";
+            if (goal === "keysanity") {
+                var availableChests = 5;
+                if (sphereCounter.boss5) {
+                    availableChests++;
+                }
+                if (items.firerod) {
+                    availableChests++;
+                    if (items.sword) {
+                        availableChests++;
+                    }
+                }
+                if (availableChests === 8) {
+                    return "available";
+                } else if (items.chest5 > 8-availableChests) {
+                    return "possible";
+                } else {
+                    return "unavailable";
+                }
             } else {
-                return "possible";
+                if (items.firerod && (items.sword || mode === "swordless") 
+                        && (goal !== "keysanity" || sphereCounter.boss5)) {
+                    return "available";
+                } else {
+                    return "possible";
+                }
             }
         }
+        
     },
     isAccessible: function() {
         switch (logic) {
@@ -1158,6 +1179,55 @@ dungeons[9] = {
         return items.firerod && items.icerod && items.somaria 
             && (goal !== "keysanity" || (sphereCounter.boss9 && sphereCounter.chest9 >= 3));
     }
+};
+
+dungeons[10] = {
+    name: "Aga Tower",
+    abbrev: "AT",
+    x: "25%",
+    y: "40%",
+    image: "agahnim.png",
+    isBeaten: false,
+    isBeatable: function(){
+		if (mode !== "swordless") {
+            if ((items.lantern || glitches.darkrooms.agatower) 
+                    && (items.cape || items.sword >= 2) && items.sword 
+                    && (goal !== "keysanity" || sphereCounter.agahnim === 2)) {
+                return "available";
+            } else {
+                return "unavailable";
+            }
+        } else {
+            if ((items.lantern || glitches.darkrooms.agatower) 
+                    && (items.cape || items.hammer)
+                    && (goal !== "keysanity" || sphereCounter.agahnim === 2)) {
+                return "available";
+            } else {
+                return "unavailable";
+            }
+        }  
+    },
+    canGetChest: function(){
+        if (goal === "keysanity") {
+            if (this.isAccessible()) {                
+                if (sphereCounter.agahnim >= 1) {
+                    return "available";
+                }
+                return "possible";
+            } else {
+                return "unavailable";
+            }            
+        } else {
+            return this.isBeatable();
+        }
+    },
+    isAccessible: function() {
+        if (mode !== "swordless") {
+            return items.cape || items.sword >= 2
+        } else {
+            return items.cape || items.hammer
+        }  
+    },
 };
 
 //define overworld chests
@@ -2352,7 +2422,7 @@ chests[57] = {
     name: "Escape",
     hint: "(3)",
     x: "24.9%",
-    y: "46%",
+    y: "53%",
     isOpened: false,
     isAvailable: function(){
         return "available";
@@ -2508,7 +2578,7 @@ chests[63] = {
 chests[64] = {
    name: "Escape Dark Room Chest",    
     x: "24.9%",
-    y: "40.8%",
+    y: "48%",
     isOpened: false,
     isAvailable: function(){
         if (mode === "standard") {

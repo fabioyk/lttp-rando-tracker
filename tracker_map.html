@@ -29,7 +29,7 @@ window.oncontextmenu = function () {
 
 function preToggle(event) {
 	if (event.button == 2) {
-		sphereCounter[event.target.id]++;
+		sphereCounter[event.target.id]++;		
 	} else if (event.button == 1) {
 		sphereCounter[event.target.id]--;
 	} else {
@@ -38,6 +38,7 @@ function preToggle(event) {
 	}
 	if (maxKeyCount[event.target.id] !== undefined) {
 		if (sphereCounter[event.target.id] > maxKeyCount[event.target.id]) sphereCounter[event.target.id] = maxKeyCount[event.target.id];
+		else logAction('SK-' + event.target.id.substring(5), sphereCounter[event.target.id]);
 	}
 	if (sphereCounter[event.target.id] < 0) sphereCounter[event.target.id] = 0;
 	if (sphereCounter[event.target.id] > 10) sphereCounter[event.target.id] = 10;
@@ -55,6 +56,7 @@ function preToggleBoss(event) {
 		if (sphereCounter[bossId]) {
 			if (goal === "keysanity") {
 				event.target.innerHTML = 'BK';
+				logAction('BK', bossId.substring(4));
 			} else {
 				event.target.innerHTML = 'X';
 			}			
@@ -103,11 +105,23 @@ function toggle(label){
 			document.getElementById(k).className = "chest " + chests[k].isAvailable();
 	}
 	for(k=0; k<dungeons.length; k++){
-		if(!dungeons[k].isBeaten)
-			document.getElementById("bossMap"+k).className = "boss " + dungeons[k].isBeatable();
-		if(items["chest"+k])
-			document.getElementById("dungeon"+k).className = "dungeon " + dungeons[k].canGetChest();
-    }
+		if (k === 10) {
+			if (!items.agahnim) {
+				document.getElementById("bossMap10").className = "boss " + dungeons[10].isBeatable();
+				document.getElementById("dungeon10").className = "dungeon " + dungeons[10].canGetChest();
+			} else {
+				document.getElementById("bossMap10").className = "boss opened";
+				document.getElementById("dungeon10").className = "dungeon opened";
+				
+			}
+		} else {
+			if(!dungeons[k].isBeaten)
+				document.getElementById("bossMap"+k).className = "boss " + dungeons[k].isBeatable();
+			if(items["chest"+k])
+				document.getElementById("dungeon"+k).className = "dungeon " + dungeons[k].canGetChest();
+		}
+	}
+		
 
 	// Tunic graphics
 	if(label=="tunic") {	
@@ -322,21 +336,34 @@ function refreshAll() {
 	});
 
 	dungeons.forEach(function(dungeon, dungeonNum) {
-		document.getElementById("dungeonPrize"+dungeonNum).style.backgroundImage = 
-			"url(images/dungeon"+prizes[dungeonNum]+".png)";
-		if (dungeon.isBeaten) {
-			document.getElementById("bossMap"+dungeonNum).className = "boss opened";
+		if (dungeonNum === 10) {
+			if (items.agahnim) {
+				document.getElementById("bossMap10").className = "boss opened";
+			} else {
+				document.getElementById("bossMap10").className = "boss " + dungeon.isBeatable();	
+			}
+			if (items.agahnim) {
+				document.getElementById("dungeon10").className = "dungeon opened";
+			} else {
+				document.getElementById("dungeon10").className = "dungeon " + dungeon.canGetChest();
+			}
 		} else {
-			document.getElementById("bossMap"+dungeonNum).className = "boss " + dungeon.isBeatable();	
-		}
-		document.getElementById("chest" + dungeonNum).style.backgroundImage = ("url(images/chest" + items["chest" + dungeonNum] + ".png)");
-		if (items["chest" + dungeonNum] === 0) {
-			document.getElementById("dungeon"+dungeonNum).className = "dungeon opened";
-		} else {
-			document.getElementById("dungeon"+dungeonNum).className = "dungeon " + dungeon.canGetChest();
-		}
-		document.getElementById("boss"+dungeonNum).style.backgroundImage = "url(images/boss"+dungeonNum+(items["boss"+dungeonNum] === "2" ? "2" : "")+".png)";
-		document.getElementById("dungeonPrize"+dungeonNum).style.backgroundImage = "url(images/dungeon"+prizes[dungeonNum]+".png)";
+			document.getElementById("dungeonPrize"+dungeonNum).style.backgroundImage = 
+				"url(images/dungeon"+prizes[dungeonNum]+".png)";
+			if (dungeon.isBeaten) {
+				document.getElementById("bossMap"+dungeonNum).className = "boss opened";
+			} else {
+				document.getElementById("bossMap"+dungeonNum).className = "boss " + dungeon.isBeatable();	
+			}
+			document.getElementById("chest" + dungeonNum).style.backgroundImage = ("url(images/chest" + items["chest" + dungeonNum] + ".png)");
+			if (items["chest" + dungeonNum] === 0) {
+				document.getElementById("dungeon"+dungeonNum).className = "dungeon opened";
+			} else {
+				document.getElementById("dungeon"+dungeonNum).className = "dungeon " + dungeon.canGetChest();
+			}
+			document.getElementById("boss"+dungeonNum).style.backgroundImage = "url(images/boss"+dungeonNum+(items["boss"+dungeonNum] === "2" ? "2" : "")+".png)";
+			document.getElementById("dungeonPrize"+dungeonNum).style.backgroundImage = "url(images/dungeon"+prizes[dungeonNum]+".png)";
+		}		
 	});
 
 	document.getElementById("medallion0").style.backgroundImage = "url(images/medallion"+medallions[0]+".png)";

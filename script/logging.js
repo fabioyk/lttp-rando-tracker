@@ -140,6 +140,11 @@ function translateLabel(label, value) {
     } else {
       return 'Left Go Mode';
     }
+  } else if (label === 'BK') {
+    return 'GOT ' + dungeons[+value].name + ' Big Key';
+  } else if (label.indexOf('SK-') > -1) {
+    var dunNum = +label.substr(3);
+    return 'GOT ' + value + ' ' + dungeons[dunNum].abbrev + ' Small Key';  
   } else {
     if (typeof value === 'boolean') {
       if (value) {
