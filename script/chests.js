@@ -391,7 +391,7 @@ dungeons[2] = {
         if (!this.isAccessible()) {
             if (goal === "keysanity" && glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern")) {
                 var chestNum = this.accessibleChests(true);
-                if (items.chest2 > 6-chestsNum) {
+                if (items.chest2 > 6-chestNum) {
                     return "glitched";
                 } else {
                     return "unavailable";
@@ -406,9 +406,9 @@ dungeons[2] = {
         } else {
             if (goal === "keysanity") {
                 var chestNum = this.accessibleChests(true);
-                if (chestsNum === 6) {
+                if (chestNum === 6) {
                     return "available";
-                } else if (items.chest2 > 6-chestsNum) {
+                } else if (items.chest2 > 6-chestNum) {
                     return "possible";
                 } else {
                     return "unavailable";
