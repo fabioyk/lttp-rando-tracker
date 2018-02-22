@@ -1291,8 +1291,7 @@ function getChestsLeftText(dungeonNum) {
         var value = dungeons[dungeonNum].accessibleChests(true)-(dungeons[dungeonNum].kChestCount-items["chest"+dungeonNum]);
         if (value <= 0) {
             return "";
-        } else {
-            console.log(dungeonNum, value, dungeons[dungeonNum].accessibleChests(true), dungeons[dungeonNum].kChestCount, items["chest"+dungeonNum]);
+        } else {            
             return value;
         }
     } else {
