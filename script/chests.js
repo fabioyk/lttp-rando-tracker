@@ -99,7 +99,7 @@ function resetChests() {
             document.getElementById(chestNum).className = "chest opened";
         });
 
-    }
+    }    
 }
 
 var regions = {  

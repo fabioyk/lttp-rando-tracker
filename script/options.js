@@ -46,6 +46,8 @@ document.querySelector('#options_button').addEventListener('click', function() {
 
 modeSelect.addEventListener('change', function() {
   mode = modeSelect.value;
+  highlightedChests = [];
+  refreshHighlights();
   resetChests();
   resetItems();
   saveCookie();
@@ -102,7 +104,8 @@ goalSelect.addEventListener('change', function() {
   for (var i=0; i<10; i++) {
     prizes[i] = (goal === "keysanity" ? 0 : 1);
   }
-  
+  highlightedChests = [];
+  refreshHighlights();
   saveCookie();
   toggle();
   refreshAll();

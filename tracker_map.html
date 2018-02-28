@@ -243,6 +243,32 @@ function toggleTunic(){
 	document.getElementById("tunic").style.backgroundImage = link;
 }
 
+highlightedChests = [];
+function preTogglePoI(event) {
+	var num = +event.target.id;
+	console.log(event.button);
+	if (event.button == 2) {
+		if (highlightedChests.indexOf(num) > -1) {
+			highlightedChests.splice(highlightedChests.indexOf(num), 1);
+		} else {
+			highlightedChests.push(num);
+		}
+		refreshHighlights();
+	} else if (event.button === 0) {
+		toggleChest(num);
+	}
+}
+
+function refreshHighlights() {
+	chests.forEach((chest, i) => {
+		if (highlightedChests.indexOf(i) > -1) {
+			document.getElementById(i).style.backgroundImage = "url(images/marked.png)";	
+		} else {
+			document.getElementById(i).style.backgroundImage = "url(images/poi.png)";			
+		}
+	});	
+}
+
 // Event of clicking a chest on the map
 function toggleChest(x){
 		chests[x].isOpened = !chests[x].isOpened;
@@ -269,8 +295,13 @@ function highlight(x){
 }
 
 function unhighlight(x){
-    document.getElementById(x).style.backgroundImage = "url(images/poi.png)";
-    document.getElementById("caption").innerHTML = "&nbsp;";
+	if (highlightedChests.indexOf(x) === -1) {
+		document.getElementById(x).style.backgroundImage = "url(images/poi.png)";
+	} else {
+		document.getElementById(x).style.backgroundImage = "url(images/marked.png)";		
+	}
+    
+  document.getElementById("caption").innerHTML = "&nbsp;";
 }
 
 // Highlights a chest location and shows the name as caption (but for dungeons)
@@ -498,11 +529,12 @@ document.getElementById("shield").style.backgroundImage = "url(images/shield.png
 // Initialize all chests on the map
 document.write('<div id="map">');
 for(k=0; k<chests.length; k++){
-    document.write("<span style='background-image:url(images/poi.png);' id='"+k+"' onClick='toggleChest("+k+")' onMouseover='highlight("+k+")' onMouseout='unhighlight("+k+")'></span>");
+    document.write("<span style='background-image:url(images/poi.png);' id='"+k+"' onMouseover='highlight("+k+")' onMouseout='unhighlight("+k+")'></span>");
+		document.getElementById(k).addEventListener('mousedown', preTogglePoI);		
     document.getElementById(k).style.left = chests[k].x;
     document.getElementById(k).style.top = chests[k].y;
     if(chests[k].isOpened)
-		document.getElementById(k).className = "chest opened";
+			document.getElementById(k).className = "chest opened";
     else
 	    document.getElementById(k).className = "chest " + chests[k].isAvailable();
 }
