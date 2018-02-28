@@ -246,7 +246,6 @@ function toggleTunic(){
 highlightedChests = [];
 function preTogglePoI(event) {
 	var num = +event.target.id;
-	console.log(event.button);
 	if (event.button == 2) {
 		if (highlightedChests.indexOf(num) > -1) {
 			highlightedChests.splice(highlightedChests.indexOf(num), 1);
