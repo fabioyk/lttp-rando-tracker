@@ -166,7 +166,7 @@ function isGoMode() {
 	var isAllCrystalsBeatable = true;
 	var isAllPendantsBeatable = true;
 	
-	for(var i=0; i<dungeons.length; i++) {
+	for(var i=0; i<=9; i++) {
 		if (prizes[i] <= 2) {
 			crystalCount++;
 			if (!(dungeons[i].isBeaten || dungeons[i].isBeatable() === "available" || dungeons[i].isBeatable() === "glitched")) {
