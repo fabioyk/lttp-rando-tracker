@@ -14,6 +14,6 @@ var glitches = {
     pod: true,
     mire: true,
     tr: true,
-    sewers: false
+    sewers: true
   }  
 }

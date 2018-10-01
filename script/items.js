@@ -350,6 +350,16 @@ function resetItems() {
     medallions[0] = 0;
     medallions[1] = 0;
 
+    if (mode === 'inverted') {
+        dungeons[10].x = "74%";
+        dungeons[10].y = "6%";
+        chests[2].x = "77.4%";        
+    } else {
+        dungeons[10].x = "25%";
+        dungeons[10].y = "40%";
+        chests[2].x = "27.4%";
+    }
+
     for (var i=0; i<dungeons.length; i++) {
         prizes[i] = (goal === "keysanity" ? 0 : 1);
     }

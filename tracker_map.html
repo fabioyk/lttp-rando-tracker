@@ -28,25 +28,44 @@ window.oncontextmenu = function () {
 }
 
 function preToggle(event) {
-	if (event.button == 2) {
-		sphereCounter[event.target.id]++;		
-	} else if (event.button == 1) {
-		sphereCounter[event.target.id]--;
+	if (event.button == 2) {		
+		if (isRightClicking) {
+			console.log(event.target.id);
+			if (event.target.id === 'sword') {
+				document.getElementById(lastChestRightClicked).style.backgroundImage = "url(images/sword_icon.png)";
+			} else if (event.target.id === 'tunic1') {
+				document.getElementById(lastChestRightClicked).style.backgroundImage = "url(images/tunic_icon.png)";
+			} else {
+				document.getElementById(lastChestRightClicked).style.backgroundImage = "url(images/"+event.target.id+".png)";
+			}
+			
+		} else {
+			sphereCounter[event.target.id]++;
+		}		
+		lastChestRightClicked = null;
+		isRightClicking = false;
 	} else {
-		toggle(event.target.id);
-		return;
+		lastChestRightClicked = null;
+		isRightClicking = false;
+		if (event.button == 1) {
+			sphereCounter[event.target.id]--;
+		} else {
+			toggle(event.target.id);
+			return;
+		}
+		if (maxKeyCount[event.target.id] !== undefined) {
+			if (sphereCounter[event.target.id] > maxKeyCount[event.target.id]) sphereCounter[event.target.id] = maxKeyCount[event.target.id];
+			else logAction('SK-' + event.target.id.substring(5), sphereCounter[event.target.id]);
+		}
+		if (sphereCounter[event.target.id] < 0) sphereCounter[event.target.id] = 0;
+		if (sphereCounter[event.target.id] > 10) sphereCounter[event.target.id] = 10;
+		event.target.innerHTML = sphereCounter[event.target.id];
+		if (sphereCounter[event.target.id] === 0) {
+			event.target.innerHTML = '';
+		}
+		toggle("");
 	}
-	if (maxKeyCount[event.target.id] !== undefined) {
-		if (sphereCounter[event.target.id] > maxKeyCount[event.target.id]) sphereCounter[event.target.id] = maxKeyCount[event.target.id];
-		else logAction('SK-' + event.target.id.substring(5), sphereCounter[event.target.id]);
-	}
-	if (sphereCounter[event.target.id] < 0) sphereCounter[event.target.id] = 0;
-	if (sphereCounter[event.target.id] > 10) sphereCounter[event.target.id] = 10;
-	event.target.innerHTML = sphereCounter[event.target.id];
-	if (sphereCounter[event.target.id] === 0) {
-		event.target.innerHTML = '';
-	}
-	toggle("");
+	
 }
 
 function preToggleBoss(event) {
@@ -69,6 +88,7 @@ function preToggleBoss(event) {
 
 // Event of clicking on the item tracker
 function toggle(label){
+	console.log(label);
 	if(label && label.substring(0,5) == "chest"){
 		if(--items[label] < 0)
 			items[label] = itemsMax[label];
@@ -243,10 +263,16 @@ function toggleTunic(){
 	document.getElementById("tunic").style.backgroundImage = link;
 }
 
+lastChestRightClicked = null;
+isRightClicking = false;
 highlightedChests = [];
 function preTogglePoI(event) {
+	lastChestRightClicked = null;
+	isRightClicking = false;
 	var num = +event.target.id;
 	if (event.button == 2) {
+		lastChestRightClicked = num;
+		isRightClicking = true;
 		if (highlightedChests.indexOf(num) > -1) {
 			highlightedChests.splice(highlightedChests.indexOf(num), 1);
 		} else {
@@ -261,9 +287,9 @@ function preTogglePoI(event) {
 function refreshHighlights() {
 	chests.forEach((chest, i) => {
 		if (highlightedChests.indexOf(i) > -1) {
-			document.getElementById(i).style.backgroundImage = "url(images/marked.png)";	
+			document.getElementById(i).style.border = "3px solid yellow";	
 		} else {
-			document.getElementById(i).style.backgroundImage = "url(images/poi.png)";			
+			document.getElementById(i).style.border = "3px solid black";			
 		}
 	});	
 }
@@ -272,10 +298,12 @@ function refreshHighlights() {
 function toggleChest(x){
 		chests[x].isOpened = !chests[x].isOpened;
 		logAction('location'+x, chests[x].isOpened);
-    if(chests[x].isOpened)
+    if(chests[x].isOpened) {
 			document.getElementById(x).className = "chest opened";
-    else
+			document.getElementById(x).style.backgroundImage = "";
+		} else {
 			document.getElementById(x).className = "chest " + chests[x].isAvailable();
+		}			
 }
 
 // Event of clicking a dungeon location (not really)
@@ -289,15 +317,15 @@ function toggleBoss(x){
 
 // Highlights a chest location and shows the name as caption
 function highlight(x){
-    document.getElementById(x).style.backgroundImage = "url(images/highlighted.png)";
+    document.getElementById(x).style.border = "3px solid yellow";
     document.getElementById("caption").innerHTML = chests[x].name + " " + (chests[x].hint ? chests[x].hint : "");
 }
 
 function unhighlight(x){
 	if (highlightedChests.indexOf(x) === -1) {
-		document.getElementById(x).style.backgroundImage = "url(images/poi.png)";
+		document.getElementById(x).style.border = "3px solid black";		
 	} else {
-		document.getElementById(x).style.backgroundImage = "url(images/marked.png)";		
+		document.getElementById(x).style.border = "3px solid yellow";	
 	}
     
   document.getElementById("caption").innerHTML = "&nbsp;";
@@ -361,6 +389,8 @@ function toggleMedallion(n){
 
 function refreshAll() {	
 	chests.forEach(function(chest, chestNum) {
+		document.getElementById(chestNum).style.left = chest.x;
+    document.getElementById(chestNum).style.top = chest.y;
 		if(chest.isOpened)
 			document.getElementById(chestNum).className = "chest opened";
     else
@@ -379,6 +409,10 @@ function refreshAll() {
 			} else {
 				document.getElementById("dungeon10").className = "dungeon " + dungeon.canGetChest();
 			}
+			document.getElementById("dungeon10").style.left = dungeon.x;
+			document.getElementById("dungeon10").style.top = dungeon.y;
+			document.getElementById("bossMap10").style.left = dungeon.x;
+			document.getElementById("bossMap10").style.top = dungeon.y;
 		} else {
 			document.getElementById("dungeonPrize"+dungeonNum).style.backgroundImage = 
 				"url(images/dungeon"+prizes[dungeonNum]+".png)";
@@ -441,8 +475,8 @@ function refreshAll() {
 	<td colspan='2' rowspan='2'id='tunic' style='background-image: url(images/tunic.png);'>
 		<table cellpadding='0' cellspacing='0' class='stoops' border='0'>
 			<tr>
-				<th onClick="toggle('tunic')"></th>
-				<td id='sword' onClick="toggle('sword')"></td>
+				<th id='tunic1'></th>
+				<td id='sword'></td>
 			</tr>
 			<tr>
 				<td id='shield' onClick="toggle('shield')"></td>
@@ -454,7 +488,7 @@ function refreshAll() {
 						</tr>
 						<tr>
 							<th onClick="toggle('tunic')"></th>
-							<th id="moonpearl" class='false' style='background-image:url(images/moonpearl.png); width:48px; height:48px;' onClick='toggle("moonpearl")'></th>
+							<th id="moonpearl" class='false' style='background-image:url(images/moonpearl.png); width:48px; height:48px;'></th>
 						</tr>
 					</table>
 				</th>
@@ -463,6 +497,10 @@ function refreshAll() {
 	</td>
 
 <script>
+
+document.querySelector('#moonpearl').addEventListener('mousedown', preToggle);
+document.querySelector('#tunic1').addEventListener('mousedown', preToggle);
+document.querySelector('#sword').addEventListener('mousedown', preToggle);
 
 var itemList = Object.keys(items);
 var k = 4;
@@ -528,7 +566,7 @@ document.getElementById("shield").style.backgroundImage = "url(images/shield.png
 // Initialize all chests on the map
 document.write('<div id="map">');
 for(k=0; k<chests.length; k++){
-    document.write("<span style='background-image:url(images/poi.png);' id='"+k+"' onMouseover='highlight("+k+")' onMouseout='unhighlight("+k+")'></span>");
+    document.write("<span style='border: 3px solid black;' id='"+k+"' onMouseover='highlight("+k+")' onMouseout='unhighlight("+k+")'></span>");
 		document.getElementById(k).addEventListener('mousedown', preTogglePoI);		
     document.getElementById(k).style.left = chests[k].x;
     document.getElementById(k).style.top = chests[k].y;
@@ -572,9 +610,10 @@ for(k=0; k<dungeons.length; k++){
 	<option value="triforce">Triforce Hunt</option>
 	<option value="keysanity">Keysanity</option>
 </select>
-<select name="mode" id="mode_select">
+<select name="mode" id="mode_select">	
 	<option value="standard">Standard</option>
 	<option value="open">Open</option>
+	<option value="inverted">Inverted</option>
 	<option value="swordless">Swordless</option>
 </select>
 
