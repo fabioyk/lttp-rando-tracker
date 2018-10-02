@@ -27,7 +27,7 @@ window.oncontextmenu = function () {
 	return false;
 }
 
-function preToggle(event) {
+function preToggle(event) {	
 	if (event.button == 2) {		
 		if (isRightClicking) {
 			console.log(event.target.id);
@@ -52,8 +52,9 @@ function preToggle(event) {
 		} else {
 			toggle(event.target.id);
 			return;
-		}
-		if (maxKeyCount[event.target.id] !== undefined) {
+		}		
+	}
+	if (maxKeyCount[event.target.id] !== undefined) {
 			if (sphereCounter[event.target.id] > maxKeyCount[event.target.id]) sphereCounter[event.target.id] = maxKeyCount[event.target.id];
 			else logAction('SK-' + event.target.id.substring(5), sphereCounter[event.target.id]);
 		}
@@ -64,7 +65,6 @@ function preToggle(event) {
 			event.target.innerHTML = '';
 		}
 		toggle("");
-	}
 	
 }
 
