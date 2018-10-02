@@ -94,6 +94,7 @@ function getSeparatorSymbol(timestamp1, timestamp2) {
 }
 
 function translateLabel(label, value) {
+  if (label === 'tunic1') label = 'tunic';
   if (label.indexOf('location') === 0) {
     var chestNum = +label.substr(8);
     if (value) {
