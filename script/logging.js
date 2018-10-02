@@ -12,6 +12,7 @@ document.addEventListener('keypress', function(evt) {
 })
 
 function logAction(label, status) {
+  if (label === 'tunic1') return;
   if (!logData.startTime && !shouldUseKeybind) {
     logData.startTime = Date.now();
   }
@@ -94,7 +95,6 @@ function getSeparatorSymbol(timestamp1, timestamp2) {
 }
 
 function translateLabel(label, value) {
-  if (label === 'tunic1') label = 'tunic';
   if (label.indexOf('location') === 0) {
     var chestNum = +label.substr(8);
     if (value) {

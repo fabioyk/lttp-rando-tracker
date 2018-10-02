@@ -88,7 +88,6 @@ function preToggleBoss(event) {
 
 // Event of clicking on the item tracker
 function toggle(label){
-	console.log(label);
 	if(label && label.substring(0,5) == "chest"){
 		if(--items[label] < 0)
 			items[label] = itemsMax[label];
@@ -146,7 +145,7 @@ function toggle(label){
 		
 
 	// Tunic graphics
-	if(label=="tunic") {	
+	if(label=="tunic" || label=="tunic1") {	
 		toggleTunic();		
 	}
 	
@@ -475,7 +474,7 @@ function refreshAll() {
 	<td colspan='2' rowspan='2'id='tunic' style='background-image: url(images/tunic.png);'>
 		<table cellpadding='0' cellspacing='0' class='stoops' border='0'>
 			<tr>
-				<th id='tunic1'></th>
+				<th id='tunic1' onClick="toggle('tunic')"></th>
 				<td id='sword'></td>
 			</tr>
 			<tr>
@@ -483,7 +482,7 @@ function refreshAll() {
 				<th>
 					<table cellpadding='0' cellspacing='0' border='0' class="lonk">
 						<tr>
-							<th class='mini-corner' onClick="toggle('tunic')"></th>
+							<th class='mini-corner'></th>
 							<th onClick="toggle('tunic')"></th>
 						</tr>
 						<tr>
