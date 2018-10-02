@@ -155,7 +155,10 @@ function translateLabel(label, value) {
     } else if (label === 'triforce') {        
       return 'GOT Triforce Piece ' + value;
     } else {
-      return 'GOT ' + itemsNames[label][value];
+      if (itemsNames[label] && itemsNames[label][value]) {
+        return 'GOT ' + itemsNames[label][value];
+      }
+      
     }
   }
 }
