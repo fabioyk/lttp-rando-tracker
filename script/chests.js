@@ -247,7 +247,7 @@ dungeons[0] = {
     isBeatable: function(){
         if (!this.isAccessible()) {
             return "unavailable";
-        }
+        }        
 		if(items.bow>1 && items.lantern && (goal !== "keysanity" || sphereCounter.boss0))
 			return "available";
         if (items.bow>1 && glitches.darkrooms.eastern && (goal !== "keysanity" || sphereCounter.boss0))
@@ -270,6 +270,9 @@ dungeons[0] = {
                 return "unavailable";
             }
         } else {
+            if (!items.moonpearl) {
+                return "glitched";
+            }
             if(items.bow>1 && items.lantern)
                 return "available";
             if (items.bow>1 && glitches.darkrooms.eastern)
