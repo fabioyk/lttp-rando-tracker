@@ -203,7 +203,8 @@ var regions = {
     },
     mire: function() {
         if (mode === 'inverted') {
-            return (items.allflute >= 2 || items.mirror) && regions.invertedLW();
+            return (items.allflute >= 2 && items.moonpearl && regions.invertedLW()) 
+                || (items.mirror && regions.invertedLW());
         }
         switch (logic) {
             case "nmg":
@@ -1076,7 +1077,7 @@ dungeons[8] = {
         }
 		if (!this.isAccessible()) {
             return "unavailable";
-        } else if (items.moonpearl) {
+        } else {
             if (goal === "keysanity") {                
                 if (this.accessibleChests(true) === 8) {
                     return "available";
@@ -1098,10 +1099,6 @@ dungeons[8] = {
                 }
             }
             
-        } else if (glitches.owbunnyrevival && items.bottle && items.net) {
-            return "glitched";
-        } else {
-            return "unavailable";
         }
     },
     isAccessible: function() {
@@ -1111,7 +1108,7 @@ dungeons[8] = {
         }
         switch (logic) {
             case "nmg":
-                return hasMedallion && items.glove === 2 && items.allflute > 1 && (items.boots || items.hookshot);
+                return hasMedallion && items.moonpearl && items.glove === 2 && items.allflute >= 2 && (items.boots || items.hookshot);
             case "owg":
                 return hasMedallion && items.moonpearl && regions.mire() && (items.boots || items.hookshot);
             case "major":
@@ -1769,6 +1766,8 @@ chests[14] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (regions.invertedLW()) {
+                return "glitched";            
             } else {
                 return "unavailable";
             }
@@ -1785,8 +1784,10 @@ chests[15] = {
     isOpened: false,
     isAvailable: function(){
         if (mode === 'inverted') {
-            if (regions.invertedLW()) {
+            if (regions.invertedLW() && items.moonpearl) {
                 return "available";
+            } else if (regions.invertedLW() && items.mirror) {
+                return "glitched";
             } else {
                 return "unavailable";
             }
@@ -2707,6 +2708,8 @@ chests[47] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (regions.invertedLW()) {
+                return "possible";
             } else {
                 return "unavailable";
             }
