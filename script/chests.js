@@ -220,10 +220,9 @@ var regions = {
         return items.agahnim ||
             (items.moonpearl && ((items.hammer && items.glove) || items.glove === 2));
     },
-    invertedEastDM: function() {
-        return (items.glove === 2 && regions.invertedEastDWDM())
-            || (items.moonPearl
-                && regions.westDeathMountain());
+    invertedEastDM: function(isGlitch) {
+        return (items.glove === 2 || (items.moonpearl && items.hookshot)) 
+            && ((items.glove && (items.lantern || isGlitch)) || (items.allflute >= 2 && items.moonpearl && regions.invertedLW()));
     },
     invertedEastDWDM: function() {
         return regions.westDeathMountain();
