@@ -270,7 +270,7 @@ dungeons[0] = {
                 return "unavailable";
             }
         } else {
-            if (!items.moonpearl) {
+            if (mode === 'inverted' && !items.moonpearl) {
                 return "glitched";
             }
             if(items.bow>1 && items.lantern)
