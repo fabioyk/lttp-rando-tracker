@@ -106,7 +106,11 @@ var regions = {
     westDeathMountain: function(isGlitch) {
         switch (logic) {
             case "nmg":
-                return items.allflute >= 2 || (items.glove && items.lantern);
+                if (mode === "inverted") {
+                    return (items.glove && items.lantern) || (items.allflute >= 2 && regions.invertedLW() && items.moonpearl);
+                } else {
+                    return items.allflute >= 2 || (items.glove && items.lantern);
+                }                
             case "owg":
                 return items.boots || items.allflute >= 2 || (items.glove && items.lantern);    
             case "major":
