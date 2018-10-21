@@ -208,6 +208,7 @@ function isGoMode() {
 				}
 			}
 		case "keysanity":
+		case "retro":
 		case "ganon":
 			if (crystalCount === 7 && isAllCrystalsBeatable) {
 				if ((mode !== "swordless" ? ((goModeRequirements.mastersword ? items.sword > 1 : true) &&
@@ -608,6 +609,7 @@ for(k=0; k<dungeons.length; k++){
 	<option value="alldungeons">All Dungeons</option>
 	<option value="triforce">Triforce Hunt</option>
 	<option value="keysanity">Keysanity</option>
+	<option value="retro">Retro</option>
 </select>
 <select name="mode" id="mode_select">	
 	<option value="standard">Standard</option>

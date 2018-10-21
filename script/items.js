@@ -342,6 +342,18 @@ function resetItems() {
         items.chest8 = 8;
         items.chest9 = 12;
     }
+    if (goal === "retro") {
+        items.chest0 = 3;
+        items.chest1 = 3;
+        items.chest2 = 3;
+        items.chest3 = 11;
+        items.chest4 = 7;
+        items.chest5 = 5;
+        items.chest6 = 5;
+        items.chest7 = 5;
+        items.chest8 = 5;
+        items.chest9 = 9;
+    }
     if (mode === "standard") {
         items.sword = 1;
     } else {

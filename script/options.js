@@ -76,7 +76,18 @@ goalSelect.addEventListener('change', function() {
     itemsMax.chest6 = 8;
     itemsMax.chest7 = 8;
     itemsMax.chest8 = 8;
-    itemsMax.chest9 = 12;    
+    itemsMax.chest9 = 12;
+  } else if (goal === 'retro') {
+    itemsMax.chest0 = 3;
+    itemsMax.chest1 = 3;
+    itemsMax.chest2 = 3;
+    itemsMax.chest3 = 11;
+    itemsMax.chest4 = 7;
+    itemsMax.chest5 = 5;
+    itemsMax.chest6 = 5;
+    itemsMax.chest7 = 5;
+    itemsMax.chest8 = 5;
+    itemsMax.chest9 = 9;  
   } else {
     itemsMax.chest0 = 3;
     itemsMax.chest1 = 2;
@@ -89,6 +100,8 @@ goalSelect.addEventListener('change', function() {
     itemsMax.chest8 = 2;
     itemsMax.chest9 = 5;
   }
+
+  
 
   items.chest0 = itemsMax.chest0;
   items.chest1 = itemsMax.chest1;
