@@ -354,11 +354,6 @@ function resetItems() {
         items.chest8 = 5;
         items.chest9 = 9;
     }
-    if (mode === "standard") {
-        items.sword = 1;
-    } else {
-        items.sword = 0;
-    }
     medallions[0] = 0;
     medallions[1] = 0;
 
