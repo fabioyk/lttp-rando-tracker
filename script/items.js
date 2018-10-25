@@ -275,6 +275,7 @@ var itemsNames = {
 function resetItems() {
     items = {
         tunic: 1,
+        sword: 0,
         shield: 0,
         moonpearl: false,
         

@@ -100,9 +100,7 @@ goalSelect.addEventListener('change', function() {
     itemsMax.chest8 = 2;
     itemsMax.chest9 = 5;
   }
-
   
-
   items.chest0 = itemsMax.chest0;
   items.chest1 = itemsMax.chest1;
   items.chest2 = itemsMax.chest2;
