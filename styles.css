@@ -65,6 +65,8 @@ td{
     margin-top: -12px;
 
     z-index: 2;
+
+    text-align: center;
 }
 
 .dungeon{
@@ -88,14 +90,16 @@ td{
     left: 456px;
 }
 
-span{
+#caption {
     color: white;
     background-color: rgb(0,0,0);
     position: absolute;
-    width: 100%;
     text-align: center;
     font-size: 16px;    
     bottom: 0px;
+}
+#caption:not(.scroll-this) {
+    width: 100%;
 }
 
 .chest{
@@ -132,7 +136,7 @@ span{
 	background-color: rgb(255,150,0);
 }
 
-select {
+.opt-select {
     position: absolute;
     z-index: 5;
 }
@@ -142,6 +146,14 @@ select {
 }
 #mode_select {
     left: 1130px;
+}
+#var_select {
+    left: 980px;
+    top: 20px;
+}
+#swords_select {
+    left: 1130px;
+    top: 20px;
 }
 
 #options_button {
@@ -169,6 +181,11 @@ select {
     width: 30%;
     height: 90%;
     padding: 20px 20px;
+}
+
+#new_hint_button {
+    position: absolute;
+    bottom: 20px;
 }
 
 #log-text-area {
@@ -207,4 +224,50 @@ td {
         -1px 1px 0 #000,
         1px 1px 0 #000;
     font-size: 20px;
+}
+
+.scroll-left {
+    height: 20px;
+    margin-top: 428px;
+    overflow: hidden;
+    position: relative;
+    background-color:black;
+}
+
+.scroll-left #caption {
+    position: absolute;
+    height: 100%;
+    margin: 0;
+    line-height: 20px;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.scroll-left .scroll-this {
+ /* Apply animation to this element */	
+ -moz-animation: scroll-left 15s linear infinite;
+ -webkit-animation: scroll-left 15s linear infinite;
+ animation: scroll-left 15s linear infinite;
+}
+/* Move it (define the animation) */
+@-moz-keyframes scroll-left {
+ 0%   { -moz-transform: translateX(70%); }
+ 100% { -moz-transform: translateX(-90%); }
+}
+@-webkit-keyframes scroll-left {
+ 0%   { -webkit-transform: translateX(70%); }
+ 100% { -webkit-transform: translateX(-90%); }
+}
+@keyframes scroll-left {
+ 0%   { 
+ -moz-transform: translateX(70%); /* Browser bug fix */
+ -webkit-transform: translateX(70%); /* Browser bug fix */
+ transform: translateX(70%); 		
+ }
+ 100% { 
+ -moz-transform: translateX(-90%); /* Browser bug fix */
+ -webkit-transform: translateX(-90%); /* Browser bug fix */
+ transform: translateX(-90%); 
+ }
 }

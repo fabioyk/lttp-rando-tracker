@@ -37,7 +37,8 @@ function preToggle(event) {
 			} else {
 				document.getElementById(lastChestRightClicked).style.backgroundImage = "url(images/"+event.target.id+".png)";
 			}
-			
+			highlightedChests.splice(highlightedChests.indexOf(lastChestRightClicked), 1);
+			refreshHighlights();
 		} else {
 			sphereCounter[event.target.id]++;
 		}		
@@ -72,7 +73,7 @@ function preToggleBoss(event) {
 	if (event.button == 1 || event.button == 2) {
 		sphereCounter[bossId] = !sphereCounter[bossId];
 		if (sphereCounter[bossId]) {
-			if (goal === "keysanity") {
+			if (variation === "keysanity") {
 				event.target.innerHTML = 'BK';
 				logAction('BK', bossId.substring(4));
 			} else {
@@ -104,7 +105,6 @@ function toggle(label){
 		document.getElementById(label).className = (items[label]=!items[label]);
 		logAction(label, items[label]);
 	}	else {
-		console.log('here?');
 		if(label && ++items[label] > itemsMax[label]){
 			items[label] = itemsMin[label];
 			document.getElementById(label).style.backgroundImage = ("url(images/" + label + ".png)");
@@ -201,17 +201,25 @@ function isGoMode() {
 
 	switch(goal) {
 		case "alldungeons":
-			if (!(pendantCount === 3 && isAllPendantsBeatable)) {
+			let beatableDuns = 0;
+			for (var i=0; i<=9; i++) {
+				if (dungeons[i].isBeaten || (dungeons[i].isBeatable() === "available" || dungeons[i].isBeatable() === "glitched")) {
+					beatableDuns++;
+				}
+			}
+			if (beatableDuns === 10) {
+				if ((items.sword === 2 || (swords === 'swordless' && items.hammer)) 
+					&& (items.firerod || items.lantern)) {
+
+				}
 				if (wasInGo) {
 					wasInGo = false;
 					logAction('gomode', false);
 				}
 			}
-		case "keysanity":
-		case "retro":
 		case "ganon":
 			if (crystalCount === 7 && isAllCrystalsBeatable) {
-				if ((mode !== "swordless" ? ((goModeRequirements.mastersword ? items.sword > 1 : true) &&
+				if ((swords !== "swordless" ? ((goModeRequirements.mastersword ? items.sword > 1 : true) &&
 						(goModeRequirements.temperedsword ? items.sword > 2 : true) &&
 						(goModeRequirements.silverarrows ? items.bow === 3 : true)) : (items.hammer && items.silverarrows)) &&
 						(goModeRequirements.somaria ? items.somaria : true) &&
@@ -318,7 +326,9 @@ function toggleBoss(x){
 // Highlights a chest location and shows the name as caption
 function highlight(x){
     document.getElementById(x).style.border = "3px solid yellow";
-    document.getElementById("caption").innerHTML = chests[x].name + " " + (chests[x].hint ? chests[x].hint : "");
+		document.getElementById("caption").innerHTML = chests[x].name + " " + (chests[x].hint ? chests[x].hint : "");
+		document.getElementById("caption").className = '';
+		hintsTextOn = false;
 }
 
 function unhighlight(x){
@@ -328,25 +338,35 @@ function unhighlight(x){
 		document.getElementById(x).style.border = "3px solid yellow";	
 	}
     
-  document.getElementById("caption").innerHTML = "&nbsp;";
+	document.getElementById("caption").innerHTML = hintsText;
+	if (hintsText.length > hintsTextLimit) {
+		document.getElementById("caption").className = 'scroll-this';
+	}	
+	hintsTextOn = true;
 }
 
 // Highlights a chest location and shows the name as caption (but for dungeons)
 function highlightDungeon(x){
     document.getElementById("dungeon"+x).style.backgroundImage = "url(images/highlighted.png)";
-    document.getElementById("caption").innerHTML = dungeons[x].name + " " + (dungeons[x].hint ? dungeons[x].hint : "");
+		document.getElementById("caption").innerHTML = dungeons[x].name + " " + (dungeons[x].hint ? dungeons[x].hint : "");
+		document.getElementById("caption").className = '';
+		hintsTextOn = false;
 }
 
 function unhighlightDungeon(x){
     document.getElementById("dungeon"+x).style.backgroundImage = "url(images/poi.png)";
-    document.getElementById("caption").innerHTML = "&nbsp;";
+		document.getElementById("caption").innerHTML = hintsText;
+		if (hintsText.length > hintsTextLimit) {
+			document.getElementById("caption").className = 'scroll-this';
+		}	
+		hintsTextOn = true;
 }
 
 // event of clicking on a boss's pendant/crystal subsquare
 function toggleDungeon(n){
 	prizes[n]++;
 	if(prizes[n] == 5)
-		prizes[n] = (goal === "keysanity" ? 0 : 1);
+		prizes[n] = (variation === "keysanity" ? 0 : 1);
 	document.getElementById("dungeonPrize"+n).style.backgroundImage = "url(images/dungeon"+prizes[n]+".png)";
 	logAction('dungeonClicked'+n, prizes[n]);
 	// Update Sahasralah, Fat Fairy, and Master Sword Pedestal
@@ -591,132 +611,39 @@ for(k=0; k<dungeons.length; k++){
 
 </script>
 
-<span id="caption">&nbsp</span>
+<div class="scroll-left">
+<span id="caption">&nbsp</span></div>
 <input type="button" id="options_button" value="Options">
 </div>
 
-
-<!--
-<select name="logic" id="logic_select">
-	<option value="nmg">No Glitches</option>
-	<option value="owg">Overworld Glitches</option>
-	<option value="major">Major Glitches</option>
-</select>
--->
-<select name="goal" id="goal_select">
+<select name="goal" class="opt-select" id="goal_select">
 	<option value="ganon">Kill Ganon</option>
 	<option value="pedestal">Pedestal</option>
 	<option value="alldungeons">All Dungeons</option>
 	<option value="triforce">Triforce Hunt</option>
+</select>
+<select name="variation" class="opt-select" id="var_select">
+	<option value="none">None</option>
 	<option value="keysanity">Keysanity</option>
 	<option value="retro">Retro</option>
 </select>
-<select name="mode" id="mode_select">	
+<select name="mode" class="opt-select" id="mode_select">	
 	<option value="standard">Standard</option>
 	<option value="open">Open</option>
 	<option value="inverted">Inverted</option>
+</select>
+<select name="swords" class="opt-select" id="swords_select">
+	<option value="normal">With Swords</option>
 	<option value="swordless">Swordless</option>
 </select>
 
 <div id="options">
 	<div class="column">
-		<div>Minor Glitches I can do:</div>
-		<div id="minor-glitches-list">
-			<div>
-				<input type="checkbox" id="fakeflippers">
-				<label for="fakeflippers" title="Access to Hobo, Zora and Ice Palace without Flippers">Fake Flippers</label>
-			</div>
-			<div>
-				<input type="checkbox" id="ipbj">
-				<label for="ipbj" title="Ability to do Ice Palace without Hookshot or Cane of Somaria">IP Bomb Jump</label>
-			</div>
-			<!--
-			<div>
-				<input type="checkbox" id="superbunny">
-				<label for="superbunny" title="Access to two chests in DW Death Mountain and two in Mire area without Moon Pearl">Super Bunny</label>
-			</div>
-			<div>
-				<input type="checkbox" id="bunnyrevival">
-				<label for="bunnyrevival" title="Access to Ice Palace without Moon Pearl">Bunny Revival</label>
-			</div>
-			<div>
-				<input type="checkbox" id="owbunnyrevival">
-				<label for="owbunnyrevival">Overworld Bunny Revival</label>
-			</div>
-			<div>
-				<input type="checkbox" id="surfbunny">
-				<label for="surfbunny" title="Access to the Lake Hylia item without Moon Pearl">Surfing Bunny</label>
-			</div>
-			<div>
-				<input type="checkbox" id="walkonwater">
-				<label for="walkonwater" title="Access to Lake Hylia item without Flippers">Walk on Water</label>
-			</div> -->			
-			<div>
-				<input type="checkbox" id="hover">
-				<label for="hover">Hovering</label>
-			</div>
-		</div>
-		<br><br><br><br>
-		<hr>
-		<div>How strict are Go Mode requirements?</div>
-		<div id="go-mode-restrictions">
-			<div>
-				<input type="checkbox" id="mastersword">
-				<label for="mastersword">I want Master Sword (can't risk no Swords in GT)</label>
-			</div>
-			<div>
-				<input type="checkbox" id="temperedsword">
-				<label for="temperedsword">I want Tempered Sword</label>
-			</div>
-			<div>
-				<input type="checkbox" id="silverarrows">
-				<label for="silverarrows">I want Silver Arrows</label>
-			</div>
-			<div>
-				<input type="checkbox" id="somaria">
-				<label for="somaria">I want Cane of Somaria (can't risk right side GT)</label>
-			</div>
-			<div>
-				<input type="checkbox" id="firerod">
-				<label for="firerod">I want Fire Rod (can't risk right side GT)</label>
-			</div>
-			<div>
-				<input type="checkbox" id="boots">
-				<label for="boots">I want Boots (can't risk Big Key on torch in GT)</label>
-			</div>
-		</div>		
+		Hint Tracker <small>(only for in dungeons or non obvious OW, highlight with right click on overworld for the rest)</small>
+		<div id="hint-tracker"></div>
+		<input type="button" id="new_hint_button" value="Add Hint">
 	</div>
-	<div class="column" id="dark-rooms-list">
-		<div>Dark Rooms I can do:</div>
-		<div>
-			<input type="checkbox" class="darkrooms" id="sewers">
-			<label for="sewers">Hyrule Castle Sewers (Open Mode)</label>
-		</div>
-		<div>
-			<input type="checkbox" class="darkrooms" id="eastern">
-			<label for="eastern">Eastern Palace</label>
-		</div>
-		<div>
-			<input type="checkbox" class="darkrooms" id="oldMan">
-			<label for="oldMan">Old Man's Cave</label>
-		</div>
-		<div>
-			<input type="checkbox" class="darkrooms" id="pod">
-			<label for="pod">Palace of Darkness</label>
-		</div>
-		<div>
-			<input type="checkbox" class="darkrooms" id="mire">
-			<label for="mire">Misery Mire</label>
-		</div>
-		<div>
-			<input type="checkbox" class="darkrooms" id="tr">
-			<label for="tr">Turtle Rock</label>
-		</div>
-		<div>
-			<input type="checkbox" class="darkrooms" id="agatower">
-			<label for="agatower">Agahnim's Tower</label>
-		</div>
-		<hr>
+	<div class="column" id="dark-rooms-list">	
 		<div>
 			<input type="checkbox" class="usesplit" id="splitcheckbox">
 			<label for="splitcheckbox" title="With this option on, press your timer key with this window on focus to start the timer. When you get items they'll be added to the log at the time you clicked them. If this option is disabled, your timer starts as soon as you click something.">Bind a Button to Start Timer</label>

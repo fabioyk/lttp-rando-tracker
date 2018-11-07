@@ -1,17 +1,18 @@
-var logic = "nmg";
 var mode = "standard";
 var goal = "ganon";
+var variation = "none";
+var swords = "normal";
+var logic = "nmg";
 
 function considerAga() {
-    if (mode !== "swordless") {
-        return !items.agahnim && (items.lantern || glitches.darkrooms.agatower) 
+    if (swords !== "swordless") {
+        return !items.agahnim 
         && (items.cape || items.sword >= 2) && items.sword 
-        && (goal !== "keysanity" || sphereCounter.agahnim === 2);
+        && (variation !== "keysanity" || sphereCounter.agahnim === 2);
     } else {
         return !items.agahnim 
-            && (items.lantern || glitches.darkrooms.agatower) 
             && (items.cape || items.hammer)
-            && (goal !== "keysanity" || sphereCounter.agahnim === 2);
+            && (variation !== "keysanity" || sphereCounter.agahnim === 2);
     }    
 }
 
@@ -61,14 +62,15 @@ function doableWith(func, itemName) {
     }    
 }
 
-function resetChests() {
+function resetChests() {    
+    highlightedChests = [];
     dungeons.forEach(function(dun) {
         dun.isBeaten = false;
     });
     chests.forEach(function(chest) {
         chest.isOpened = false;
     });
-    if (goal === 'keysanity') {
+    if (variation === 'keysanity') {
         itemsMax.chest0 = 6;
         itemsMax.chest1 = 6;
         itemsMax.chest2 = 6;
@@ -252,9 +254,9 @@ dungeons[0] = {
         if (!this.isAccessible()) {
             return "unavailable";
         }        
-		if(items.bow>1 && items.lantern && (goal !== "keysanity" || sphereCounter.boss0))
+		if(items.bow>1 && items.lantern && (variation !== "keysanity" || sphereCounter.boss0))
 			return "available";
-        if (items.bow>1 && glitches.darkrooms.eastern && (goal !== "keysanity" || sphereCounter.boss0))
+        if (items.bow>1 && (variation !== "keysanity" || sphereCounter.boss0))
             return "glitched";
 		return "unavailable";
     },
@@ -263,12 +265,12 @@ dungeons[0] = {
         if (!this.isAccessible()) {
             return "unavailable";
         }
-        if (goal === "keysanity") {            
+        if (variation === "keysanity") {            
             if (this.accessibleChests(true) === 6) {
                 return "available";
             } else if (items.chest0 > 6-this.accessibleChests(true)) {
                 return "possible";
-            } else if (items.chest0 > 6-this.accessibleChests(false) && glitches.darkrooms.eastern) {
+            } else if (items.chest0 > 6-this.accessibleChests(false)) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -279,7 +281,7 @@ dungeons[0] = {
             }
             if(items.bow>1 && items.lantern)
                 return "available";
-            if (items.bow>1 && glitches.darkrooms.eastern)
+            if (items.bow>1)
                 return "glitched";
             return "possible";
         }
@@ -332,7 +334,7 @@ dungeons[1] = {
         if (mode === 'inverted' && !items.moonpearl) {
             return "unavailable";
         }
-        if(!items.boots && goal !== "keysanity")
+        if(!items.boots && variation !== "keysanity")
             return "possible";        
         return "available";		
     },
@@ -340,7 +342,7 @@ dungeons[1] = {
     canGetChest: function(){        
         if (!this.isAccessible())
             return "unavailable";
-        if (goal === "keysanity") {
+        if (variation === "keysanity") {
             var chestNum = this.accessibleChests(true);
             if (chestNum === 6) {
                 return "available";
@@ -361,7 +363,7 @@ dungeons[1] = {
             }
         } else {
             if ((items.glove || logic === "major") && hasFiresource() && items.boots 
-                && this.isKillable() && (goal !== "keysanity" || sphereCounter.chest1)) {
+                && this.isKillable() && (variation !== "keysanity" || sphereCounter.chest1)) {
                 if (mode === 'inverted' && !items.moonpearl) {
                     return "glitched";
                 }
@@ -387,7 +389,7 @@ dungeons[1] = {
     },
     isKillable: function() {
         return (items.sword || items.hammer || items.bow > 1 || items.firerod || 
-              items.icerod || items.byrna || items.somaria) && (goal !== "keysanity" || sphereCounter.boss1);
+              items.icerod || items.byrna || items.somaria) && (variation !== "keysanity" || sphereCounter.boss1);
     },
     accessibleChests: function(inLogic) {
         var normalChests = 1;
@@ -416,13 +418,13 @@ dungeons[2] = {
     isBeaten: false,
     isBeatable: function(){
         if (!this.isAccessible()) {
-            if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern") && this.isKillable()) {
+            if (doableWith(this.isAccessible, "lantern") && this.isKillable()) {
                 return "glitched";
             } else {
                 return "unavailable";
             }
         } else {
-            if ((hasFiresource() || goal === "keysanity") && this.isKillable()) {
+            if ((hasFiresource() || variation === "keysanity") && this.isKillable()) {
                 return "available";
             } else if (this.isKillable()) {
                 return "possible";
@@ -434,7 +436,7 @@ dungeons[2] = {
     kChestCount: 6,
     canGetChest: function(){
         if (!this.isAccessible()) {
-            if (goal === "keysanity" && glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern")) {
+            if (variation === "keysanity" && doableWith(this.isAccessible, "lantern")) {
                 var chestNum = this.accessibleChests(true);
                 if (items.chest2 > 6-chestNum) {
                     return "glitched";
@@ -442,14 +444,14 @@ dungeons[2] = {
                     return "unavailable";
                 }
             } else {
-                if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern")) {
+                if (doableWith(this.isAccessible, "lantern")) {
                     return "glitched";
                 } else {
                     return "unavailable";
                 }
             }            
         } else {
-            if (goal === "keysanity") {
+            if (variation === "keysanity") {
                 var chestNum = this.accessibleChests(true);
                 if (chestNum === 6) {
                     return "available";
@@ -470,7 +472,7 @@ dungeons[2] = {
     isAccessible: function() {
         if (mode === 'inverted') {
             return items.moonpearl && items.hammer && 
-                (regions.invertedEastDM() || (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDM, "lantern")));
+                (regions.invertedEastDM() || (doableWith(regions.invertedEastDM, "lantern")));
         }
         switch(logic) {
             case "nmg":
@@ -485,7 +487,7 @@ dungeons[2] = {
         
     },
     isKillable: function() {
-        return (items.sword || items.hammer) && (goal !== "keysanity" || sphereCounter.boss2);
+        return (items.sword || items.hammer) && (variation !== "keysanity" || sphereCounter.boss2);
     },
     accessibleChests: function(inLogic) {
         var normalChests = 2;
@@ -512,7 +514,7 @@ dungeons[3] = {
     isBeaten: false,
     isBeatable: function(){
         if (!this.isAccessible()) {
-            if (considerAga() && doableWith(this.isAccessible, "agahnim") && this.isKillable() && (items.lantern || glitches.darkroom)) {
+            if (considerAga() && doableWith(this.isAccessible, "agahnim") && this.isKillable()) {
                 return "aga";
             } else {
                 return "unavailable";
@@ -520,7 +522,7 @@ dungeons[3] = {
         }
         if (this.isKillable() && items.lantern) {
             return "available";
-        } else if (this.isKillable() && glitches.darkrooms.pod) {
+        } else if (this.isKillable()) {
             return "glitched";
         } else {
             return "unavailable";
@@ -535,7 +537,7 @@ dungeons[3] = {
                 return "unavailable";
             }
         }
-        if (goal === "keysanity") {
+        if (variation === "keysanity") {
             var logicChests = this.accessibleChests(true);
             var glitchedChests = this.accessibleChests(false);
             if (logicChests === 14) {
@@ -550,7 +552,7 @@ dungeons[3] = {
         } else {
             if (this.isKillable() && items.lantern) {
                 return "available";
-            } else if (this.isKillable() && !items.lantern && glitches.darkrooms.pod) {
+            } else if (this.isKillable() && !items.lantern) {
                 return "glitched";
             } else {
                 return "possible";
@@ -566,7 +568,7 @@ dungeons[3] = {
     },
     isKillable: function() {
         return (items.bow > 1 && items.hammer) 
-            && (goal !== "keysanity" || (sphereCounter.boss3 && sphereCounter.chest3));
+            && (variation !== "keysanity" || (sphereCounter.boss3 && sphereCounter.chest3));
     },
     accessibleChests: function(inLogic) {
         var minChests, maxChestsGlitched;
@@ -605,7 +607,9 @@ dungeons[3] = {
             if (items.bow > 1) {
                 minChests += 2;
                 maxChestsGlitched += 2;
-            }                
+            } else if (items.bottle) {
+                maxChestsGlitched += 2;
+            }
         }
         if (items.hammer && items.bow>1) {
             switch(sphereCounter.chest3) {
@@ -703,7 +707,7 @@ dungeons[4] = {
                 return "unavailable";
             }
         }
-        if (goal === "keysanity") {
+        if (variation === "keysanity") {
             var chestCount = this.accessibleChests(true);
             if (chestCount === 10) {
                 return "available";
@@ -714,7 +718,7 @@ dungeons[4] = {
             }
         } else {
             if (logic !== "major") {
-                if (this.isKillable() && (goal !== "keysanity" || sphereCounter.boss4)) {
+                if (this.isKillable() && (variation !== "keysanity" || sphereCounter.boss4)) {
                     return "available";      
                 } else {  
                     return "possible";
@@ -744,7 +748,7 @@ dungeons[4] = {
         }
     },
     isKillable: function() {
-        return items.hookshot && items.hammer && (goal !== "keysanity" || sphereCounter.chest4);
+        return items.hookshot && items.hammer && (variation !== "keysanity" || sphereCounter.chest4);
     },
     accessibleChests: function(inLogic) {
         var chestCount = 1;
@@ -773,13 +777,13 @@ dungeons[5] = {
     isBeaten: false,
     isBeatable: function(){
         if (!this.isAccessible()) {
-            if (considerAga() && doableWith(this.isAccessible, "agahnim") && items.firerod && (items.sword || mode === "swordless")) {
+            if (considerAga() && doableWith(this.isAccessible, "agahnim") && items.firerod && this.canKillBoss()) {
                 return "aga";
             } else {
                 return "unavailable";
             }
         } else {
-            if (items.firerod && (items.sword || mode === "swordless")) {
+            if (items.firerod && this.canKillBoss()) {
                 return "available";
             } else {
                 return "unavailable";
@@ -795,7 +799,7 @@ dungeons[5] = {
                 return "unavailable";
             }
         } else {
-            if (goal === "keysanity") {
+            if (variation === "keysanity") {
                 var availableChests = this.accessibleChests(true);
                 if (availableChests === 8) {
                     return "available";
@@ -805,8 +809,8 @@ dungeons[5] = {
                     return "unavailable";
                 }
             } else {
-                if (items.firerod && (items.sword || mode === "swordless") 
-                        && (goal !== "keysanity" || sphereCounter.boss5)) {
+                if (items.firerod && (items.sword || swords === "swordless") 
+                        && (variation !== "keysanity" || sphereCounter.boss5)) {
                     return "available";
                 } else {
                     return "possible";
@@ -828,6 +832,10 @@ dungeons[5] = {
                 return true;
         }
     },
+    canKillBoss: function() {
+        return items.sword || items.hammer || (items.bottle && (items.firerod || items.somaria || items.byrna))
+            || (items.boots && items.bottle && items.net);
+    },
     accessibleChests: function(inLogic) {
         var availableChests = 5;
         if (sphereCounter.boss5) {
@@ -835,7 +843,7 @@ dungeons[5] = {
         }
         if (items.firerod) {
             availableChests++;
-            if (items.sword || mode === "swordless") {
+            if (items.sword || swords === "swordless") {
                 availableChests++;
             }
         }
@@ -874,7 +882,7 @@ dungeons[6] = {
                 return "unavailable";
             }
         } 
-        if (goal === "keysanity") {
+        if (variation === "keysanity") {
             var chestCount = this.accessibleChests(true);
             if (chestCount === 8) {
                 return "available";
@@ -884,7 +892,7 @@ dungeons[6] = {
                 return "unavailable";
             }
         } else {
-            if (items.hammer && this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest6)) {
+            if (items.hammer && this.canKillBoss() && (variation !== "keysanity" || sphereCounter.chest6)) {
                 return "available";
             } else {
                 return "possible";
@@ -903,7 +911,7 @@ dungeons[6] = {
     },
     canKillBoss: function() {
         return (items.sword || items.hammer || items.somaria || items.byrna)
-                && (goal !== "keysanity" || sphereCounter.boss6);
+                && (variation !== "keysanity" || sphereCounter.boss6);
     },
     accessibleChests: function(inLogic) {
         var chestCount = 4;
@@ -928,13 +936,9 @@ dungeons[7] = {
         if (logic !== "major") {
             if (!this.isAccessible()) {
                 var glitchList = [];
-                if (glitches.fakeflippers) {
-                    glitchList.push("flippers");
-                }
-                if (glitches.bunnyrevival) {
-                    glitchList.push("moonpearl");
-                }
-                if (doableWith(this.isAccessible, glitchList) && (items.hookshot || items.somaria || glitches.ipbj) && items.hammer && items.glove) {
+                glitchList.push("flippers");
+                glitchList.push("moonpearl");
+                if (doableWith(this.isAccessible, glitchList) && items.hammer && items.glove) {
                     return "glitched";
                 } else {
                     return "unavailable";
@@ -961,18 +965,14 @@ dungeons[7] = {
         if (logic !== "major") {
             if (!this.isAccessible()) {
                 var glitchList = [];
-                if (glitches.fakeflippers) {
-                    glitchList.push("flippers");
-                }
-                if (glitches.bunnyrevival) {
-                    glitchList.push("moonpearl");
-                }
+                glitchList.push("flippers");
+                glitchList.push("moonpearl");
                 if (doableWith(this.isAccessible, glitchList)) {
                     return "glitched";
                 } else {
                     return "unavailable";
                 }
-            } else if (goal === "keysanity") {                
+            } else if (variation === "keysanity") {                
                 if (this.accessibleChests(true) === 8) {
                     return "available";
                 } else if (items.chest7 > 8-this.accessibleChests(true)) {
@@ -983,7 +983,7 @@ dungeons[7] = {
                     return "unavailable";
                 }
             } else {
-                if (items.hookshot && items.somaria && items.hammer && (goal !== "keysanity" || sphereCounter.boss7)) {
+                if (items.hookshot && items.somaria && items.hammer && (variation !== "keysanity" || sphereCounter.boss7)) {
                     return "available";
                 } else {
                     return "possible";
@@ -1053,7 +1053,7 @@ dungeons[8] = {
     isBeatable: function(){
 		var canClear;
         if (logic !== "major") {
-            canClear = items.somaria && items.lantern && (goal !== "keysanity" || sphereCounter.boss8);
+            canClear = items.somaria && items.lantern && (variation !== "keysanity" || sphereCounter.boss8);
         } else {
             canClear = items.somaria || items.sword || items.hammer || (items.hookshot && items.flippers && (items.firerod || items.icerod || items.bow > 1))
         }
@@ -1062,13 +1062,13 @@ dungeons[8] = {
         } else if (items.moonpearl) {
             if (canClear) {
                 return "available";
-            } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire && (goal !== "keysanity" || sphereCounter.boss8)) {
+            } else if (logic !== "major" && items.somaria && hasFiresource() && (goal !== "keysanity" || sphereCounter.boss8)) {
                 return "glitched";
             } else {
                 return "unavailable";
             }
-        } else if (glitches.owbunnyrevival && items.bottle && items.net && 
-                        (canClear || (items.somaria && items.firerod && glitches.darkrooms.mire))) {            
+        } else if (items.bottle && items.net && 
+                        (canClear || (items.somaria && items.firerod))) {            
             return "glitched";
         } else {
             return "unavailable";
@@ -1078,14 +1078,14 @@ dungeons[8] = {
     canGetChest: function(){
         var canClear;
         if (logic !== "major") {
-            canClear = items.somaria && items.lantern && (goal !== "keysanity" || sphereCounter.boss8);
+            canClear = items.somaria && items.lantern && (variation !== "keysanity" || sphereCounter.boss8);
         } else {
             canClear = items.somaria || items.sword || items.hammer || (items.hookshot && items.flippers && (items.firerod || items.icerod || items.bow > 1))
         }
 		if (!this.isAccessible()) {
             return "unavailable";
         } else {
-            if (goal === "keysanity") {                
+            if (variation === "keysanity") {                
                 if (this.accessibleChests(true) === 8) {
                     return "available";
                 } else if (items.chest8 > 8-this.accessibleChests(true)) {
@@ -1099,7 +1099,7 @@ dungeons[8] = {
             } else {
                 if (canClear && this.canKillBoss()) {                
                     return "available";
-                } else if (logic !== "major" && items.somaria && hasFiresource() && glitches.darkrooms.mire && (goal !== "keysanity" || sphereCounter.boss8)) {
+                } else if (logic !== "major" && items.somaria && hasFiresource() && (goal !== "keysanity" || sphereCounter.boss8)) {
                     return "glitched";
                 } else {
                     return "possible";
@@ -1109,7 +1109,7 @@ dungeons[8] = {
         }
     },
     isAccessible: function() {
-        var hasMedallion = medallionCheck(0) && (items.sword || mode === "swordless");
+        var hasMedallion = medallionCheck(0) && (items.sword || swords === "swordless");
         if (mode === 'inverted') {
             return hasMedallion && (items.boots || items.hookshot) && regions.mire();
         }
@@ -1161,7 +1161,7 @@ dungeons[9] = {
     isBeaten: false,
     isBeatable: function(){
 		if (!this.isAccessible()) {
-            if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern") && items.firerod && items.icerod && items.somaria && (items.lantern || glitches.darkrooms.tr)) {
+            if (doableWith(this.isAccessible, "lantern") && items.firerod && items.icerod && items.somaria && (items.lantern || glitches.darkrooms.tr)) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -1171,10 +1171,8 @@ dungeons[9] = {
                 if (this.canKillBoss()) {
                     if (items.lantern) {
                         return "available";
-                    } else if (glitches.darkrooms.tr) {
-                        return "glitched";
                     } else {
-                        return "unavailable";
+                        return "glitched";
                     }
                 } else {
                     return "unavailable";
@@ -1191,14 +1189,14 @@ dungeons[9] = {
     kChestCount: 12,
     canGetChest: function(){
         if (!this.isAccessible()) {
-            if (glitches.darkrooms.oldMan && doableWith(this.isAccessible, "lantern")) {
+            if (doableWith(this.isAccessible, "lantern")) {
                 return "glitched";
             } else {
                 return "unavailable";
             }
         } else {
             if (logic !== "major") {
-                if (goal === "keysanity") {                    
+                if (variation === "keysanity") {                    
                     if (this.accessibleChests(true) === 12) {
                         return "available";
                     } else if (items.chest9 > 12-this.accessibleChests(true)) {
@@ -1209,20 +1207,18 @@ dungeons[9] = {
                         return "unavailable";
                     }
                 } else {
-                    if (this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest9 >= 4)) {
+                    if (this.canKillBoss() && (variation !== "keysanity" || sphereCounter.chest9 >= 4)) {
                         if (items.lantern) {
                             return "available";
-                        } else if (glitches.darkrooms.tr) {
-                            return "glitched";
                         } else {
-                            return "possible";
+                            return "glitched";
                         }
                     } else {
                         return "possible";
                     }
                 }                
             } else {
-                if (this.canKillBoss() && (goal !== "keysanity" || sphereCounter.chest9 >= 4)) {
+                if (this.canKillBoss() && (variation !== "keysanity" || sphereCounter.chest9 >= 4)) {
                     return "available";
                 } else {
                     return "possible";
@@ -1231,10 +1227,10 @@ dungeons[9] = {
         }
     },
     isAccessible: function() {        
-        var hasMedallion = medallionCheck(1) && (items.sword || mode === "swordless");
+        var hasMedallion = medallionCheck(1) && (items.sword || swords === "swordless");
         if (mode === 'inverted') {
-            return ((regions.invertedEastDM() || (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDM, "lantern"))) && items.mirror)
-                || ((regions.invertedEastDWDM() || (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDWDM, "lantern"))) && hasMedallion && items.somaria && items.hammer); // TODO check
+            return ((regions.invertedEastDM() || (doableWith(regions.invertedEastDM, "lantern"))) && items.mirror)
+                || ((regions.invertedEastDWDM() || (doableWith(regions.invertedEastDWDM, "lantern"))) && hasMedallion && items.somaria && items.hammer); // TODO check
         }
         switch (logic) {
             case "nmg":
@@ -1249,7 +1245,7 @@ dungeons[9] = {
     },
     canKillBoss: function() {
         return items.firerod && items.icerod && items.somaria 
-            && (goal !== "keysanity" || (sphereCounter.boss9 && sphereCounter.chest9 >= 3));
+            && (variation !== "keysanity" || (sphereCounter.boss9 && sphereCounter.chest9 >= 3));
     },
     accessibleChests: function(inLogic) {
         var minChests = 1, maxChests = 1;
@@ -1297,18 +1293,17 @@ dungeons[10] = {
     image: "agahnim.png",
     isBeaten: false,
     isBeatable: function(){
-		if (mode !== "swordless") {
-            if (this.isAccessible() && (items.lantern || glitches.darkrooms.agatower) 
+		if (swords !== "swordless") {
+            if (this.isAccessible() 
                     && items.sword 
-                    && (goal !== "keysanity" || sphereCounter.agahnim === 2)) {
+                    && (variation !== "keysanity" || sphereCounter.agahnim === 2)) {
                 return "available";
             } else {
                 return "unavailable";
             }
         } else {
-            if ((items.lantern || glitches.darkrooms.agatower) 
-                    && (items.cape || items.hammer)
-                    && (goal !== "keysanity" || sphereCounter.agahnim === 2)) {
+            if ((items.cape || items.hammer)
+                    && (variation !== "keysanity" || sphereCounter.agahnim === 2)) {
                 return "available";
             } else {
                 return "unavailable";
@@ -1317,7 +1312,7 @@ dungeons[10] = {
     },
     kChestCount: 2,
     canGetChest: function(){
-        if (goal === "keysanity") {
+        if (variation === "keysanity") {
             if (this.isAccessible()) {                
                 if (sphereCounter.agahnim >= 1) {
                     return "available";
@@ -1334,7 +1329,7 @@ dungeons[10] = {
         if (mode === 'inverted') {
             return regions.westDeathMountain();
         }
-        if (mode !== "swordless") {
+        if (swords !== "swordless") {
             return items.cape || items.sword >= 2
         } else {
             return items.cape || items.hammer
@@ -1357,7 +1352,7 @@ dungeons[10] = {
 };
 
 function getChestsLeftText(dungeonNum) {
-    if (goal === "keysanity" && dungeonNum != 10 && dungeons[dungeonNum].isAccessible()) {
+    if (variation === "keysanity" && dungeonNum != 10 && dungeons[dungeonNum].isAccessible()) {
         var value = dungeons[dungeonNum].accessibleChests(true)-(dungeons[dungeonNum].kChestCount-items["chest"+dungeonNum]);
         if (value <= 0) {
             return "";
@@ -1448,7 +1443,7 @@ chests[3] = {
         if (mode === 'inverted') {
             if (regions.invertedEastDM() && items.moonpearl) {
                 return "available";
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDM, "lantern")) {
+            } else if (doableWith(regions.invertedEastDM, "lantern")) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -1456,7 +1451,7 @@ chests[3] = {
         }
         if (regions.eastDeathMountain()) {
             return "available";
-        } else if (glitches.darkrooms.oldMan && doableWith(regions.eastDeathMountain, "lantern")) {
+        } else if (doableWith(regions.eastDeathMountain, "lantern")) {
             return "glitched";
         } else {
             return "unavailable";
@@ -1474,7 +1469,7 @@ chests[4] = {
         if (mode === 'inverted') {
             if (regions.invertedEastDM() && items.mirror && items.hammer) {
                 return "available";
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDM, "lantern") && items.mirror && items.hammer) {
+            } else if (doableWith(regions.invertedEastDM, "lantern") && items.mirror && items.hammer) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -1483,12 +1478,12 @@ chests[4] = {
         switch (logic) {
             case "nmg":
                 if (dungeons[9].isAccessible() && items.mirror) {
-                    if (items.firerod || (goal === "keysanity" && sphereCounter.chest9 >= 2)) {
+                    if (items.firerod || (variation === "keysanity" && sphereCounter.chest9 >= 2)) {
                         return "available";
                     } else {
                         return "possible";
                     }
-                } else if (glitches.darkrooms.oldMan && doableWith(dungeons[9].isAccessible, "lantern") && items.mirror) {
+                } else if (doableWith(dungeons[9].isAccessible, "lantern") && items.mirror) {
                     return "glitched";
                 } else {
                     return "unavailable";
@@ -1496,7 +1491,7 @@ chests[4] = {
             case "owg":
                 if (items.hammer && items.mirror && regions.darkEastDeathMountain()) {
                     return "available";
-                } else if (items.hammer && items.mirror && glitches.darkrooms.oldMan && doableWith(regions.darkEastDeathMountain, "lantern")) {
+                } else if (items.hammer && items.mirror && doableWith(regions.darkEastDeathMountain, "lantern")) {
                     return "glitched";
                 } else {
                     return "unavailable";
@@ -1634,7 +1629,7 @@ chests[10] = {
                 case "nmg":
                     if (items.moonpearl) {
                         return "available";
-                    } else if (glitches.superbunny && items.mirror) {
+                    } else if (items.mirror) {
                         return "glitched";
                     } else {
                         return "unavailable";
@@ -1666,7 +1661,7 @@ chests[11] = {
         if (mode === 'inverted') {
             if (regions.invertedEastDWDM()) {
                 return "available";
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDWDM, "lantern")) {
+            } else if (doableWith(regions.invertedEastDWDM, "lantern")) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -1675,12 +1670,8 @@ chests[11] = {
         switch(logic) {
             case "nmg":
                 var glitchList = [];
-                if (glitches.superbunny) {
-                    glitchList.push("moonpearl");
-                }
-                if (glitches.darkrooms.oldMan) {
-                    glitchList.push("lantern");
-                }
+                glitchList.push("moonpearl");
+                glitchList.push("lantern");
                 if (regions.darkEastDeathMountain()) {
                     return "available";
                 } else if (doableWith(regions.darkEastDeathMountain, glitchList)) {
@@ -1736,7 +1727,7 @@ chests[13] = {
                 } else {
                     return "glitched";
                 }
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.westDeathMountain, "lantern")
+            } else if (doableWith(regions.westDeathMountain, "lantern")
                 && items.hammer && items.glove) {
                 return "glitched";
             } else {
@@ -1755,7 +1746,7 @@ chests[13] = {
             } else {
                 return "unavailable";
             }      
-        } else if (glitches.darkrooms.oldMan && doableWith(regions.darkWestDeathMountain, "lantern")) {
+        } else if (doableWith(regions.darkWestDeathMountain, "lantern")) {
             return isAccessible ? "glitched" : "unavailable";
         } else {
             return "unavailable";
@@ -1833,7 +1824,7 @@ chests[17] = {
         if (mode === 'inverted') {
             if (regions.invertedEastDM() && items.moonpearl) {
                 return "available";
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDM, "lantern")) {
+            } else if (doableWith(regions.invertedEastDM, "lantern")) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -1841,7 +1832,7 @@ chests[17] = {
         }
         if (regions.eastDeathMountain()) {
             return "available";
-        } else if (glitches.darkrooms.oldMan && doableWith(regions.eastDeathMountain, "lantern")) {
+        } else if (doableWith(regions.eastDeathMountain, "lantern")) {
             return "glitched";
         } else {
             return "unavailable";
@@ -1916,7 +1907,7 @@ chests[21] = {
         if (mode === 'inverted') {
             if (regions.invertedEastDWDM() && items.glove && (items.hookshot || items.boots)) {
                 return "available";
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDWDM, "lantern") 
+            } else if (doableWith(regions.invertedEastDWDM, "lantern") 
                 && items.glove && (items.hookshot || items.boots)) {
                 return "glitched";
             } else {
@@ -1927,7 +1918,7 @@ chests[21] = {
             case "nmg":
                 if (regions.darkEastDeathMountain() && (items.hookshot || items.boots)) {                    
                     return "available";                    
-                } else if (glitches.darkrooms.oldMan && doableWith(regions.darkEastDeathMountain, "lantern") && (items.hookshot || items.boots)) {
+                } else if (doableWith(regions.darkEastDeathMountain, "lantern") && (items.hookshot || items.boots)) {
                     return "glitched";
                 } else {
                     return "unavailable";
@@ -1959,8 +1950,8 @@ chests[22] = {
         if (mode === 'inverted') {
             if (regions.invertedEastDWDM() && items.glove && items.hookshot) {
                 return "available";
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDWDM, "lantern") 
-                && items.glove && (items.hookshot || (glitches.hover && items.boots))) {
+            } else if (doableWith(regions.invertedEastDWDM, "lantern") 
+                && items.glove && (items.hookshot || items.boots)) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -1970,8 +1961,8 @@ chests[22] = {
             case "nmg":
                 if (regions.darkEastDeathMountain() && items.hookshot ) {                    
                     return "available";                    
-                } else if ((regions.darkEastDeathMountain() || (glitches.darkrooms.oldMan && doableWith(regions.darkEastDeathMountain, "lantern"))) 
-                            && (items.hookshot || (glitches.hover && items.boots))) {
+                } else if ((regions.darkEastDeathMountain() || (doableWith(regions.darkEastDeathMountain, "lantern"))) 
+                            && (items.hookshot || items.boots)) {
                     return "glitched";                    
                 } else {
                     return "unavailable";
@@ -1979,7 +1970,7 @@ chests[22] = {
             case "owg":
                 if (regions.darkEastDeathMountain() && items.moonpearl && items.glove && items.hookshot) {                    
                     return "available";                    
-                } else if ((regions.darkEastDeathMountain() || (glitches.darkrooms.oldMan && doableWith(regions.darkEastDeathMountain, "lantern"))) 
+                } else if ((regions.darkEastDeathMountain() || (doableWith(regions.darkEastDeathMountain, "lantern"))) 
                             && items.moonpearl && items.glove && items.hookshot) {
                     return "glitched";                    
                 } else {
@@ -1990,7 +1981,7 @@ chests[22] = {
                     ((items.moonpearl || items.bottle) && items.glove));
                 if (isAccessible && items.hookshot) {
                     return "available";
-                } else if (isAccessible && glitches.hover && items.boots) {
+                } else if (isAccessible && items.boots) {
                     return "glitched";
                 } else {
                     return "unavailable";
@@ -2151,10 +2142,9 @@ chests[29] = {
             if (items.moonpearl && regions.invertedLW()) {
                 if (items.flippers) {
                     return "available";
-                } else if (glitches.fakeflippers) {
+                } else {
                     return "glitched";
                 }
-                return "unavailable";
             } else {
                 return "unavailable";
             }
@@ -2162,10 +2152,8 @@ chests[29] = {
         if (logic === "nmg") {
             if (items.flippers) {
                 return "available";
-            } else if (glitches.fakeflippers) {
-                return "glitched";
             } else {
-                return "unavailable";
+                return "glitched";
             }
         } else {
             return "available";
@@ -2187,7 +2175,7 @@ chests[30] = {
                 } else {
                     return "possible";
                 }
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDM, "lantern")
+            } else if (doableWith(regions.invertedEastDM, "lantern")
                 && (items.moonpearl && items.book && items.hammer)) {
                     return "glitched";
             } else {
@@ -2197,19 +2185,19 @@ chests[30] = {
         if (logic !== "major") {
             if (items.book) {
                 if (regions.westDeathMountain() && (items.mirror || (items.hammer && items.hookshot))) {
-                    if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
+                    if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
                         return "available";
                     } else {
                         return "possible";
                     }
-                } else if (glitches.darkrooms.oldMan && doableWith(regions.westDeathMountain, "lantern") 
+                } else if (doableWith(regions.westDeathMountain, "lantern") 
                         && (items.mirror || (items.hammer && items.hookshot))) {
                     return "glitched";
                 }
             }           
         } else {
             if (regions.westDeathMountain() && items.book) {
-                if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
+                if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
                     return "available";
                 } else {
                     return "possible";
@@ -2241,7 +2229,7 @@ chests[31] = {
         switch (logic) {
             case "nmg":
                 if (items.book && items.mirror && regions.SouthDarkWorld()) {
-                    if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
+                    if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
                         return "available";
                     } else {
                         return "possible";
@@ -2253,7 +2241,7 @@ chests[31] = {
                 }
             case "owg":
                 if (items.book && (items.boots || (items.mirror && regions.SouthDarkWorld()))) {
-                    if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
+                    if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
                         return "available";
                     } else {
                         return "possible";
@@ -2265,7 +2253,7 @@ chests[31] = {
                 }
             case "major":
                 if (items.book) {
-                    if (items.sword >= 2 || (mode === "swordless" && items['Hammer'])) {
+                    if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
                         return "available";
                     } else {
                         return "possible";
@@ -2302,7 +2290,7 @@ chests[32] = {
             case "owg":
                 if (regions.northEastDarkWorld() && items.moonpearl && items.glove) {
                     return "available";
-                } else if (glitches.darkrooms.oldMan && doableWith(regions.northEastDarkWorld, "lantern") && items.moonpearl && items.glove) {
+                } else if (doableWith(regions.northEastDarkWorld, "lantern") && items.moonpearl && items.glove) {
                     return "glitched";
                 } else if (considerAga() && doableWith(regions.northEastDarkWorld, "agahnim") && items.moonpearl && items.glove) {
                     return "aga";                
@@ -2340,10 +2328,8 @@ chests[33] = {
         if (logic === "nmg") {
             if (items.flippers || items.glove) {
                 return "available";
-            } else if (glitches.fakeflippers) {
-                return "glitched";
             } else {
-                return "unavailable";
+                return "glitched";
             }
         } else {
             return "available";
@@ -2359,7 +2345,7 @@ chests[34] = {
     isAvailable: function(){
         if (regions.westDeathMountain() && items.lantern) {
             return "available";        
-        } else if (glitches.darkrooms.oldMan && doableWith(regions.westDeathMountain, "lantern")) {
+        } else if (doableWith(regions.westDeathMountain, "lantern")) {
             return "glitched";
         } else {
             return "unavailable";
@@ -2450,7 +2436,7 @@ chests[38] = {
     isAvailable: function(){
         if (regions.westDeathMountain()) {
             return "available";
-        } else if (glitches.darkrooms.oldMan && doableWith(regions.westDeathMountain, "lantern")) {
+        } else if (doableWith(regions.westDeathMountain, "lantern")) {
             return "glitched";
         } else {
             return "unavailable";
@@ -2538,7 +2524,7 @@ chests[41] = {
             case "owg":
                 if (items.glove && (items.boots || (items.mirror && regions.mire()))) {
                     return "available";
-                } else if (items.glove && items.mirror && glitches.darkrooms.oldMan && doableWith(regions.mire, "lantern")) {
+                } else if (items.glove && items.mirror && doableWith(regions.mire, "lantern")) {
                     return "glitched";
                 } else if (items.glove && items.mirror && considerAga() && doableWith(regions.mire, "agahnim")) {
                     return "aga";
@@ -2638,10 +2624,10 @@ chests[45] = {
         if (mode === 'inverted') {
             if (regions.invertedEastDM() && items.moonpearl && items.hammer) {
                 return "available";
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDM, "lantern")
+            } else if (doableWith(regions.invertedEastDM, "lantern")
                 && items.moonpearl && items.hammer) {
                 return "glitched";
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.westDeathMountain, "lantern")) {
+            } else if (doableWith(regions.westDeathMountain, "lantern")) {
                 return "possible";
             } else {
                 return "unavailable";
@@ -2660,7 +2646,7 @@ chests[45] = {
             } else {
                 return "possible";
             }
-        } else if (glitches.darkrooms.oldMan && doableWith(regions.westDeathMountain, "lantern")) {
+        } else if (doableWith(regions.westDeathMountain, "lantern")) {
             return "glitched";
         } else {
             return "unavailable";
@@ -2678,7 +2664,7 @@ chests[46] = {
         if (mode === 'inverted') {
             if (regions.invertedEastDM()) {
                 return "available";
-            } else if (glitches.darkrooms.oldMan && doableWith(regions.invertedEastDM, "lantern")) {
+            } else if (doableWith(regions.invertedEastDM, "lantern")) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -2697,7 +2683,7 @@ chests[46] = {
             } else {
                 return "possible";
             }
-        } else if (glitches.darkrooms.oldMan && doableWith(regions.eastDeathMountain, "lantern")) {
+        } else if (doableWith(regions.eastDeathMountain, "lantern")) {
             return "glitched";
         } else {
             return "unavailable";
@@ -2745,7 +2731,7 @@ chests[48] = {
         }
         if (dungeons[1].isAccessible()) {
             return "available";
-        } else if (glitches.darkrooms.oldMan && doableWith(dungeons[1].isAccessible, "lantern")) {
+        } else if (doableWith(dungeons[1].isAccessible, "lantern")) {
             return "glitched";        
         } else if (considerAga() && doableWith(dungeons[1].isAccessible, "agahnim")) {
             return "aga";
@@ -2765,7 +2751,7 @@ chests[49] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW() && items.flippers) {
                 return "available";
-            } else if (items.moonpearl && regions.invertedLW() && glitches.fakeflippers) {
+            } else if (items.moonpearl && regions.invertedLW()) {
                 return "glitched";
             } else if (regions.invertedLW()) {
                 return "possible";
@@ -2779,12 +2765,10 @@ chests[49] = {
                     return "available";
                 } else if (considerAga() && items.flippers && items.moonpearl && items.mirror && (doableWith(regions.SouthDarkWorld, "agahnim") || doableWith(regions.northEastDarkWorld, "agahnim"))) {
                     return "aga";
-                } else if (items.agahnim && items.flippers && items.mirror && glitches.surfbunny) {
+                } else if (items.agahnim && items.flippers && items.mirror) {
                     return "glitched";
-                } else if (items.flippers || glitches.fakeflippers) {
-                    return "possible";
                 } else {
-                    return "unavailable";
+                    return "possible";
                 }
             case "owg":
                 if (items.boots || (items.flippers && items.mirror && ((items.moonpearl && regions.SouthDarkWorld()) || regions.northEastDarkWorld()))) {
@@ -2849,7 +2833,7 @@ chests[51] = {
         }
         if (regions.northEastDarkWorld()) {
             return "available";
-        } else if (glitches.darkrooms.oldMan && doableWith(regions.northEastDarkWorld, "lantern")) {
+        } else if (doableWith(regions.northEastDarkWorld, "lantern")) {
             return "glitched";
         } else if (considerAga() && doableWith(regions.northEastDarkWorld, "agahnim")) {
             return "aga";
@@ -2890,12 +2874,10 @@ chests[53] = {
             if (items.moonpearl && regions.invertedLW()) {
                 if (items.flippers) {
                     return "available";
-                } else if (glitches.fakeflippers && items.boots) {
+                } else if (items.boots) {
                     return "glitched";
-                } else if (items.glove || glitches.fakeflippers) {
-                    return "possible";
                 } else {
-                    return "unavailable";
+                    return "possible";
                 }
             } else {
                 return "unavailable";
@@ -2904,10 +2886,8 @@ chests[53] = {
         if (logic === "nmg") {
             if (items.flippers) {
                 return "available";
-            } else if (items.glove || glitches.fakeflippers) {
-                return "possible";
             } else {
-                return "unavailable";
+                return "possible";
             }
         } else {
             if (items.flippers || (items.boots && items.moonpearl)) {
@@ -2951,7 +2931,7 @@ chests[55] = {
         if (mode === 'inverted') {
             if (items.moonpearl && items.glove && regions.invertedLW()) {
                 return "available";
-            } else if (regions.invertedLW() && (items.lantern || glitches.darkrooms.sewers)) {
+            } else if (regions.invertedLW()) {
                 return "possible";
             } else {
                 return "unavailable";
@@ -2962,10 +2942,8 @@ chests[55] = {
         } else {
             if (items.glove) {
                 return "available";
-            } else if (items.lantern || glitches.darkrooms.sewers) {
-                return "possible";
             } else {
-                return "unavailable";
+                return "possible";
             }
         }	    
     }
@@ -3172,7 +3150,7 @@ chests[63] = {
             if (items.moonpearl && regions.invertedLW()) {
                 if (items.flippers) {
                     return "available";
-                } else if (glitches.fakeflippers && (items.moonpearl || items.boots)) {
+                } else if ((items.moonpearl || items.boots)) {
                     return "glitched";
                 } else {
                     return "unavailable";
@@ -3184,7 +3162,7 @@ chests[63] = {
         if (logic === "nmg") {
             if (items.flippers) {
                 return "available";
-            } else if (glitches.fakeflippers && (items.moonpearl || items.boots)) {
+            } else if (items.moonpearl || items.boots) {
                 return "glitched";
             } else {
                 return "unavailable";
@@ -3209,10 +3187,8 @@ chests[64] = {
             if (regions.invertedLW()) {
                 if (items.moonpearl && items.lantern) {
                     return "available";
-                } else if (glitches.darkrooms.sewers) {
-                    return "glitched";
                 } else {
-                    return "unavailable";
+                    return "glitched";
                 }
             } else {
                 return "unavailable";
@@ -3223,10 +3199,8 @@ chests[64] = {
         } else {
             if (items.lantern) {
                 return "available";
-            } else if (glitches.darkrooms.sewers) {
-                return "glitched";
             } else {
-                return "unavailable";
+                return "glitched";
             }
         }
     }

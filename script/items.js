@@ -331,7 +331,7 @@ function resetItems() {
         chest8: 2,
         chest9: 5 
     };
-    if (goal === "keysanity") {
+    if (variation === "keysanity") {
         items.chest0 = 6;
         items.chest1 = 6;
         items.chest2 = 6;
@@ -343,7 +343,7 @@ function resetItems() {
         items.chest8 = 8;
         items.chest9 = 12;
     }
-    if (goal === "retro") {
+    if (variation === "retro") {
         items.chest0 = 3;
         items.chest1 = 3;
         items.chest2 = 3;
@@ -369,6 +369,6 @@ function resetItems() {
     }
 
     for (var i=0; i<dungeons.length; i++) {
-        prizes[i] = (goal === "keysanity" ? 0 : 1);
+        prizes[i] = (variation === "keysanity" ? 0 : 1);
     }
 }

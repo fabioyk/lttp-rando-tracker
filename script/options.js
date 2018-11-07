@@ -1,52 +1,162 @@
 var optionsOpen = false;
-var minorGlitchesCheckboxes = document.querySelectorAll('#minor-glitches-list input');
-var darkRoomsCheckboxes = document.querySelectorAll('#dark-rooms-list input');
-var gomodeCheckboxes = document.querySelectorAll('#go-mode-restrictions input');
 var splitCheckbox = document.querySelector('#splitcheckbox');
 var modeSelect = document.querySelector('#mode_select');
-var logicSelect = document.querySelector('#logic_select');
 var goalSelect = document.querySelector('#goal_select');
+var varSelect = document.querySelector('#var_select');
+var swordsSelect = document.querySelector('#swords_select');
 var keybindButton = document.querySelector('#keybind_button');
+var hintArea = document.querySelector('#hint-tracker');
 
-minorGlitchesCheckboxes.forEach(function(checkbox) {
-  checkbox.checked = glitches[checkbox.id];
-  checkbox.addEventListener('click', function() {
-    glitches[checkbox.id] = checkbox.checked;
-    saveCookie();
-    toggle();
-  });
-});
-
-darkRoomsCheckboxes.forEach(function(checkbox) {
-  checkbox.checked = glitches.darkrooms[checkbox.id];
-  checkbox.addEventListener('click', function() {
-    glitches.darkrooms[checkbox.id] = checkbox.checked;
-    saveCookie();
-    toggle();
-  });
-});
-
-gomodeCheckboxes.forEach(function(checkbox) {
-  checkbox.checked = goModeRequirements[checkbox.id];
-  checkbox.addEventListener('click', function() {
-    goModeRequirements[checkbox.id] = checkbox.checked;
-    saveCookie();
-    toggle();
-  });
-});
-
+var storedHints = [];
+var hintsTextLimit = 120;
 document.querySelector('#options_button').addEventListener('click', function() {
   optionsOpen = !optionsOpen;
   if (optionsOpen) {
     document.querySelector('#options').style.display = "inherit";
   } else {
     document.querySelector('#options').style.display = "none";
+    updateHintsTextTicker();
+    document.getElementById("caption").innerHTML = hintsText;    
+    if (hintsText.length > hintsTextLimit) {
+      document.getElementById("caption").className = 'scroll-this';
+    }	
+    hintsTextOn = true;
+    
   }		
 });
 
-modeSelect.addEventListener('change', function() {
-  mode = modeSelect.value;
+document.querySelector('#new_hint_button').addEventListener('click', function() {
+  storedHints.push([itemsArr[0], locationsArr[0]]);
+  hintArea.appendChild(makeHintSelector(storedHints.length-1));
+  updateHintsSelector();
+  updateHintsTextTicker();
+});
+
+function updateHintsSelector() {
+  hintArea.childNodes.forEach((child, i) => {
+    if (!storedHints[child.id.split('-')[1]]) {
+      hintArea.removeChild(child);
+    }
+  });
+}
+
+var hintsText = '&nbsp;';
+var hintsTextOn = true;
+function updateHintsTextTicker() {
+  hintsText = '';
+  storedHints.forEach(eachHint => {    
+    if (eachHint) {
+      if (hintsText != '') {
+        hintsText += '  |  ';
+      }
+      hintsText += eachHint[0] + ' &#8594; ' + eachHint[1];
+    }
+  });
+  if (hintsText == '') {
+    hintsText = '&nbsp;';
+  }  
+}
+
+var itemsArr = 
+  ['Unique Item', 'Useless', 'Mildly Useful', 'Bow', 'Silvers', 'Hookshot',
+  'Mushroom', 'Powder', 'Fire Rod', 'Ice Rod', 'Bombos', 'Ether', 'Quake',
+  'Lamp', 'Hammer', 'Shovel', 'Flute', 'Bug Net', 'Book', 'Bottle',
+  'Cane of Somaria', 'Cane of Byrna', 'Cape', 'Mirror', 'Boots', 'Glove',
+  'Flippers', 'Sword', 'Moon Pearl'];
+var keysanityItemsArr = 
+  ['GT BK', 'GT sk', 'EP BK', 'DP BK', 'DP sk', 'ToH BK', 'ToH sk', 'PoD BK', 'PoD sk', 'SP BK', 'SP sk',
+  'SW BK', 'SW sk', 'TT BK', 'TT sk', 'IP BK', 'IP sk', 'MM BK', 'MM sk', 'TR BK', 'TR sk'];
+var triforceItem = 'Triforce Piece';
+var retroItem = 'Key';
+
+var locationsArr =
+  ['Held by NPC', 'Plain Sight', 'Tablet', 'Village of Outcasts', 'Under Water',
+  'In the Dark', 'Catfish/Zora', 'Lost Woods', 'Great Fairy',  
+  'Requires Bomb', 'Requires Hammer', 'Requires Glove', 'Requires Bow',
+  'Requires Somaria', 'Requires Hookshot', 'Requires Boots', 'on a Boss', 
+  'Swamp Left Side', 'Swamp Big Chest', 'Mire Fire Locked', 'Hera Basement',
+  'in Hyrule Castle', 'in Eastern', 'in Desert', 'in Hera', 'in Aga Tower', 'in PoD', 
+  'in Swamp', 'in Skull Woods', 'in Thieves Town', 'in Ice Palace', 'in Mire', 
+  'in Turtle Rock', 'in Ganons Tower']
+
+function makeHintSelector(id) {
+  let hintObj = document.createElement('div');
+  hintObj.id = 'selector-'+id;
+
+  let hintItem = document.createElement('select');
+  hintItem.name = 'item' + id;
+  hintItem.className = 'item-select';
+  hintItem.id = 'item' + id;
+  itemsArr.forEach(eachItem => {
+    let option = document.createElement('option');
+    option.value = eachItem;
+    option.innerText = eachItem;
+    hintItem.appendChild(option);
+  });
+  if (variation === 'keysanity') {
+    keysanityItemsArr.forEach(eachItem => {
+      let option = document.createElement('option');
+      option.value = eachItem;
+      option.innerText = eachItem;
+      hintItem.appendChild(option);
+    });
+  }
+  if (variation === 'retro') {
+    let option = document.createElement('option');
+    option.value = retroItem;
+    option.innerText = retroItem;
+    hintItem.appendChild(option);
+  }
+  if (goal === 'triforce') {
+    let option = document.createElement('option');
+    option.value = triforceItem;
+    option.innerText = triforceItem;
+    hintItem.appendChild(option);
+  }
+  hintItem.addEventListener('change', function(ev) {
+    storedHints[+ev.target.id.substr(4)][0] = ev.target.value;    
+    updateHintsTextTicker()
+  });
+  hintObj.appendChild(hintItem);
+
+
+  let hintPlace = document.createElement('select');
+  hintPlace.name = 'place' + id;
+  hintPlace.className = 'place-select';
+  hintPlace.id = 'place' + id;
+  locationsArr.forEach(eachLoc => {
+    let option = document.createElement('option');
+    option.value = eachLoc;
+    option.innerText = eachLoc;
+    hintPlace.appendChild(option);
+  });
+  hintPlace.addEventListener('change', function(ev) {
+    storedHints[+ev.target.id.substr(5)][1] = ev.target.value;    
+    updateHintsTextTicker()
+  });
+  hintObj.appendChild(hintPlace);
+
+  let deleteButton = document.createElement('input');
+  deleteButton.type = 'button';
+  deleteButton.value = 'X';
+  deleteButton.id = 'del' + id;
+  deleteButton.addEventListener('click', function(ev) {
+    storedHints[+ev.target.id.substr(3)] = null;
+    updateHintsSelector();
+    updateHintsTextTicker()
+  })
+  hintObj.appendChild(deleteButton);
+
+  return hintObj;
+}
+
+function resetEverything() {
   highlightedChests = [];
+  storedHints = [];
+  hintArea.innerHTML = '';
+  updateHintsSelector();
+  updateHintsTextTicker();
+  document.getElementById("caption").innerHTML = '';
   refreshHighlights();
   resetChests();
   resetItems();
@@ -54,19 +164,22 @@ modeSelect.addEventListener('change', function() {
   toggle();
   resetLog();
   refreshAll();
+}
+
+modeSelect.addEventListener('change', function() {
+  mode = modeSelect.value;
+  resetEverything();
 });
 
-/*
-logicSelect.addEventListener('change', function() {
-  logic = logicSelect.value;
-  saveCookie();
-  toggle();
-});
-*/
+swordsSelect.addEventListener('change', function() {
+  swords = swordsSelect.value;
+  resetEverything();
+})
 
-goalSelect.addEventListener('change', function() {
-  goal = goalSelect.value;
-  if (goal === 'keysanity') {
+varSelect.addEventListener('change', function() {
+  variation = varSelect.value;
+
+  if (variation === 'keysanity') {
     itemsMax.chest0 = 6;
     itemsMax.chest1 = 6;
     itemsMax.chest2 = 6;
@@ -77,7 +190,7 @@ goalSelect.addEventListener('change', function() {
     itemsMax.chest7 = 8;
     itemsMax.chest8 = 8;
     itemsMax.chest9 = 12;
-  } else if (goal === 'retro') {
+  } else if (variation === 'retro') {
     itemsMax.chest0 = 3;
     itemsMax.chest1 = 3;
     itemsMax.chest2 = 3;
@@ -113,13 +226,14 @@ goalSelect.addEventListener('change', function() {
   items.chest9 = itemsMax.chest9;
 
   for (var i=0; i<10; i++) {
-    prizes[i] = (goal === "keysanity" ? 0 : 1);
+    prizes[i] = (variation === "keysanity" ? 0 : 1);
   }
-  highlightedChests = [];
-  refreshHighlights();
-  saveCookie();
-  toggle();
-  refreshAll();
+  resetEverything();
+});
+
+goalSelect.addEventListener('change', function() {
+  goal = goalSelect.value;
+  resetEverything();
 });
 
 var shouldUseKeybind = false;
