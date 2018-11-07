@@ -252,18 +252,18 @@ td {
 }
 /* Move it (define the animation) */
 @-moz-keyframes scroll-left {
- 0%   { -moz-transform: translateX(70%); }
+ 0%   { -moz-transform: translateX(50%); }
  100% { -moz-transform: translateX(-90%); }
 }
 @-webkit-keyframes scroll-left {
- 0%   { -webkit-transform: translateX(70%); }
+ 0%   { -webkit-transform: translateX(50%); }
  100% { -webkit-transform: translateX(-90%); }
 }
 @keyframes scroll-left {
  0%   { 
- -moz-transform: translateX(70%); /* Browser bug fix */
- -webkit-transform: translateX(70%); /* Browser bug fix */
- transform: translateX(70%); 		
+ -moz-transform: translateX(50%); /* Browser bug fix */
+ -webkit-transform: translateX(50%); /* Browser bug fix */
+ transform: translateX(50%); 		
  }
  100% { 
  -moz-transform: translateX(-90%); /* Browser bug fix */
