@@ -72,9 +72,9 @@ var retroItem = 'Key';
 var locationsArr =
   ['Held by NPC', 'Plain Sight', 'Tablet', 'Village of Outcasts', 'Under Water',
   'In the Dark', 'Catfish/Zora', 'Lost Woods', 'Great Fairy',  
-  'Requires Bomb', 'Requires Hammer', 'Requires Glove', 'Requires Bow',
-  'Requires Somaria', 'Requires Hookshot', 'Requires Boots', 'on a Boss', 
   'Swamp Left Side', 'Swamp Big Chest', 'Mire Fire Locked', 'Hera Basement',
+  'Requires Bomb', 'Requires Hammer', 'Requires Glove', 'Requires Bow',
+  'Requires Somaria', 'Requires Hookshot', 'Requires Boots', 'on a Boss',   
   'in Hyrule Castle', 'in Eastern', 'in Desert', 'in Hera', 'in Aga Tower', 'in PoD', 
   'in Swamp', 'in Skull Woods', 'in Thieves Town', 'in Ice Palace', 'in Mire', 
   'in Turtle Rock', 'in Ganons Tower']
