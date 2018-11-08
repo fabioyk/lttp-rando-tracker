@@ -1293,22 +1293,24 @@ dungeons[10] = {
     image: "agahnim.png",
     isBeaten: false,
     isBeatable: function(){
-		if (swords !== "swordless") {
-            if (this.isAccessible() 
-                    && items.sword 
-                    && (variation !== "keysanity" || sphereCounter.agahnim === 2)) {
+        var hasKeys = (variation !== "keysanity" || sphereCounter.agahnim === 2);
+        if (this.isAccessible()) {
+            if (this.canKillBoss() && this.canKillThings() && items.lantern && hasKeys) {
                 return "available";
+            } else if (this.canKillBoss() && items.lantern && hasKeys) {
+                return "possible";
+            } else if (this.canKillBoss() && hasKeys) {
+                return "glitched";
             } else {
                 return "unavailable";
             }
-        } else {
-            if ((items.cape || items.hammer)
-                    && (variation !== "keysanity" || sphereCounter.agahnim === 2)) {
-                return "available";
+        } else if (mode === "inverted" && regions.westDeathMountain(true)) {
+            if (this.canKillBoss() && hasKeys) {
+                return "glitched";
             } else {
                 return "unavailable";
             }
-        }  
+        }
     },
     kChestCount: 2,
     canGetChest: function(){
@@ -1318,12 +1320,25 @@ dungeons[10] = {
                     return "available";
                 }
                 return "possible";
+            } else if (mode === "inverted" && regions.westDeathMountain(true)) {
+                return "glitched";
             } else {
                 return "unavailable";
-            }            
+            }
         } else {
             return this.isBeatable();
         }
+    },
+    canKillBoss: function() {
+        if (swords === "swordless") {
+            return (items.hammer || items.net);
+        } else {
+            return items.sword;
+        }
+    },
+    canKillThings: function() {
+        return items.sword || items.somaria || items.bow || items.hammer || items.firerod
+            || (items.byrna && items.bottle);
     },
     isAccessible: function() {
         if (mode === 'inverted') {
