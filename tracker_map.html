@@ -209,43 +209,88 @@ function isGoMode() {
 			}
 			if (beatableDuns === 10) {
 				if ((items.sword === 2 || (swords === 'swordless' && items.hammer)) 
-					&& (items.firerod || items.lantern)) {
-
-				}
+					&& (items.firerod || items.lantern) && items.bow > 1) {
+					if (swords === 'swordless') {
+						if (items.somaria && items.firerod && items.boots && items.hookshot && items.bow === 3) {
+							if (!wasInGo) {
+								wasInGo = true;
+								logAction('gomode', true);
+							}
+							return 'true';
+						}						
+					} else {
+						if (items.somaria && items.firerod && items.boots && items.bow > 1 && items.hookshot) {
+							if (!wasInGo) {
+								wasInGo = true;
+								logAction('gomode', true);
+							}
+							return 'true';
+						}
+					}					
+				}	
 				if (wasInGo) {
 					wasInGo = false;
 					logAction('gomode', false);
 				}
+				return 'half';
 			}
+			return "false";
+			break;
 		case "ganon":
-			if (crystalCount === 7 && isAllCrystalsBeatable) {
-				if ((swords !== "swordless" ? ((goModeRequirements.mastersword ? items.sword > 1 : true) &&
-						(goModeRequirements.temperedsword ? items.sword > 2 : true) &&
-						(goModeRequirements.silverarrows ? items.bow === 3 : true)) : (items.hammer && items.silverarrows)) &&
-						(goModeRequirements.somaria ? items.somaria : true) &&
-						(goModeRequirements.firerod ? items.firerod : true) &&
-						(goModeRequirements.boots ? items.boots : true) &&
-						items.bow > 1 && (items.firerod || items.lantern) &&
-						(items.hookshot || glitches.hover)
-						) {
-					if (!wasInGo) {
-						wasInGo = true;
-						logAction('gomode', true);
-					}
-					return 'true';
-				} else {
-					if (wasInGo) {
-						wasInGo = false;
-						logAction('gomode', false);
-					}
-					return 'half';
+			if (crystalCount >= 7 && isAllCrystalsBeatable) {
+				if ((items.sword === 2 || (swords === 'swordless' && items.hammer)) 
+					&& (items.firerod || items.lantern) && items.bow > 1) {
+					if (swords === 'swordless') {
+						if (items.somaria && items.firerod && items.boots && items.hookshot && items.bow === 3) {
+							if (!wasInGo) {
+								wasInGo = true;
+								logAction('gomode', true);
+							}
+							return 'true';
+						}						
+					} else {
+						if (items.somaria && items.firerod && items.boots && items.bow > 1 && items.hookshot) {
+							if (!wasInGo) {
+								wasInGo = true;
+								logAction('gomode', true);
+							}
+							return 'true';
+						}
+					}					
+				}	
+				if (wasInGo) {
+					wasInGo = false;
+					logAction('gomode', false);
 				}
+				return 'half';
+
+				// if ((swords !== "swordless" ? ((goModeRequirements.mastersword ? items.sword > 1 : true) &&
+				// 		(goModeRequirements.temperedsword ? items.sword > 2 : true) &&
+				// 		(goModeRequirements.silverarrows ? items.bow === 3 : true)) : (items.hammer && items.silverarrows)) &&
+				// 		(goModeRequirements.somaria ? items.somaria : true) &&
+				// 		(goModeRequirements.firerod ? items.firerod : true) &&
+				// 		(goModeRequirements.boots ? items.boots : true) &&
+				// 		items.bow > 1 && (items.firerod || items.lantern) &&
+				// 		(items.hookshot || glitches.hover)
+				// 		) {
+				// 	if (!wasInGo) {
+				// 		wasInGo = true;
+				// 		logAction('gomode', true);
+				// 	}
+				// 	return 'true';
+				// } else {
+				// 	if (wasInGo) {
+				// 		wasInGo = false;
+				// 		logAction('gomode', false);
+				// 	}
+				// 	return 'half';
+				// }
 			} else {
 				return 'false';
 			}
 			break;
 		case "pedestal":
-			if (pendantCount === 3 && isAllPendantsBeatable) {
+			if (pendantCount >= 3 && isAllPendantsBeatable && (mode !== 'inverted' || regions.invertedLW())) {				
 				if (!wasInGo) {
 					wasInGo = true;
 					logAction('gomode', true);

@@ -5,15 +5,8 @@ var swords = "normal";
 var logic = "nmg";
 
 function considerAga() {
-    if (swords !== "swordless") {
-        return !items.agahnim 
-        && (items.cape || items.sword >= 2) && items.sword 
-        && (variation !== "keysanity" || sphereCounter.agahnim === 2);
-    } else {
-        return !items.agahnim 
-            && (items.cape || items.hammer)
-            && (variation !== "keysanity" || sphereCounter.agahnim === 2);
-    }    
+    return !items.agahnim 
+        && dungeons[10].isBeatable() !== "unavailable";
 }
 
 function hasFiresource() {
@@ -109,7 +102,7 @@ var regions = {
         switch (logic) {
             case "nmg":
                 if (mode === "inverted") {
-                    return (items.glove && items.lantern) || (items.allflute >= 2 && regions.invertedLW() && items.moonpearl);
+                    return (items.glove && (items.lantern || isGlitch)) || (items.allflute >= 2 && regions.invertedLW() && items.moonpearl);
                 } else {
                     return items.allflute >= 2 || (items.glove && items.lantern);
                 }                
@@ -329,6 +322,9 @@ dungeons[1] = {
     isBeatable: function(){
         if (!this.isKillable())
             return "unavailable";
+        if (!this.isAccessible() && this.isKillable() && items.boots && items.glove && mode === "inverted" && considerAga() && doableWith(this.isAccessible, "agahnim")) {
+            return "aga";
+        }
         if(!(this.isAccessible() && (items.glove || logic === "major") && hasFiresource()))
             return "unavailable";
         if (mode === 'inverted' && !items.moonpearl) {
@@ -340,8 +336,12 @@ dungeons[1] = {
     },
     kChestCount: 6,
     canGetChest: function(){        
-        if (!this.isAccessible())
+        if (!this.isAccessible()) {
+            if (mode === "inverted" && considerAga() && doableWith(this.isAccessible, "agahnim")) {
+                return "aga";
+            }
             return "unavailable";
+        }
         if (variation === "keysanity") {
             var chestNum = this.accessibleChests(true);
             if (chestNum === 6) {
@@ -701,7 +701,7 @@ dungeons[4] = {
     kChestCount: 10,
     canGetChest: function(){
         if (!this.isAccessible()) {
-            if (considerAga() && doableWith(this.isAccessible, "agahnim")) {
+            if (mode !== "inverted" && considerAga() && doableWith(this.isAccessible, "agahnim")) {
                 return "aga";
             } else {
                 return "unavailable";
@@ -776,18 +776,21 @@ dungeons[5] = {
     image: "boss52.png",
     isBeaten: false,
     isBeatable: function(){
-        if (!this.isAccessible()) {
+        if (!this.isAccessible() && mode !== "inverted") {
             if (considerAga() && doableWith(this.isAccessible, "agahnim") && items.firerod && this.canKillBoss()) {
                 return "aga";
             } else {
                 return "unavailable";
             }
         } else {
-            if (items.firerod && this.canKillBoss()) {
-                return "available";
-            } else {
-                return "unavailable";
+            if (this.isAccessible()) {
+                if (items.firerod && this.canKillBoss()) {
+                    return "available";
+                } else if (items.firerod && (items.sword || swords === "swordless")) {
+                    return "possible";
+                }
             }
+            return "unavailable";
         }
     },
     kChestCount: 8,
@@ -1315,7 +1318,7 @@ dungeons[10] = {
     kChestCount: 2,
     canGetChest: function(){
         if (variation === "keysanity") {
-            if (this.isAccessible()) {                
+            if (this.isAccessible()) {
                 if (sphereCounter.agahnim >= 1) {
                     return "available";
                 }
@@ -1326,7 +1329,19 @@ dungeons[10] = {
                 return "unavailable";
             }
         } else {
-            return this.isBeatable();
+            if (this.isAccessible()) {
+                if (items.lantern && (variation !== "keysanity" || sphereCounter.agahnim >= 1)) {
+                    return "available";
+                } else if (variation !== "keysanity" || sphereCounter.agahnim >= 1) {
+                    return "glitched";
+                } else {
+                    return "possible";
+                }
+            } else if (mode === "inverted" && regions.westDeathMountain(true)) {
+                return "glitched";
+            } else {
+                return "unavailable";
+            }
         }
     },
     canKillBoss: function() {
@@ -1337,7 +1352,7 @@ dungeons[10] = {
         }
     },
     canKillThings: function() {
-        return items.sword || items.somaria || items.bow || items.hammer || items.firerod
+        return items.sword || items.somaria || (items.bow > 1) || items.hammer || items.firerod
             || (items.byrna && items.bottle);
     },
     isAccessible: function() {
@@ -1431,6 +1446,10 @@ chests[1] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.mirror && regions.invertedLW()) {
+                return "glitched";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1530,6 +1549,10 @@ chests[5] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (regions.invertedLW() && items.mirror) {
+                return "glitched";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1548,6 +1571,8 @@ chests[6] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1617,6 +1642,8 @@ chests[9] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1635,6 +1662,8 @@ chests[10] = {
         if (mode === 'inverted') {
             if (regions.mire()) {
                 return "available";
+            } else if (considerAga() && doableWith(regions.mire, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1659,7 +1688,7 @@ chests[10] = {
                     return "available";
             }
         } else if (logic === "owg" && considerAga() && doableWith(regions.mire, "agahnim") && (items.moonpearl || items.mirror)) {
-            return "glitched";
+            return "aga";
         } else {
             return "unavailable";
         }
@@ -1721,6 +1750,8 @@ chests[12] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1780,7 +1811,9 @@ chests[14] = {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
             } else if (regions.invertedLW()) {
-                return "glitched";            
+                return "glitched"; 
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1801,6 +1834,8 @@ chests[15] = {
                 return "available";
             } else if (regions.invertedLW() && items.mirror) {
                 return "glitched";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1865,6 +1900,8 @@ chests[18] = {
         if (mode === 'inverted') {
             if (items.boots && items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.boots && items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1886,6 +1923,8 @@ chests[19] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -1904,6 +1943,8 @@ chests[20] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2041,6 +2082,8 @@ chests[24] = {
         if (mode === 'inverted') {
             if (regions.invertedLW()) {
                 return "available";
+            } else if (considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2059,8 +2102,10 @@ chests[25] = {
 		for(var k=0; k<10; k++)
             if(prizes[k]==3 && items["boss"+k]==2) {
                 if (mode === 'inverted') {
-                    if (items.moonpearl && regions.invertedLW()) {
+                    if (regions.invertedLW()) {
                         return "available";
+                    } else if (considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                        return "aga";
                     } else {
                         return "unavailable";
                     }
@@ -2100,6 +2145,8 @@ chests[27] = {
         if (mode === 'inverted') {
             if (items.bottle && regions.invertedLW()) {
                 return "available";
+            } else if (items.bottle && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2122,6 +2169,8 @@ chests[28] = {
         if (mode === 'inverted') {
             if ((items.glove === 2 || items.mirror) && regions.invertedLW()) {
                 return "available";
+            } else if (items.mirror && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2160,6 +2209,8 @@ chests[29] = {
                 } else {
                     return "glitched";
                 }
+            } else if (items.moonpearl && items.flippers && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2185,7 +2236,7 @@ chests[30] = {
     isAvailable: function(){
         if (mode === 'inverted') {
             if (regions.invertedEastDM() && items.moonpearl && items.book && items.hammer) {
-                if (items.sword >= 2) {
+                if (items.sword >= 2 || (swords === "swordless" && items.hammer)) {
                     return "available";
                 } else {
                     return "possible";
@@ -2200,7 +2251,7 @@ chests[30] = {
         if (logic !== "major") {
             if (items.book) {
                 if (regions.westDeathMountain() && (items.mirror || (items.hammer && items.hookshot))) {
-                    if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
+                    if (items.sword >= 2 || (swords === "swordless" && items.hammer)) {
                         return "available";
                     } else {
                         return "possible";
@@ -2212,7 +2263,7 @@ chests[30] = {
             }           
         } else {
             if (regions.westDeathMountain() && items.book) {
-                if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
+                if (items.sword >= 2 || (swords === "swordless" && items.hammer)) {
                     return "available";
                 } else {
                     return "possible";
@@ -2232,19 +2283,22 @@ chests[31] = {
     isAvailable: function(){        
         if (mode === 'inverted') {
             if (regions.invertedLW() && items.book) {
-                if (items.sword >= 2) {
+                if (items.sword >= 2 || (items.hammer && swords === "swordless")) {
                     return "available";
                 } else {
                     return "possible";
                 }
-            } else {
-                return "unavailable";
-            }
+            } else if (items.book && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                if (items.sword >= 2 || (items.hammer && swords === "swordless")) {
+                    return "aga";
+                }                
+            } 
+            return "unavailable";            
         }
         switch (logic) {
             case "nmg":
                 if (items.book && items.mirror && regions.SouthDarkWorld()) {
-                    if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
+                    if (items.sword >= 2 || (swords === "swordless" && items.hammer)) {
                         return "available";
                     } else {
                         return "possible";
@@ -2256,7 +2310,7 @@ chests[31] = {
                 }
             case "owg":
                 if (items.book && (items.boots || (items.mirror && regions.SouthDarkWorld()))) {
-                    if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
+                    if (items.sword >= 2 || (swords === "swordless" && items.hammer)) {
                         return "available";
                     } else {
                         return "possible";
@@ -2268,7 +2322,7 @@ chests[31] = {
                 }
             case "major":
                 if (items.book) {
-                    if (items.sword >= 2 || (swords === "swordless" && items['Hammer'])) {
+                    if (items.sword >= 2 || (swords === "swordless" && items.hammer)) {
                         return "available";
                     } else {
                         return "possible";
@@ -2289,6 +2343,8 @@ chests[32] = {
         if (mode === 'inverted') {
             if (items.glove && regions.invertedNEDW()) {
                 return "available";
+            } else if (items.glove && considerAga() && doableWith(regions.invertedNEDW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2336,6 +2392,8 @@ chests[33] = {
                 } else {
                     return "glitched";
                 }
+            } else if (items.moonpearl && (items.glove || items.flippers) && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2378,6 +2436,8 @@ chests[35] = {
         if (mode === 'inverted') {
             if (items.allpowder % 2 === 1 && items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.allpowder % 2 === 1 && items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2399,6 +2459,10 @@ chests[36] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (regions.invertedLW()) {
+                return "possible";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2419,6 +2483,8 @@ chests[37] = {
                 return "available";
             } else if (regions.invertedLW()) {
                 return "possible";
+            } else if (items.moonpearl && items.boots && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2469,6 +2535,8 @@ chests[39] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2497,6 +2565,8 @@ chests[40] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2525,6 +2595,8 @@ chests[41] = {
         if (mode === 'inverted') {
             if (items.moonpearl && items.glove && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && items.glove && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2566,6 +2638,8 @@ chests[42] = {
         if (mode === 'inverted') {
             if (items.hammer && (items.glove === 2 || (items.mirror && regions.invertedLW() && items.glove))) {
                 return "available";
+            } else if (items.mirror && items.glove && items.hammer && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2600,6 +2674,8 @@ chests[43] = {
                 return "available";
             } else if (regions.invertedLW()) {
                 return "possible";
+            } else if (items.moonpearl && items.boots && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2621,6 +2697,10 @@ chests[44] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (regions.invertedLW()) {
+                return "possible";            
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2718,6 +2798,8 @@ chests[47] = {
                 return "available";
             } else if (regions.invertedLW()) {
                 return "possible";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2740,6 +2822,8 @@ chests[48] = {
                 return "glitched";
             } else if (regions.invertedLW()) {
                 return "possible";
+            } else if (items.moonpearl && items.book && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2770,6 +2854,8 @@ chests[49] = {
                 return "glitched";
             } else if (regions.invertedLW()) {
                 return "possible";
+            } else if (items.moonpearl && items.flippers && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2809,6 +2895,8 @@ chests[50] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW() && items.glove && items.cape && items.mirror) {
                 return "available";
+            } else if (items.moonpearl && items.glove && items.cape && items.mirror && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "possible";
             }
@@ -2842,6 +2930,8 @@ chests[51] = {
         if (mode === 'inverted') {
             if (regions.invertedNEDW()) {
                 return "available";
+            } else if (items.mirror && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2894,6 +2984,8 @@ chests[53] = {
                 } else {
                     return "possible";
                 }
+            } else if (items.moonpearl && items.flippers && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2924,6 +3016,8 @@ chests[54] = {
         if (mode === 'inverted') {
             if (items.moonpearl && items.allflute % 2 === 1 && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && items.allflute % 2 === 1 && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2948,6 +3042,8 @@ chests[55] = {
                 return "available";
             } else if (regions.invertedLW()) {
                 return "possible";
+            } else if (items.moonpearl && items.glove && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2973,6 +3069,8 @@ chests[56] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -2993,6 +3091,8 @@ chests[57] = {
                 return "available";
             } else if (regions.invertedLW()) {
                 return "glitched";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -3010,6 +3110,8 @@ chests[58] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW()) {
                 return "available";
+            } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -3028,6 +3130,8 @@ chests[59] = {
         if (mode === 'inverted') {
             if (items.moonpearl && regions.invertedLW() && items.hammer && items.allpowder >= 2) {
                 return "available";
+            } else if (items.moonpearl && items.hammer && items.allpowder >= 2 && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -3065,6 +3169,8 @@ chests[60] = {
         if (mode === 'inverted') {
             if ((items.glove === 2 || items.mirror) && regions.invertedLW()) {
                 return "available";
+            } else if ((items.glove === 2 || items.mirror) && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -3105,9 +3211,10 @@ chests[61] = {
 			if(prizes[k]==2 && items["boss"+k]==2)
 				crystalCount++;
         if (mode === 'inverted') {
-            if (regions.invertedNEDW() && crystalCount === 2 &&
-                items.moonpearl && (items.hammer || (items.mirror && items.agahnim))) {
+            if (regions.invertedLW() && crystalCount === 2 && items.mirror) {
                 return "available";
+            } else if (crystalCount === 2 && items.mirror && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -3145,11 +3252,15 @@ chests[62] = {
     isAvailable: function(){
 		var pendantCount = 0;
 		for(var k=0; k<10; k++)
-			if((prizes[k]==3 || prizes[k]==4) && items["boss"+k]==2)
-				if(++pendantCount==3 && items.moonpearl && regions.invertedLW())
+			if((prizes[k]==3 || prizes[k]==4) && items["boss"+k]==2) {
+                if(++pendantCount==3 && (mode !== "inverted" || (mode === "inverted" && regions.invertedLW() && items.moonpearl)))
 					return "available";
-        if (items.book && items.moonpearl && regions.invertedLW())
+            }
+				
+        if (items.book && (mode !== "inverted" || (mode === "inverted" && regions.invertedLW() && items.moonpearl)))
             return "possible";
+        if (mode === "inverted" && items.moonpearl && pendantCount === 3 && considerAga() && doableWith(regions.invertedLW, "agahnim"))
+            return "aga";
 		return "unavailable";
     }
 };
@@ -3170,6 +3281,8 @@ chests[63] = {
                 } else {
                     return "unavailable";
                 }
+            } else if (items.moonpearl && items.flippers && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
@@ -3205,6 +3318,8 @@ chests[64] = {
                 } else {
                     return "glitched";
                 }
+            } else if (items.moonpearl && items.lantern && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
+                return "aga";
             } else {
                 return "unavailable";
             }
