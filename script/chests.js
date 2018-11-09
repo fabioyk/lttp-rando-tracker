@@ -1314,6 +1314,7 @@ dungeons[10] = {
                 return "unavailable";
             }
         }
+        return "unavailable";
     },
     kChestCount: 2,
     canGetChest: function(){
