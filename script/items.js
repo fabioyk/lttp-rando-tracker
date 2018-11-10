@@ -60,7 +60,9 @@ var items = {
 var currentMaxSphere = 0;
 var sphereCounter = {
 	moonpearl: 0,
-	
+    sword: 0,
+    tunic1: 0,
+    shield: 0,
 	bow: 0,
     boomerang: 0,
     hookshot: 0,
