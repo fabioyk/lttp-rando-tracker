@@ -71,19 +71,47 @@ function preToggle(event) {
 function preToggleBoss(event) {
 	var bossId = event.target.id.substring(1);
 	if (event.button == 1 || event.button == 2) {
-		sphereCounter[bossId] = !sphereCounter[bossId];
-		if (sphereCounter[bossId]) {
-			if (variation === "keysanity") {
-				event.target.innerHTML = 'BK';
-				logAction('BK', bossId.substring(4));
-			} else {
-				event.target.innerHTML = 'X';
-			}			
+		if (isRightClicking) {						
+			document.getElementById(lastChestRightClicked).style.backgroundImage = "url(images/"+bossId+"2.png)";			
+			highlightedChests.splice(highlightedChests.indexOf(lastChestRightClicked), 1);
+			refreshHighlights();
+			lastChestRightClicked = null;
+			isRightClicking = false;
 		} else {
-			event.target.innerHTML = '';		
+			sphereCounter[bossId] = !sphereCounter[bossId];
+			if (sphereCounter[bossId]) {
+				if (variation === "keysanity") {
+					event.target.innerHTML = 'BK';
+					logAction('BK', bossId.substring(4));
+				} else {
+					event.target.innerHTML = 'X';
+				}			
+			} else {
+				event.target.innerHTML = '';		
+			}
 		}
+		
+		
 	}
 	toggle("");
+}
+
+function toggleDungeonMap(event) {
+	lastChestRightClicked = null;
+	isRightClicking = false;
+	var num = event.target.id;
+	if (event.button == 2) {
+		lastChestRightClicked = num;
+		isRightClicking = true;
+		if (highlightedChests.indexOf(num) > -1) {
+			highlightedChests.splice(highlightedChests.indexOf(num), 1);
+		} else {
+			highlightedChests.push(num);
+		}
+		refreshHighlights();
+	} else if (event.button === 0) {
+		toggleChest(num);
+	}
 }
 
 // Event of clicking on the item tracker
@@ -344,7 +372,16 @@ function refreshHighlights() {
 		} else {
 			document.getElementById(i).style.border = "3px solid black";			
 		}
-	});	
+	});
+
+	for (let i = 0; i <= 10; i++) {
+		if (highlightedChests.includes('bossMap'+i)) {
+			document.getElementById('dungeon'+i).style.backgroundImage = "url(images/highlighted.png)";	
+		} else {
+			document.getElementById('dungeon'+i).style.backgroundImage = "url(images/poi.png)";	
+		}
+	}
+
 }
 
 // Event of clicking a chest on the map
@@ -399,12 +436,14 @@ function highlightDungeon(x){
 }
 
 function unhighlightDungeon(x){
-    document.getElementById("dungeon"+x).style.backgroundImage = "url(images/poi.png)";
-		document.getElementById("caption").innerHTML = hintsText;
-		if (hintsText.length > hintsTextLimit) {
-			document.getElementById("caption").className = 'scroll-this';
-		}	
-		hintsTextOn = true;
+	if (!highlightedChests.includes('bossMap'+x)) {
+    document.getElementById("dungeon"+x).style.backgroundImage = "url(images/poi.png)";		
+	}
+	document.getElementById("caption").innerHTML = hintsText;
+	if (hintsText.length > hintsTextLimit) {
+		document.getElementById("caption").className = 'scroll-this';
+	}		
+	hintsTextOn = true;
 }
 
 // event of clicking on a boss's pendant/crystal subsquare
@@ -643,7 +682,8 @@ for(k=0; k<chests.length; k++){
 
 // Dungeon bosses & chests
 for(k=0; k<dungeons.length; k++){
-    document.write("<span style='background-image:url(images/"+dungeons[k].image+");' id='bossMap"+k+"' onMouseover='highlightDungeon("+k+")' onMouseout='unhighlightDungeon("+k+")'></span>");
+		document.write("<span style='background-image:url(images/"+dungeons[k].image+");' id='bossMap"+k+"' onMouseover='highlightDungeon("+k+")' onMouseout='unhighlightDungeon("+k+")'></span>");
+		document.getElementById("bossMap"+k).addEventListener('mousedown', toggleDungeonMap);
     document.getElementById("bossMap"+k).style.left = dungeons[k].x;
     document.getElementById("bossMap"+k).style.top = dungeons[k].y;
 		document.getElementById("bossMap"+k).className = "boss " + dungeons[k].isBeatable();
