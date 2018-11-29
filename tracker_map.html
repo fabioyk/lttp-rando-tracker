@@ -236,7 +236,7 @@ function isGoMode() {
 				}
 			}
 			if (beatableDuns === 10) {
-				if ((items.sword === 2 || (swords === 'swordless' && items.hammer)) 
+				if ((items.sword >= 2 || (swords === 'swordless' && items.hammer)) 
 					&& (items.firerod || items.lantern) && items.bow > 1) {
 					if (swords === 'swordless') {
 						if (items.somaria && items.firerod && items.boots && items.hookshot && items.bow === 3) {
@@ -266,7 +266,7 @@ function isGoMode() {
 			break;
 		case "ganon":
 			if (crystalCount >= 7 && isAllCrystalsBeatable) {
-				if ((items.sword === 2 || (swords === 'swordless' && items.hammer)) 
+				if ((items.sword >= 2 || (swords === 'swordless' && items.hammer)) 
 					&& (items.firerod || items.lantern) && items.bow > 1) {
 					if (swords === 'swordless') {
 						if (items.somaria && items.firerod && items.boots && items.hookshot && items.bow === 3) {

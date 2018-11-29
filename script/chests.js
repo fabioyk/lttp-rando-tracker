@@ -73,7 +73,18 @@ function resetChests() {
         itemsMax.chest6 = 8;
         itemsMax.chest7 = 8;
         itemsMax.chest8 = 8;
-        itemsMax.chest9 = 12;    
+        itemsMax.chest9 = 12;  
+      } else if (variation === "retro") {
+        itemsMax.chest0 = 3;
+        itemsMax.chest1 = 3;
+        itemsMax.chest2 = 3;
+        itemsMax.chest3 = 11;
+        itemsMax.chest4 = 7;
+        itemsMax.chest5 = 5;
+        itemsMax.chest6 = 5;
+        itemsMax.chest7 = 5;
+        itemsMax.chest8 = 5;
+        itemsMax.chest9 = 9;  
       } else {
         itemsMax.chest0 = 3;
         itemsMax.chest1 = 2;
@@ -3039,10 +3050,12 @@ chests[55] = {
     isOpened: false,
     isAvailable: function(){
         if (mode === 'inverted') {
-            if (items.moonpearl && items.glove && regions.invertedLW()) {
+            if (items.moonpearl && regions.invertedLW() && (items.glove || (variation === "retro" && items.lantern))) {
                 return "available";
-            } else if (regions.invertedLW()) {
+            } else if (items.moonpearl && regions.invertedLW() && items.lantern) {
                 return "possible";
+            } else if (regions.invertedLW()) {
+                return "glitched";
             } else if (items.moonpearl && items.glove && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
                 return "aga";
             } else {
@@ -3052,8 +3065,10 @@ chests[55] = {
         if (mode === "standard") {
             return "available";
         } else {
-            if (items.glove) {
+            if (items.glove || (variation === "retro" && items.lantern)) {
                 return "available";
+            } else if (variation === "retro") {
+                return "glitched";
             } else {
                 return "possible";
             }
