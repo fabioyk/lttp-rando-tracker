@@ -14,7 +14,7 @@ function hasFiresource() {
 }
 
 function canMeltThings() {
-    return items.firerod || (items.bombos && items.sword);
+    return items.firerod || (items.bombos && (items.sword || swords === "swordless"));
 }
 
 function canSpinSpeed() {
@@ -1513,9 +1513,9 @@ chests[4] = {
     isOpened: false,
     isAvailable: function() {
         if (mode === 'inverted') {
-            if (regions.invertedEastDM() && items.mirror && items.hammer) {
+            if (regions.invertedEastDM() && items.hammer && items.moonpearl) {
                 return "available";
-            } else if (doableWith(regions.invertedEastDM, "lantern") && items.mirror && items.hammer) {
+            } else if (doableWith(regions.invertedEastDM, "lantern") && items.hammer && items.moonpearl) {
                 return "glitched";
             } else {
                 return "unavailable";
