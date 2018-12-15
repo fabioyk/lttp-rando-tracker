@@ -592,9 +592,18 @@ dungeons[3] = {
                     minChests = 3;
                     break;
                 case 2:
-                case 3:
-                case 4:
                     minChests = 3;
+                    maxChestsGlitched = 8 + (sphereCounter.chest3 - 2);
+                    if (sphereCounter.boss3) {
+                        maxChestsGlitched++;
+                    }
+                    break;
+                case 3:                    
+                case 4:
+                    minChests = 4;
+                    if (items.lantern) {
+                        minChests += 2;
+                    }                    
                     maxChestsGlitched = 8 + (sphereCounter.chest3 - 2);
                     if (sphereCounter.boss3) {
                         maxChestsGlitched++;
@@ -604,7 +613,7 @@ dungeons[3] = {
                 case 6:
                     minChests = 6;
                     if (items.lantern) {
-                        minChests += 3;
+                        minChests += 4;
                         if (sphereCounter.boss3) {
                             minChests++;
                         }
@@ -2549,6 +2558,8 @@ chests[39] = {
                 return "available";
             } else if (items.moonpearl && considerAga() && doableWith(regions.invertedLW, "agahnim")) {
                 return "aga";
+            } else if (regions.invertedLW()) {
+                return "possible";
             } else {
                 return "unavailable";
             }
