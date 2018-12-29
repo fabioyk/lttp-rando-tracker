@@ -1190,7 +1190,19 @@ dungeons[9] = {
                 return "unavailable";
             }
         } else {
-            if (logic !== "major") {
+            if (mode === 'inverted') {
+                if (this.canKillBoss()) {
+                    if (regions.invertedEastDM() && items.mirror) {
+                        return "available";
+                    } else if ((doableWith(regions.invertedEastDM, "lantern")) && items.mirror) {
+                        return "glitched";
+                    } else {
+                        return "possible";
+                    }
+                } else {
+                    return "unavailable";
+                }
+            } else {
                 if (this.canKillBoss()) {
                     if (items.lantern) {
                         return "available";
@@ -1200,13 +1212,7 @@ dungeons[9] = {
                 } else {
                     return "unavailable";
                 }
-            } else {
-                if (this.canKillBoss()) {
-                    return "available";
-                } else {
-                    return "unavailable";
-                }
-            }
+            }            
         }
     },
     kChestCount: 12,
@@ -1218,31 +1224,36 @@ dungeons[9] = {
                 return "unavailable";
             }
         } else {
-            if (logic !== "major") {
-                if (variation === "keysanity") {                    
-                    if (this.accessibleChests(true) === 12) {
-                        return "available";
-                    } else if (items.chest9 > 12-this.accessibleChests(true)) {
-                        return "possible";
-                    } else if (items.chest9 > 12-this.accessibleChests(false)) {
-                        return "glitched";
-                    } else {
-                        return "unavailable";
-                    }
+            if (variation === "keysanity") {                    
+                if (this.accessibleChests(true) === 12) {
+                    return "available";
+                } else if (items.chest9 > 12-this.accessibleChests(true)) {
+                    return "possible";
+                } else if (items.chest9 > 12-this.accessibleChests(false)) {
+                    return "glitched";
                 } else {
-                    if (this.canKillBoss() && (variation !== "keysanity" || sphereCounter.chest9 >= 4)) {
-                        if (items.lantern) {
+                    return "unavailable";
+                }
+            } else {
+                if (mode === 'inverted') {
+                    if (this.canKillBoss()) {
+                        if (regions.invertedEastDM() && items.mirror) {
                             return "available";
-                        } else {
+                        } else if ((doableWith(regions.invertedEastDM, "lantern")) && items.mirror) {
                             return "glitched";
+                        } else {
+                            return "possible";
                         }
                     } else {
                         return "possible";
                     }
-                }                
-            } else {
-                if (this.canKillBoss() && (variation !== "keysanity" || sphereCounter.chest9 >= 4)) {
-                    return "available";
+                }
+                if (this.canKillBoss()) {
+                    if (items.lantern) {
+                        return "available";
+                    } else {
+                        return "glitched";
+                    }
                 } else {
                     return "possible";
                 }
@@ -1253,7 +1264,7 @@ dungeons[9] = {
         var hasMedallion = medallionCheck(1) && (items.sword || swords === "swordless");
         if (mode === 'inverted') {
             return ((regions.invertedEastDM() || (doableWith(regions.invertedEastDM, "lantern"))) && items.mirror)
-                || ((regions.invertedEastDWDM() || (doableWith(regions.invertedEastDWDM, "lantern"))) && hasMedallion && items.somaria && items.hammer); // TODO check
+                || ((regions.invertedEastDWDM() || (doableWith(regions.invertedEastDWDM, "lantern"))) && hasMedallion && items.somaria);
         }
         switch (logic) {
             case "nmg":
