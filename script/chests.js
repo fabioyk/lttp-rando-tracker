@@ -856,8 +856,8 @@ dungeons[5] = {
         }
     },
     canKillBoss: function() {
-        return items.sword || items.hammer || (items.bottle && (items.firerod || items.somaria || items.byrna))
-            || (items.boots && items.bottle && items.net);
+        return (items.sword || swords === "swordless") && (items.sword || items.hammer || (items.bottle && (items.firerod || items.somaria || items.byrna))
+            || (items.boots && items.bottle && items.net));
     },
     accessibleChests: function(inLogic) {
         var availableChests = 5;
