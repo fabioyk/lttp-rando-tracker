@@ -73,8 +73,8 @@ function resetChests() {
         itemsMax.chest6 = 8;
         itemsMax.chest7 = 8;
         itemsMax.chest8 = 8;
-        itemsMax.chest9 = 12;  
-      } else if (variation === "retro") {
+        itemsMax.chest9 = 12;
+      } else if (variation === 'retro') {
         itemsMax.chest0 = 3;
         itemsMax.chest1 = 3;
         itemsMax.chest2 = 3;
@@ -85,6 +85,39 @@ function resetChests() {
         itemsMax.chest7 = 5;
         itemsMax.chest8 = 5;
         itemsMax.chest9 = 9;  
+      } else if (variation === 'mc') {
+        itemsMax.chest0 = 5;
+        itemsMax.chest1 = 4;
+        itemsMax.chest2 = 4;
+        itemsMax.chest3 = 7;
+        itemsMax.chest4 = 8;
+        itemsMax.chest5 = 4;
+        itemsMax.chest6 = 6;
+        itemsMax.chest7 = 5;
+        itemsMax.chest8 = 4;
+        itemsMax.chest9 = 7; 
+      } else if (variation === 'mcs') {
+        itemsMax.chest0 = 5;
+        itemsMax.chest1 = 5;
+        itemsMax.chest2 = 5;
+        itemsMax.chest3 = 13;
+        itemsMax.chest4 = 9;
+        itemsMax.chest5 = 7;
+        itemsMax.chest6 = 7;
+        itemsMax.chest7 = 7;
+        itemsMax.chest8 = 7;
+        itemsMax.chest9 = 11;
+      } else if (variation === 'cross') {
+        itemsMax.chest0 = 10;
+        itemsMax.chest1 = 10;
+        itemsMax.chest2 = 10;
+        itemsMax.chest3 = 10;
+        itemsMax.chest4 = 10;
+        itemsMax.chest5 = 10;
+        itemsMax.chest6 = 10;
+        itemsMax.chest7 = 10;
+        itemsMax.chest8 = 10;
+        itemsMax.chest9 = 10;
       } else {
         itemsMax.chest0 = 3;
         itemsMax.chest1 = 2;
@@ -96,6 +129,33 @@ function resetChests() {
         itemsMax.chest7 = 3;
         itemsMax.chest8 = 2;
         itemsMax.chest9 = 5;
+      }
+      if (variation === "cross") {
+        maxKeyCount = {
+            chest0: 6,
+            chest1: 6,
+            chest2: 6,
+            chest3: 6,
+            chest4: 6,
+            chest5: 6,
+            chest6: 6,
+            chest7: 6,
+            chest8: 6,
+            chest9: 6
+          }
+      } else {
+        maxKeyCount = {
+            chest0: 0,
+            chest1: 1,
+            chest2: 1,
+            chest3: 6,
+            chest4: 1,
+            chest5: 3,
+            chest6: 1,
+            chest7: 2,
+            chest8: 3,
+            chest9: 4
+        }
       }
     if (mode === "standard") {
         // Change initial chests to checked in standard

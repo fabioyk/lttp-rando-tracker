@@ -357,6 +357,18 @@ function resetItems() {
         items.chest8 = 5;
         items.chest9 = 9;
     }
+    if (variation === "cross") {
+        items.chest0 = 10;
+        items.chest1 = 10;
+        items.chest2 = 10;
+        items.chest3 = 10;
+        items.chest4 = 10;
+        items.chest5 = 10;
+        items.chest6 = 10;
+        items.chest7 = 10;
+        items.chest8 = 10;
+        items.chest9 = 10;
+    }
     medallions[0] = 0;
     medallions[1] = 0;
 
@@ -371,6 +383,6 @@ function resetItems() {
     }
 
     for (var i=0; i<dungeons.length; i++) {
-        prizes[i] = (variation === "keysanity" ? 0 : 1);
+        prizes[i] = (variation === "none" ? 1 : 0);
     }
 }

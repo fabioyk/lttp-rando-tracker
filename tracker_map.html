@@ -80,7 +80,7 @@ function preToggleBoss(event) {
 		} else {
 			sphereCounter[bossId] = !sphereCounter[bossId];
 			if (sphereCounter[bossId]) {
-				if (variation === "keysanity") {
+				if (variation === "keysanity" || variation === "cross") {
 					event.target.innerHTML = 'BK';
 					logAction('BK', bossId.substring(4));
 				} else {
@@ -450,7 +450,7 @@ function unhighlightDungeon(x){
 function toggleDungeon(n){
 	prizes[n]++;
 	if(prizes[n] == 5)
-		prizes[n] = (variation === "keysanity" ? 0 : 1);
+		prizes[n] = (variation === "none" ? 1 : 0);
 	document.getElementById("dungeonPrize"+n).style.backgroundImage = "url(images/dungeon"+prizes[n]+".png)";
 	logAction('dungeonClicked'+n, prizes[n]);
 	// Update Sahasralah, Fat Fairy, and Master Sword Pedestal
@@ -709,8 +709,11 @@ for(k=0; k<dungeons.length; k++){
 </select>
 <select name="variation" class="opt-select" id="var_select">
 	<option value="none">None</option>
+	<option value="mc">MC</option>
+	<option value="mcs">MCS</option>
 	<option value="keysanity">Keysanity</option>
 	<option value="retro">Retro</option>
+	<option value="cross">CrossDoors</option>
 </select>
 <select name="mode" class="opt-select" id="mode_select">	
 	<option value="standard">Standard</option>
@@ -719,6 +722,7 @@ for(k=0; k<dungeons.length; k++){
 </select>
 <select name="swords" class="opt-select" id="swords_select">
 	<option value="normal">With Swords</option>
+	<option value="vanilla">Vanilla</option>
 	<option value="swordless">Swordless</option>
 </select>
 
