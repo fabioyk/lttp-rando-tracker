@@ -205,8 +205,11 @@ var goModeRequirements = {
 
 var wasInGo = false;
 function isGoMode() {
-	if (goal === "triforce" || variation === "cross") {
+	if (goal === "triforce") {
 		return;
+	}
+	if (variation === "cross") {
+		return false;
 	}
 	var crystalCount = 0;
 	var pendantCount = 0;
