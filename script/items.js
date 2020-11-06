@@ -345,6 +345,18 @@ function resetItems() {
         items.chest8 = 8;
         items.chest9 = 12;
     }
+    if (variation === "keydrop") {
+        items.chest0 = 8;
+        items.chest1 = 9;
+        items.chest2 = 6;
+        items.chest3 = 14;
+        items.chest4 = 15;
+        items.chest5 = 10;
+        items.chest6 = 10;
+        items.chest7 = 12;
+        items.chest8 = 11;
+        items.chest9 = 14;
+    }
     if (variation === "retro") {
         items.chest0 = 3;
         items.chest1 = 3;

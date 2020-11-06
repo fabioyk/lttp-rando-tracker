@@ -80,7 +80,7 @@ function preToggleBoss(event) {
 		} else {
 			sphereCounter[bossId] = !sphereCounter[bossId];
 			if (sphereCounter[bossId]) {
-				if (variation === "keysanity" || variation === "cross") {
+				if (variation === "keysanity" || variation === "cross" || variation === "keydrop") {
 					event.target.innerHTML = 'BK';
 					logAction('BK', bossId.substring(4));
 				} else {
@@ -715,6 +715,7 @@ for(k=0; k<dungeons.length; k++){
 	<option value="mc">MC</option>
 	<option value="mcs">MCS</option>
 	<option value="keysanity">Keysanity</option>
+	<option value="keydrop">Keysanity+KeyDrop</option>
 	<option value="retro">Retro</option>
 	<option value="cross">CrossDoors</option>
 </select>

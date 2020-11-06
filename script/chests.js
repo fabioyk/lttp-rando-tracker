@@ -143,6 +143,19 @@ function resetChests() {
             chest8: 6,
             chest9: 6
           }
+      } else if (variation === "keydrop") {
+        maxKeyCount = {
+            chest0: 2,
+            chest1: 3,
+            chest2: 1,
+            chest3: 6,
+            chest4: 6,
+            chest5: 5,
+            chest6: 3,
+            chest7: 6,
+            chest8: 6,
+            chest9: 6
+        }
       } else {
         maxKeyCount = {
             chest0: 0,

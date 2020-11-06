@@ -160,6 +160,7 @@ function resetEverything() {
   refreshHighlights();
   //resetChests();
   //resetItems();
+  console.log(swords);
   saveCookie();
   toggle();
   //resetLog();
@@ -173,7 +174,7 @@ modeSelect.addEventListener('change', function() {
 
 swordsSelect.addEventListener('change', function() {
   swords = swordsSelect.value;
-  if (swords = 'vanilla') {
+  if (swords == 'vanilla') {
     document.getElementById('56').style.backgroundImage = "url(images/sword3.png)";
     document.getElementById('60').style.backgroundImage = "url(images/sword3.png)";
     document.getElementById('61').style.backgroundImage = "url(images/sword3.png)";
@@ -212,6 +213,30 @@ varSelect.addEventListener('change', function() {
       chest8: 3,
       chest9: 4
     }
+  } else if (variation === 'keydrop') {
+    itemsMax.chest0 = 8;
+    itemsMax.chest1 = 9;
+    itemsMax.chest2 = 6;
+    itemsMax.chest3 = 14;
+    itemsMax.chest4 = 15;
+    itemsMax.chest5 = 10;
+    itemsMax.chest6 = 10;
+    itemsMax.chest7 = 12;
+    itemsMax.chest8 = 11;
+    itemsMax.chest9 = 14;
+
+    maxKeyCount = {
+      chest0: 2,
+      chest1: 3,
+      chest2: 1,
+      chest3: 6,
+      chest4: 6,
+      chest5: 5,
+      chest6: 3,
+      chest7: 6,
+      chest8: 6,
+      chest9: 6
+  }
   } else if (variation === 'retro') {
     itemsMax.chest0 = 3;
     itemsMax.chest1 = 3;
