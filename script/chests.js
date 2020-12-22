@@ -146,7 +146,7 @@ function resetChests() {
       } else if (variation === "keydrop") {
         maxKeyCount = {
             chest0: 2,
-            chest1: 3,
+            chest1: 4,
             chest2: 1,
             chest3: 6,
             chest4: 6,
